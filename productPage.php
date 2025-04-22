@@ -1,4 +1,8 @@
-<?php include 'header.php'; ?>
+<?php 
+session_start();
+include 'header.php'; 
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -288,7 +292,7 @@
             
             // Fetch products from database
             function fetchProducts() {
-                fetch('api/get_products.php')
+                fetch('getProducts.php')
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -296,6 +300,7 @@
                         return response.json();
                     })
                     .then(products => {
+                        console.log('Fetched products:', products); //for debugging
                         allProducts = products;
                         renderProducts(products);
                     })
@@ -315,16 +320,18 @@
                 productsContainer.innerHTML = '';
                 
                 products.forEach(product => {
+                    console.log(product); //for debugging
                     const productCard = document.createElement('div');
                     productCard.className = 'product-card';
                     productCard.innerHTML = `
                         <div class="product-image" style="background-image: url('${product.image_url}')"></div>
                         <div class="product-info">
                             <h3 class="product-title">${product.name}</h3>
-                            <div class="product-price">P${product.price.toFixed(2)}</div>
-                            <button class="add-to-cart" data-product-id="${product.id}">Add to Cart</button>
+                            <div class="product-price">P${Number(product.price).toFixed(2)}</div>
+                            <button class="add-to-cart" data-product-id="${product.flower_id}" >Add to Cart</button>
                         </div>
-                    `;
+                    `; //changed
+                    
                     productsContainer.appendChild(productCard);
                 });
                 
@@ -332,7 +339,11 @@
                 document.querySelectorAll('.add-to-cart').forEach(button => {
                     button.addEventListener('click', function() {
                         const productId = this.getAttribute('data-product-id');
-                        addToCart(productId);
+                        if (!isNaN(productId)) {
+                            addToCart(productId); //changed
+                        } else {
+                            console.error('Invalid product ID');
+                        }
                     });
                 });
             }
@@ -374,9 +385,10 @@
                 renderProducts(filteredProducts);
             }
             
-            // Add to cart function
+            // Add to cart function //changed func
             function addToCart(productId) {
-                fetch('api/add_to_cart.php', {
+                console.log('Sending product ID:', productId); //debugging
+                fetch('addToCart.php', { //changed
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -388,8 +400,29 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
+                    if (data.success && data.product) {
+                        // Get current cart from localStorage or initialize empty
+                        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                        // Check if item already in cart
+                        const existingItem = cart.find(item => item.id === data.product.flower_id); //changed data.product.flower_id
+
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            cart.push({
+                            id: data.product.flower_id, //changed
+                            name: data.product.name,
+                            price: data.product.price,
+                            image: data.product.image,
+                            quantity: 1
+                            });
+                        }
+                        // Save updated cart to localStorage
+                        localStorage.setItem('cart', JSON.stringify(cart));
+
                         alert('Product added to cart!');
+                        console.log('Current cart:', JSON.parse(localStorage.getItem('cart'))); //debugging
                         // Update cart count if needed
                     } else {
                         alert('Failed to add product to cart: ' + (data.message || ''));
