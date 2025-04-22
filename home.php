@@ -51,7 +51,7 @@
 
     .box4 {
       height: auto;
-      background-color: whitesmoke;
+      background-color: white;
       justify-content: center;
       display: flex;
       flex-direction: column;
@@ -133,7 +133,7 @@
       font-size: 28px;
       color: #122349;
       margin-bottom: 20px;
-      font-family: 'AvenirLTStd-LightOblique', sans-serif;
+      font-family: 'AvenirLTStd-LightOblique';
     }
 
     .loading {
@@ -146,7 +146,7 @@
 
     /* Existing styles */
     .box3 h6, .box3 p {
-      font-family: 'AvenirLTStd-LightOblique', sans-serif;
+      font-family: 'AvenirLTStd-LightOblique';
       font-size: 1.25rem;
     }
     
@@ -172,6 +172,18 @@
       font-weight: normal;
       font-style: normal;
     }
+    @font-face {
+      font-family: 'Fraunces_72pt-Light';
+      src: url('fonts/Fraunces_72pt-Light.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Fraunces_72pt-SemiBoldItalic';
+      src: url('fonts/Fraunces_72pt-SemiBoldItalic.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
 
     .shop-button1 {
       background-color: #800000;
@@ -183,19 +195,59 @@
       cursor: pointer;
       font-family: Arial, sans-serif;
       position: absolute;
-      top: 700px;
+      top: 550px;
       left: 250px;
     }
 
     .shop-button1:hover {
       opacity: 0.9;
     }
+    .festives{
+      font-size: 50px;
+      font-family: 'Fraunces_72pt-SemiBoldItalic';
+      position: absolute;
+      top: 250px;
+      left: 75px;
+    }
+    .Christmas{
+      font-size: 30px;
+      font-family: 'Fraunces_72pt-Light';
+      position: absolute;
+      top: 400px;
+      left: 75px;
+    }
+
+    .div5 {
+  height: auto;
+  min-height: 300px;
+  background-color: #F7E2DF;
+  margin-top: 30px;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-start; /* Changed from center to flex-start */
+  align-items: center;
+  overflow: hidden;
+  position: relative; /* Added for positioning context */
+}
+
+.div5pic {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+  position: relative; /* Changed to relative */
+  left: 250px; /* Moves image 20px to the left */
+  /* Adjust this value to move more/less: -10px, -30px, etc. */
+}
+    
   </style>
 </head>
 
 <body>
   <div class="grid-container">
-    <div class="box box1">
+    <div class="box box1"> 
+      <h5><p class=" festives">Flowers For The Festivities</p></h5>
+      <p class="wordmargin Christmas"> spread the cheer with fresh  <br> 
+        holiday blooms for your home or theirs!</p>
       <button class="shop-button1" onclick="window.location.href='shop.php'">Shop now</button>
     </div>
     <div class="box box2">
@@ -214,8 +266,11 @@
       <div class="loading">Loading featured products...</div>
     </div>
   </div>
+
+     <div class="div5">
+  <img class="div5pic" src="pictures/stylish.png" alt="">
+</div>
   
-  <div class="box5"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
