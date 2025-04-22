@@ -260,7 +260,6 @@
       text-align: center;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       position: relative;
-      background-image: url('https://i.imgur.com/J6l6aXW.jpg');
       background-size: cover;
       background-blend-mode: overlay;
       background-color: rgba(255, 255, 255, 0.9);
@@ -372,8 +371,8 @@
         <h2>Welcome Back! 🌸</h2>
         <p>Sign in to order your favorite flowers</p>
         <form id="user-login">
-          <input type="text" placeholder="Username" required>
-          <input type="password" placeholder="Password" required>
+          <input type="text" id="username" placeholder="Username" required>
+          <input type="password" id="pass" placeholder="Password" required>
           <button type="submit">Log In</button>
         </form>
         <p class="switch-form">Don't have an account? <a href="#" id="show-signup">Create one</a></p>
@@ -384,11 +383,11 @@
         <h2>Join Us! 🌺</h2>
         <p>Create an account to start shopping</p>
         <form id="user-signup">
-          <input type="text" placeholder="Full Name" required>
-          <input type="text" placeholder="Username" required>
-          <input type="password" placeholder="Password" required>
-          <input type="text" placeholder="Address" required>
-          <input type="date" placeholder="Birthdate" required>
+          <input type="text" id="name" placeholder="Full Name" required>
+          <input type="text" id="username" placeholder="Username" required>
+          <input type="password" id="pass" placeholder="Password" required>
+          <input type="text" id="email" placeholder="Email Address" required>
+          <input type="text" id="phone" placeholder="Phone Number" required>
           <button type="submit">Sign Up</button>
         </form>
         <p class="switch-form">Already have an account? <a href="#" id="show-login">Log In</a></p>
@@ -614,21 +613,6 @@
         }
       };
       
-      // Example product data structure for testing
-      window.exampleProducts = [
-        {
-          id: 1,
-          name: "Red Roses Bouquet",
-          price: 1200,
-          image: "pictures/red-roses.jpg"
-        },
-        {
-          id: 2,
-          name: "Tulips Arrangement",
-          price: 1500,
-          image: "pictures/tulips.jpg"
-        }
-      ];
     });
   </script>
 </body>
