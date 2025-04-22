@@ -9,9 +9,9 @@ header('Access-Control-Allow-Origin: *');
 
 // Database configuration
 $host = 'localhost';
-$dbname = 'your_database';
-$username = 'your_username';
-$password = 'your_password';
+$dbname = 'inventory';
+$username = 'root';
+$password = '';
 
 try {
     // Create PDO connection
@@ -26,7 +26,7 @@ try {
     $sizes = isset($_GET['sizes']) ? explode(',', $_GET['sizes']) : [];
     
     // Base query
-    $query = "SELECT * FROM products WHERE available = 1";
+    $query = "SELECT * FROM product WHERE available = 1";
     $params = [];
     
     // Add filters to query
