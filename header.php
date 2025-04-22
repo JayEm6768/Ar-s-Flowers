@@ -87,6 +87,11 @@
       font-size: 20px;
       color: #850000;
       cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .icons i:hover {
+      color: #b10e73;
     }
 
     .logo img {
@@ -232,6 +237,90 @@
       padding: 40px 0;
       color: #850000;
     }
+
+    /* NEW LOGIN MODAL STYLES */
+    .login-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      background-image: url('https://i.imgur.com/J6l6aXW.jpg');
+      background-size: cover;
+      background-blend-mode: overlay;
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .close-login {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #850000;
+    }
+
+    .login-form-container h2 {
+      color: #b10e73;
+      margin-bottom: 10px;
+    }
+
+    .login-form-container p {
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .login-form-container input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .login-form-container button {
+      width: 100%;
+      padding: 12px;
+      background: #b10e73;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .login-form-container button:hover {
+      background: #850000;
+    }
+
+    .switch-form {
+      margin-top: 15px;
+      color: #555;
+    }
+
+    .switch-form a {
+      color: #b10e73;
+      text-decoration: none;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -247,13 +336,13 @@
       <a onclick="window.location.href='events.php'">Events</a>
     </div>
     <div class="icons">
-      <!-- This is the profiles icon-->
-      <i class="fa-regular fa-user" onclick="window.location.href='account.html'"></i>
+      <!-- This is the profiles icon - now triggers login modal -->
+      <i class="fa-regular fa-user" id="login-button"></i>
 
       <!-- This is the cart icon-->
       <div class="cart-icon">
         <i class="fa-solid fa-cart-shopping" id="cart-button"></i>
-        <span id="cart-count">0</span>
+        <span id="cart-count"></span>
       </div>
     </div>
   </div>
@@ -273,6 +362,40 @@
     <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
   </div>
 
+  <!-- NEW LOGIN MODAL -->
+  <div class="login-modal" id="login-modal">
+    <div class="login-modal-content">
+      <span class="close-login" id="close-login">&times;</span>
+      
+      <!-- Login Form -->
+      <div class="login-form-container" id="login-form">
+        <h2>Welcome Back! 🌸</h2>
+        <p>Sign in to order your favorite flowers</p>
+        <form id="user-login">
+          <input type="text" placeholder="Username" required>
+          <input type="password" placeholder="Password" required>
+          <button type="submit">Log In</button>
+        </form>
+        <p class="switch-form">Don't have an account? <a href="#" id="show-signup">Create one</a></p>
+      </div>
+      
+      <!-- Signup Form (hidden by default) -->
+      <div class="login-form-container" id="signup-form" style="display: none;">
+        <h2>Join Us! 🌺</h2>
+        <p>Create an account to start shopping</p>
+        <form id="user-signup">
+          <input type="text" placeholder="Full Name" required>
+          <input type="text" placeholder="Username" required>
+          <input type="password" placeholder="Password" required>
+          <input type="text" placeholder="Address" required>
+          <input type="date" placeholder="Birthdate" required>
+          <button type="submit">Sign Up</button>
+        </form>
+        <p class="switch-form">Already have an account? <a href="#" id="show-login">Log In</a></p>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       
@@ -286,6 +409,15 @@
       const cartTotal = document.getElementById('cart-total');
       const checkoutBtn = document.getElementById('checkout-btn');
       
+      // Login modal elements
+      const loginButton = document.getElementById('login-button');
+      const loginModal = document.getElementById('login-modal');
+      const closeLogin = document.getElementById('close-login');
+      const showSignup = document.getElementById('show-signup');
+      const showLogin = document.getElementById('show-login');
+      const loginForm = document.getElementById('login-form');
+      const signupForm = document.getElementById('signup-form');
+      
       // Initialize cart from localStorage or create empty cart
       let cart = JSON.parse(localStorage.getItem('cart')) || [];
       console.log('inside cart:', cart); //for debugging
@@ -297,6 +429,37 @@
       cartButton.addEventListener('click', toggleCart);
       closeCart.addEventListener('click', toggleCart);
       overlay.addEventListener('click', toggleCart);
+      
+      // Login modal functionality
+      loginButton.addEventListener('click', toggleLoginModal);
+      closeLogin.addEventListener('click', toggleLoginModal);
+      
+      // Switch between login and signup forms
+      showSignup.addEventListener('click', function(e) {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+      });
+      
+      showLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        signupForm.style.display = 'none';
+        loginForm.style.display = 'block';
+      });
+      
+      // Form submissions
+      document.getElementById('user-login').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Login successful!'); // Replace with actual login logic
+        toggleLoginModal();
+      });
+      
+      document.getElementById('user-signup').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Account created successfully!'); // Replace with actual signup logic
+        signupForm.style.display = 'none';
+        loginForm.style.display = 'block';
+      });
       
       // Checkout button
       checkoutBtn.addEventListener('click', function() {
@@ -311,6 +474,17 @@
         
         if (cartSidebar.classList.contains('active')) {
           renderCartItems();
+        }
+      }
+      
+      function toggleLoginModal() {
+        loginModal.style.display = loginModal.style.display === 'flex' ? 'none' : 'flex';
+        overlay.classList.toggle('active');
+        
+        // Reset to login form when opening
+        if (loginModal.style.display === 'flex') {
+          signupForm.style.display = 'none';
+          loginForm.style.display = 'block';
         }
       }
       
@@ -402,46 +576,17 @@
         cartCount.textContent = count;
       }
       
-      // Database-ready functions (to be implemented when you have a backend)
-      function saveCartToDatabase() {
-        // This would be replaced with actual API calls to your backend
-        console.log('Cart would be saved to database here');
-        
-        fetch('/api/cart', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(cart)
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Cart saved:', data);
-        })
-        .catch(error => {
-          console.error('Error saving cart:', error);
-        });
-        
-      }
-      
-      function loadCartFromDatabase() {
-        // This would be replaced with actual API calls to your backend
-        console.log('Cart would be loaded from database here');
-        
-        fetch('/api/cart')
-          .then(response => response.json())
-          .then(data => {
-            cart = data;
-            updateCartCount();
-            if (cartSidebar.classList.contains('active')) {
-              renderCartItems();
-            }
-          })
-          .catch(error => {
-            console.error('Error loading cart:', error);
-          });
-        
-      }
+      // Close modals when clicking outside
+      window.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          if (cartSidebar.classList.contains('active')) {
+            toggleCart();
+          }
+          if (loginModal.style.display === 'flex') {
+            toggleLoginModal();
+          }
+        }
+      });
       
       // Example function to add an item to the cart (you would call this from your product pages)
       window.addToCart = function(product) {
