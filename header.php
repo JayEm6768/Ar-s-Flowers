@@ -275,6 +275,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      
       // Cart functionality
       const cartButton = document.getElementById('cart-button');
       const closeCart = document.getElementById('close-cart');
@@ -287,6 +288,7 @@
       
       // Initialize cart from localStorage or create empty cart
       let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      console.log('inside cart:', cart); //for debugging
       
       // Update cart count on page load
       updateCartCount();
@@ -333,7 +335,7 @@
               <img src="${item.image}" alt="${item.name}">
               <div class="item-details">
                 <div class="item-name">${item.name}</div>
-                <div class="item-price">₱${item.price.toFixed(2)}</div>
+                <div class="item-price">₱${Number(item.price).toFixed(2)}</div>
                 <div class="item-quantity">
                   <button class="quantity-btn minus" data-index="${index}">-</button>
                   <input type="text" class="quantity-input" value="${item.quantity}" readonly>
@@ -404,7 +406,7 @@
       function saveCartToDatabase() {
         // This would be replaced with actual API calls to your backend
         console.log('Cart would be saved to database here');
-        /*
+        
         fetch('/api/cart', {
           method: 'POST',
           headers: {
@@ -419,13 +421,13 @@
         .catch(error => {
           console.error('Error saving cart:', error);
         });
-        */
+        
       }
       
       function loadCartFromDatabase() {
         // This would be replaced with actual API calls to your backend
         console.log('Cart would be loaded from database here');
-        /*
+        
         fetch('/api/cart')
           .then(response => response.json())
           .then(data => {
@@ -438,7 +440,7 @@
           .catch(error => {
             console.error('Error loading cart:', error);
           });
-        */
+        
       }
       
       // Example function to add an item to the cart (you would call this from your product pages)
