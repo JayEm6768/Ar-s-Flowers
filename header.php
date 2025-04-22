@@ -20,10 +20,21 @@
 
     .header {
       justify-content: space-between;
-      position: relative;
       padding: 10px 40px;
       border-bottom: 2px solid #b10e73;
       background-color: #fff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: transform 0.3s ease-in-out;
+      padding: 10px 40px;
+      border-bottom: 2px solid #b10e73;
+      background-color: #fff;
+    }
+    .header.hidden {
+      transform: translateY(-100%);
     }
 
     .logo img {
@@ -324,7 +335,7 @@
 </head>
 <body>
 
-  <div class="header">
+  <div id="main-header" class="header">
     <div class="logo">
       <img src="pictures/arsFlowerHeaderLogo.png" onclick="window.location.href='home.php'"> <!-- Logo links to home -->
     </div>
@@ -612,6 +623,30 @@
           renderCartItems();
         }
       };
+      const header = document.getElementById('main-header');
+      let lastScrollPosition = 0;
+      const scrollThreshold = 100; // Adjust this value as needed
+
+            window.addEventListener('scroll', function() {
+            const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+            // Always show header when at top of page
+            if (currentScrollPosition <= 0) {
+            header.classList.remove('hidden');
+            return;
+              }
+    
+           // Scrolling down
+           if (currentScrollPosition > lastScrollPosition && currentScrollPosition > scrollThreshold) {
+             header.classList.add('hidden');
+              } 
+           // Scrolling up
+           else if (currentScrollPosition < lastScrollPosition) {
+           header.classList.remove('hidden');
+            }
+    
+            lastScrollPosition = currentScrollPosition;
+          });
       
     });
   </script>
