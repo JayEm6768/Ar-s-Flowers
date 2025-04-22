@@ -1,5 +1,4 @@
 <?php
-
 //not yet implemented
 
 
@@ -13,13 +12,11 @@ $username = 'root';
 $password = '';
 
 try {
-    // Create PDO connection
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn = new PDO("mysql:host=localhost;dbname=inventory", 'root', '');
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Query to get 3 random featured products (or you could order by popularity, etc.)
+   // Query to get 3 random featured products (or you could order by popularity, etc.)
     $query = "SELECT id, name, price, image_url 
-              FROM products 
+              FROM product 
               WHERE available = 1 AND featured = 1
               ORDER BY RAND() 
               LIMIT 3";
