@@ -1,0 +1,232 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header("Location: home.php");
+    exit();
+}
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name | Profile</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .profile-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: #2980b9;
+        }
+        
+        .profile-bio {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .skill {
+            background: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .experience-item, .education-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .experience-item:last-child, .education-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .item-date {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .item-subtitle {
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+            
+            .item-header {
+                flex-direction: column;
+            }
+            
+            .item-date {
+                margin-top: 0.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <header class="profile-header">
+            <img src="profile-picture.jpg" alt="Your Name" class="profile-picture">
+            <h1>Your Name</h1>
+            <p class="tagline">Your Professional Tagline or Headline</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+            </div>
+        </header>
+        
+        <section class="profile-bio">
+            <h2 class="section-title">About Me</h2>
+            <p>Write a compelling bio that highlights who you are, what you do, and what makes you unique. This is your opportunity to introduce yourself to visitors and make a strong first impression. Mention your professional background, passions, and any other relevant information.</p>
+        </section>
+        
+        <section class="profile-skills">
+            <h2 class="section-title">Skills & Expertise</h2>
+            <div class="skills-container">
+                <span class="skill">Web Development</span>
+                <span class="skill">UI/UX Design</span>
+                <span class="skill">Project Management</span>
+                <span class="skill">JavaScript</span>
+                <span class="skill">HTML/CSS</span>
+                <span class="skill">React</span>
+                <span class="skill">Node.js</span>
+                <span class="skill">Python</span>
+                <!-- Add more skills as needed -->
+            </div>
+        </section>
+        
+        <section class="profile-experience">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="experience-item">
+                <div class="item-header">
+                    <h3 class="item-title">Job Title</h3>
+                    <span class="item-date">Month Year - Present</span>
+                </div>
+                <h4 class="item-subtitle">Company Name</h4>
+                <p>Describe your responsibilities and achievements in this role. Focus on measurable results and impact you made. Use bullet points if you prefer.</p>
+            </div>
+            <div class="experience-item">
+                <div class="item-header">
+                    <h3 class="item-title">Previous Job Title</h3>
+                    <span class="item-date">Month Year - Month Year</span>
+                </div>
+                <h4 class="item-subtitle">Previous Company</h4>
+                <p>Highlight key accomplishments and skills gained during this experience.</p>
+            </div>
+        </section>
+        
+        <section class="profile-education">
+            <h2 class="section-title">Education</h2>
+            <div class="education-item">
+                <div class="item-header">
+                    <h3 class="item-title">Degree Name</h3>
+                    <span class="item-date">Year - Year</span>
+                </div>
+                <h4 class="item-subtitle">University Name</h4>
+                <p>Any honors, specializations, or relevant coursework.</p>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Font Awesome for icons (optional) -->
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+</body>
+</html>
