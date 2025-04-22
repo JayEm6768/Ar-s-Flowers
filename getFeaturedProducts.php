@@ -8,9 +8,9 @@ header('Access-Control-Allow-Origin: *');
 
 // Database configuration
 $host = 'localhost';
-$dbname = 'your_database';
-$username = 'your_username';
-$password = 'your_password';
+$dbname = 'inventory';
+$username = 'root';
+$password = '';
 
 try {
     // Create PDO connection
