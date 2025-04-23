@@ -726,64 +726,75 @@ if (!window.headerScriptsLoaded) {
         }
 
         function renderCartItems() {
-            if (cart.length === 0) {
-                elements.cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
-                elements.cartTotal.textContent = 'Total: ₱0.00';
-                elements.checkoutBtn.disabled = true;
-                return;
-            }
-            
-            elements.checkoutBtn.disabled = false;
-            
-            let itemsHTML = '';
-            let total = 0;
-            
-            cart.forEach((item, index) => {
-                total += item.price * item.quantity;
-                
-                itemsHTML += `
-                    <div class="cart-item" data-id="${item.id}">
-                        <img src="${item.image}" alt="${item.name}">
-                        <div class="item-details">
-                            <div class="item-name">${item.name}</div>
-                            <div class="item-price">₱${Number(item.price).toFixed(2)}</div>
-                            <div class="item-quantity">
-                                <button class="quantity-btn minus" data-index="${index}">-</button>
-                                <input type="text" class="quantity-input" value="${item.quantity}" readonly>
-                                <button class="quantity-btn plus" data-index="${index}">+</button>
-                            </div>
-                            <span class="remove-item" data-index="${index}">Remove</span>
-                        </div>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartTotal = document.getElementById('cart-total');
+    
+    if (!cartItemsContainer) return;
+    
+    if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+        if (cartTotal) cartTotal.textContent = 'Total: ₱0.00';
+        return;
+    }
+    
+    let itemsHTML = '';
+    let total = 0;
+    
+    cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+        
+        itemsHTML += `
+            <div class="cart-item" data-id="${item.id}">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="item-details">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">₱${Number(item.price).toFixed(2)}</div>
+                    <div class="item-quantity">
+                        <button class="quantity-btn minus" data-index="${index}">-</button>
+                        <input type="text" class="quantity-input" value="${item.quantity}" readonly>
+                        <button class="quantity-btn plus" data-index="${index}">+</button>
                     </div>
-                `;
-            });
-            
-            elements.cartItemsContainer.innerHTML = itemsHTML;
-            elements.cartTotal.textContent = `Total: ₱${total.toFixed(2)}`;
-            
-            // Add event listeners to quantity buttons
-            document.querySelectorAll('.minus').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    updateQuantity(index, -1);
-                });
-            });
-            
-            document.querySelectorAll('.plus').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    updateQuantity(index, 1);
-                });
-            });
-            
-            // Add event listeners to remove buttons
-            document.querySelectorAll('.remove-item').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removeItem(index);
-                });
-            });
+                    <span class="remove-item" data-index="${index}">Remove</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    cartItemsContainer.innerHTML = itemsHTML;
+    if (cartTotal) cartTotal.textContent = `Total: ₱${total.toFixed(2)}`;
+    
+    // Reattach event listeners
+    document.querySelectorAll('.minus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            updateQuantity(index, -1);
+        });
+    });
+    
+    document.querySelectorAll('.plus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            updateQuantity(index, 1);
+        });
+    });
+    
+    document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            removeItem(index);
+        });
+    });
+}
+// Add this event listener to watch for cart changes from other tabs/windows
+window.addEventListener('storage', function(event) {
+    if (event.key === 'cart') {
+        updateCartCount();
+        if (document.getElementById('cart-sidebar').classList.contains('active')) {
+            renderCartItems();
         }
+    }
+});
         
         function updateQuantity(index, change) {
             cart[index].quantity += change;
@@ -811,31 +822,68 @@ if (!window.headerScriptsLoaded) {
         function updateCartCount() {
             const count = cart.reduce((total, item) => total + item.quantity, 0);
             elements.cartCount.textContent = count;
+            
         }
 
         // Global function to add items to cart
         window.addToCart = function(product) {
-            const existingItem = cart.find(item => item.id === product.id);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image,
-                    quantity: 1
-                });
-            }
-            
-            saveCart();
-            updateCartCount();
-            
-            if (elements.cartSidebar.classList.contains('active')) {
-                renderCartItems();
-            }
-        };
+    console.log('Adding product to cart:', product);
+    
+    // Get current cart or initialize empty array
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Check if item exists in cart
+    const existingItem = cart.find(item => item.id === product.id);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            quantity: 1
+        });
+    }
+    
+    // Save updated cart
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Update UI immediately
+    updateCartCount();
+    
+    // If cart sidebar is open, update its contents
+    if (document.getElementById('cart-sidebar').classList.contains('active')) {
+        renderCartItems();
+    }
+    
+    // Show visual feedback
+    const cartIcon = document.getElementById('cart-button');
+    if (cartIcon) {
+        cartIcon.classList.add('pulse');
+        setTimeout(() => cartIcon.classList.remove('pulse'), 500);
+    }
+    
+    console.log('Cart updated:', cart);
+};
+
+// Unified function to update all cart UI elements
+function updateCartUI() {
+    updateCartCount(); // Update the cart counter badge
+    renderCartItems(); // Update the cart items list
+    
+    // If you have any other cart-related UI elements to update, add them here
+    // For example:
+    // updateCartTotal();
+    // updateCheckoutButton();
+}
+
+// Initialize cart UI when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart(); // Make sure this loads your cart from localStorage
+    updateCartUI(); // Initialize all UI elements
+});
 
         console.log('Header scripts initialized successfully');
     });
