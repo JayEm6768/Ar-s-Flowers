@@ -1,16 +1,38 @@
 <?php include 'header.php'; ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<script>
+// Debugging script - add this right after header include
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Debugging home page:');
+  
+  // Check if elements exist
+  const loginButton = document.getElementById('login-button');
+  const loginModal = document.getElementById('login-modal');
+  
+  console.log('Login button exists:', !!loginButton);
+  console.log('Login modal exists:', !!loginModal);
+  
+  // Manually test click handler
+  if (loginButton) {
+    loginButton.addEventListener('click', function() {
+      console.log('Login button clicked - manual handler');
+      document.getElementById('login-modal').style.display = 'flex';
+    });
+  }
+});
+</script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARS Flowershop - Home</title>
   <style>
+    /* Base Styles */
+    
     body {
       margin: 0;
       padding: 0;
       font-family: sans-serif;
-      background-color: white;
+      background-color: #FFF9F9;
+      margin-top: 120px;
     }
 
     /*CONTAINERS SECTION*/
@@ -63,12 +85,6 @@
       padding: 20px;
     }
 
-    .box5 {
-      height: 100px;
-      background-color: whitesmoke;
-      margin-top: 30px;
-    }
-
     /* PRODUCT GRID STYLES */
     .featured-products {
       display: grid;
@@ -81,59 +97,81 @@
 
     .product-card {
       background-color: white;
-      border-radius: 8px;
+      border-radius: 15px;
       overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
     }
 
     .product-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(177, 14, 115, 0.15);
     }
 
     .product-image {
-      height: 200px;
+      height: 220px;
       width: 100%;
       object-fit: cover;
+      border-bottom: 3px solid #ffb6c1;
     }
 
     .product-info {
-      padding: 15px;
+      padding: 25px;
       text-align: center;
     }
 
     .product-title {
-      font-size: 18px;
+      font-size: 1.2rem;
       color: #122349;
       margin-bottom: 10px;
+      font-family: 'Fraunces_72pt-Light';
     }
 
     .product-price {
-      font-size: 20px;
-      color: #800000;
+      font-size: 1.3rem;
+      color: #850000;
       font-weight: bold;
       margin-bottom: 15px;
     }
 
-    .view-product {
+    /* Updated Button Styles to Match Events Page */
+    .view-product, .shop-button1, .shop-button2 {
       display: inline-block;
-      background-color: #800000;
+      background: linear-gradient(135deg, #b10e73, #ff6b9e);
       color: white;
-      padding: 8px 20px;
-      border-radius: 25px;
+      padding: 10px 25px;
+      border-radius: 30px;
       text-decoration: none;
-      transition: opacity 0.3s;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 3px 10px rgba(177, 14, 115, 0.3);
+      font-family: 'Arial', sans-serif;
     }
 
-    .view-product:hover {
-      opacity: 0.9;
+    .view-product:hover, .shop-button1:hover, .shop-button2:hover {
+      background: linear-gradient(135deg, #850000, #b10e73);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(177, 14, 115, 0.4);
     }
 
     .section-title {
-      font-size: 28px;
-      color: #122349;
+      font-size: 2.5rem;
+      color: #b10e73;
       margin-bottom: 20px;
-      font-family: 'AvenirLTStd-LightOblique';
+      font-family: 'Fraunces_72pt-SemiBoldItalic';
+      position: relative;
+      text-align: center;
+    }
+
+    .section-title:after {
+      content: "";
+      display: block;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, #b10e73, #ffb6c1);
+      margin: 10px auto;
     }
 
     .loading {
@@ -156,6 +194,7 @@
 
     .underline-text {
       text-decoration: underline;
+      cursor: pointer;
     }
 
     .letter-spacing {
@@ -187,100 +226,159 @@
     
 
     .shop-button1 {
-      background-color: #800000;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      padding: 10px 25px;
-      font-size: 16px;
-      cursor: pointer;
-      font-family: Arial, sans-serif;
       position: absolute;
       top: 550px;
       left: 250px;
     }
 
-    .shop-button1:hover {
-      opacity: 0.9;
-    }
     .shop-button2 {
-      background-color: #800000;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      padding: 10px 25px;
-      font-size: 16px;
-      cursor: pointer;
-      font-family: Arial, sans-serif;
       position: absolute;
-      top: 1450px;
-      left: 835px;
+      top: 370px;
+      left: 1020px;
     }
-
-    .shop-button2:hover {
-      opacity: 0.9;
-    }
+    
     .festives{
       font-size: 50px;
       font-family: 'Fraunces_72pt-SemiBoldItalic';
       position: absolute;
       top: 250px;
       left: 75px;
+      color: #122349;
     }
+    
     .Christmas{
       font-size: 30px;
       font-family: 'Fraunces_72pt-Light';
       position: absolute;
       top: 400px;
       left: 75px;
+      color: #122349;
     }
 
     .div5 {
-  height: auto;
-  min-height: 300px;
-  background-color: #F7E2DF;
-  margin-top: 30px;
-  padding: 40px;
-  display: flex;
-  align-items: center; /* Vertically centers items */
-  gap: 40px; /* Space between image and text */
-}
+      height: auto;
+      min-height: 300px;
+      background-color: #F7E2DF;
+      margin-top: 30px;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      position: relative;
+    }
 
-.div5pic {
-  width: 550px;
-  height: auto;
-  object-fit: contain;
-  flex-shrink: 0; /* Prevents image from shrinking */
-  margin-left: 200px;
-}
+    .div5pic {
+       width: 400px;
+        height: auto;
+       object-fit: contain;
+       flex-shrink: 0;
+       margin-left: 370px;
+       -webkit-mask-image: 
+        /* Top fade */
+        linear-gradient(to bottom, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) 80%, 
+            rgba(0,0,0,0) 100%),
+        /* Bottom fade */
+        linear-gradient(to top, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) 80%, 
+            rgba(0,0,0,0) 100%),
+        /* Left fade */
+        linear-gradient(to right, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) 80%, 
+            rgba(0,0,0,0) 100%),
+        /* Right fade */
+        linear-gradient(to left, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) 80%, 
+            rgba(0,0,0,0) 100%);
+    mask-image: 
+        linear-gradient(to bottom, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) 80%, 
+            rgba(0,0,0,0) 100%),
+        linear-gradient(to top, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) 80%, 
+            rgba(0,0,0,0) 100%),
+        linear-gradient(to right, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) 80%, 
+            rgba(0,0,0,0) 100%),
+        linear-gradient(to left, 
+            rgba(0,0,0,1) 0%, 
+            rgba(0,0,0,1) 80%, 
+            rgba(0,0,0,0) 100%);
+    -webkit-mask-composite: destination-in;
+    mask-composite: intersect;
+    mask-mode: alpha;
+    -webkit-mask-mode: alpha;
+    }
 
-.div5text {
-  font-size: 40px;
-  font-family: 'Fraunces_72pt-Light', serif;
-  max-width: 600px; /* Prevents text from getting too wide */
-}
+    .div5text {
+      font-size: 2.5rem;
+      font-family: 'Fraunces_72pt-Light', serif;
+      max-width: 600px;
+      color: #122349;
+      margin-left: 170px;
+    }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-  .div5 {
-    flex-direction: column;
-    text-align: center;
-  }
-  .div5pic {
-    width: 100%;
-    max-width: 550px;
-  }
-}
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .div5 {
+        flex-direction: column;
+        text-align: center;
+      }
+      .div5pic {
+        width: 100%;
+        max-width: 550px;
+        margin-left: 0;
+      }
+      .shop-button1, .shop-button2 {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-top: 20px;
+      }
+    }
     
+    /* Floral Divider Matching Events Page */
+    .floral-divider {
+      text-align: center;
+      margin: 40px 0;
+      position: relative;
+    }
+
+    .floral-divider:before {
+      content: "❀❀❀";
+      color: #ffb6c1;
+      font-size: 1.5rem;
+      letter-spacing: 10px;
+    }
+    .whiteBackground{
+      background-color: white;
+    }
+    .transparent-square {
+  position: absolute; /* Allows free movement without affecting siblings */
+  width: 500px;
+  height: 400px;
+  background-color: transparent;
+  border: 5px solid white;
+  
+  /* Move the square using top/left/right/bottom */
+  top: 60px; /* Adjust as needed */
+  left: 345px; /* Adjust as needed */
+}
   </style>
-</head>
+
 
 <body>
   <div class="grid-container">
     <div class="box box1"> 
-      <h5><p class=" festives">Flowers For The Festivities</p></h5>
-      <p class="wordmargin Christmas"> spread the cheer with fresh  <br> 
-        holiday blooms for your home or theirs!</p>
+      <h5><p class="festives">Flowers For The Festivities</p></h5>
+      <p class="wordmargin Christmas">Spread the cheer with fresh<br>holiday blooms for your home or theirs!</p>
       <button class="shop-button1" onclick="window.location.href='productPage.php'">Shop now</button>
     </div>
     <div class="box box2">
@@ -295,17 +393,22 @@
   
   <div class="box4">
     <h2 class="section-title">Featured Arrangements</h2>
+
+    <!-- This is where the fetching of the product will show in the homepage -->
     <div class="featured-products" id="featured-products-container">
       <div class="loading">Loading featured products...</div>
     </div>
+    <div class="floral-divider"></div>
   </div>
 
-     <div class="div5">
-  <img class="div5pic" src="pictures/stylish.png" alt="">
-  <p class="div5text">Joy that keeps blooming<br><br>The ultimate flower<br>subscription at the best value<br></p>
-  <button class="shop-button2" onclick="window.location.href='productPage.php'">Shop now</button>
-</div>
+  <div class="div5">
+    <div class="transparent-square"></div>
+    <img class="div5pic" src="pictures/joy.jpg" alt="">
+    <p class="div5text">Joy that keeps blooming<br>The ultimate flower<br>subscription at the best value<br></p>
+    <button class="shop-button2" onclick="window.location.href='productPage.php'">Shop now</button>
+  </div>
   
+  <div class="floral-divider"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -336,7 +439,7 @@
               <img src="${product.image_url}" alt="${product.name}" class="product-image">
               <div class="product-info">
                 <h3 class="product-title">${product.name}</h3>
-                <div class="product-price">P${product.price.toFixed(2)}</div>
+                <div class="product-price">₱${product.price.toFixed(2)}</div>
                 <a href="shop.php#product-${product.id}" class="view-product">View Product</a>
               </div>
             `;
@@ -350,5 +453,11 @@
         });
     });
   </script>
+    <?php include 'aboutUs_content.php'; ?>
+
+  <div class="whiteBackground">
+  <?php include 'events_content.php'; ?>
+  </div>
+  <?php include 'footer.php'; ?>
 </body>
 </html>
