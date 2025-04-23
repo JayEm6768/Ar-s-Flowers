@@ -184,6 +184,7 @@
       font-weight: normal;
       font-style: normal;
     }
+    
 
     .shop-button1 {
       background-color: #800000;
@@ -200,6 +201,23 @@
     }
 
     .shop-button1:hover {
+      opacity: 0.9;
+    }
+    .shop-button2 {
+      background-color: #800000;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 25px;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      position: absolute;
+      top: 1450px;
+      left: 835px;
+    }
+
+    .shop-button2:hover {
       opacity: 0.9;
     }
     .festives{
@@ -222,21 +240,36 @@
   min-height: 300px;
   background-color: #F7E2DF;
   margin-top: 30px;
-  padding: 20px;
+  padding: 40px;
   display: flex;
-  justify-content: flex-start; /* Changed from center to flex-start */
-  align-items: center;
-  overflow: hidden;
-  position: relative; /* Added for positioning context */
+  align-items: center; /* Vertically centers items */
+  gap: 40px; /* Space between image and text */
 }
 
 .div5pic {
-  max-width: 80%;
-  max-height: 80%;
+  width: 550px;
+  height: auto;
   object-fit: contain;
-  position: relative; /* Changed to relative */
-  left: 250px; /* Moves image 20px to the left */
-  /* Adjust this value to move more/less: -10px, -30px, etc. */
+  flex-shrink: 0; /* Prevents image from shrinking */
+  margin-left: 200px;
+}
+
+.div5text {
+  font-size: 40px;
+  font-family: 'Fraunces_72pt-Light', serif;
+  max-width: 600px; /* Prevents text from getting too wide */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .div5 {
+    flex-direction: column;
+    text-align: center;
+  }
+  .div5pic {
+    width: 100%;
+    max-width: 550px;
+  }
 }
     
   </style>
@@ -248,7 +281,7 @@
       <h5><p class=" festives">Flowers For The Festivities</p></h5>
       <p class="wordmargin Christmas"> spread the cheer with fresh  <br> 
         holiday blooms for your home or theirs!</p>
-      <button class="shop-button1" onclick="window.location.href='shop.php'">Shop now</button>
+      <button class="shop-button1" onclick="window.location.href='productPage.php'">Shop now</button>
     </div>
     <div class="box box2">
       <img src="pictures/rose.png" alt="Ar's Flower Rose Bouquet">
@@ -257,7 +290,7 @@
   
   <div class="box3">
     <h6>Elevate your holiday decor with festive arrangements and centerpieces.</h6>
-    <p class="underline-text letter-spacing wordmargin" onclick="window.location.href='shop.php'">Shop Now!</p>
+    <p class="underline-text letter-spacing wordmargin" onclick="window.location.href='productPage.php'">Shop Now!</p>
   </div>
   
   <div class="box4">
@@ -269,6 +302,8 @@
 
      <div class="div5">
   <img class="div5pic" src="pictures/stylish.png" alt="">
+  <p class="div5text">Joy that keeps blooming<br><br>The ultimate flower<br>subscription at the best value<br></p>
+  <button class="shop-button2" onclick="window.location.href='productPage.php'">Shop now</button>
 </div>
   
 
