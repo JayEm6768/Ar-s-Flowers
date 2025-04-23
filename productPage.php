@@ -407,56 +407,86 @@ include 'header.php';
                 
                 renderProducts(filteredProducts);
             }
-            
+            function updateCartDisplay() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Update cart count in navbar (example)
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountElement.textContent = totalItems;
+    }
+    
+    // If you have a cart dropdown/sidebar, update it here
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    if (cartItemsContainer) {
+        cartItemsContainer.innerHTML = '';
+        
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
+        } else {
+            cart.forEach(item => {
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item';
+                cartItemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div>
+                        <h4>${item.name}</h4>
+                        <p>₱${item.price.toFixed(2)} × ${item.quantity}</p>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+        }
+    }
+}
             // Add to cart function //changed func
-            function addToCart(productId) {
-                console.log('Sending product ID:', productId); //debugging
-                fetch('addToCart.php', { //changed
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        product_id: productId,
-                        quantity: 1 
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.product) {
-                        // Get current cart from localStorage or initialize empty
-                        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            // Modified addToCart function
+function addToCart(productId) {
+    console.log('Sending product ID:', productId);
+    fetch('addToCart.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+            product_id: productId,
+            quantity: 1 
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.product) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItem = cart.find(item => item.id === data.product.flower_id);
 
-                        // Check if item already in cart
-                        const existingItem = cart.find(item => item.id === data.product.flower_id); //changed data.product.flower_id
-
-                        if (existingItem) {
-                            existingItem.quantity += 1;
-                        } else {
-                            cart.push({
-                            id: data.product.flower_id, //changed
-                            name: data.product.name,
-                            price: data.product.price,
-                            image: data.product.image,
-                            quantity: 1
-                            });
-                        }
-                        // Save updated cart to localStorage
-                        localStorage.setItem('cart', JSON.stringify(cart));
-
-                        alert('Product added to cart!');
-                        console.log('Current cart:', JSON.parse(localStorage.getItem('cart'))); //debugging
-                        // Update cart count if needed
-                    } else {
-                        alert('Failed to add product to cart: ' + (data.message || ''));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while adding to cart');
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: data.product.flower_id,
+                    name: data.product.name,
+                    price: data.product.price,
+                    image: data.product.image,
+                    quantity: 1
                 });
             }
             
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay(); // Call this to refresh UI
+            
+            alert('Product added to cart!');
+            console.log('Current cart:', cart);
+        } else {
+            alert('Failed to add product to cart: ' + (data.message || ''));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding to cart');
+    });
+}
+            document.addEventListener('DOMContentLoaded', updateCartDisplay);
             // Event listeners for filters
             document.querySelectorAll('.category-filter').forEach(link => {
                 link.addEventListener('click', function(e) {
