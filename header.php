@@ -44,7 +44,7 @@
 
     .nav-links {
        position: absolute;
-      left: 30px;
+      left: -200px;
       top: 50%;
       transform: translateX(270%);
       display: flex;
@@ -60,7 +60,7 @@
     .nav-links a {
       text-decoration: none;
       color: #850000;
-      font-size: 18px;
+      font-size: 24px;
       transition: 0.3s;
       cursor: pointer; /* Add pointer cursor to indicate clickable */
     }
