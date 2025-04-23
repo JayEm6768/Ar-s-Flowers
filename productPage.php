@@ -1,14 +1,13 @@
 <?php 
 session_start();
 include 'header.php'; 
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floral Delights - Shop</title>
+    <title>ARS Flowershop - Shop</title>
     <style>
         * {
             margin: 0;
@@ -18,15 +17,35 @@ include 'header.php';
         }
         
         body {
-            background-color: #FEFAF0;
+            background-color: #FFF9F9;
             color: #122349;
             line-height: 1.6;
+            margin-top: 120px; /* Offset for fixed header */
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+        }
+        
+        /* Title Section */
+        .page-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #b10e73;
+            font-family: 'Fraunces_72pt-SemiBoldItalic';
+            position: relative;
+        }
+        
+        .page-title:after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #b10e73, #ffb6c1);
+            margin: 10px auto;
         }
         
         .breadcrumb {
@@ -38,32 +57,28 @@ include 'header.php';
         .breadcrumb a {
             color: #666;
             text-decoration: none;
+            transition: color 0.3s;
         }
         
         .breadcrumb a:hover {
+            color: #b10e73;
             text-decoration: underline;
-            color: #800000;
         }
         
-        .page-title {
-            font-size: 28px;
-            margin-bottom: 30px;
-            color: #122349;
-            text-align: center;
-        }
         
+        /* Shop Layout */
         .shop-container {
             display: flex;
             gap: 30px;
         }
         
-        /* Sidebar Styles */
+        /* Sidebar Filters */
         .sidebar {
             width: 250px;
             background-color: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
         
         .sidebar-section {
@@ -71,10 +86,12 @@ include 'header.php';
         }
         
         .sidebar-title {
-            font-size: 18px;
+            font-size: 1.2rem;
             margin-bottom: 15px;
             color: #122349;
             font-weight: bold;
+            border-bottom: 2px solid #ffb6c1;
+            padding-bottom: 5px;
         }
         
         .sidebar-links {
@@ -88,13 +105,17 @@ include 'header.php';
         .sidebar-links a {
             color: #666;
             text-decoration: none;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            display: block;
+            padding: 5px 0;
         }
         
         .sidebar-links a:hover {
-            color: #800000;
+            color: #b10e73;
+            transform: translateX(5px);
         }
         
+        /* Filter Groups */
         .filter-group {
             margin-bottom: 20px;
         }
@@ -114,93 +135,110 @@ include 'header.php';
         
         .filter-option input[type="checkbox"] {
             margin-right: 10px;
+            accent-color: #b10e73;
         }
         
-        /* Products Grid Styles */
+        /* Products Grid */
         .products-grid {
             flex: 1;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
         }
         
         .product-card {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
         }
         
         .product-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(177, 14, 115, 0.15);
         }
         
         .product-image {
-            height: 200px;
-            background-color: #f5f5f5;
-            background-size: cover;
-            background-position: center;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 3px solid #ffb6c1;
         }
         
         .product-info {
-            padding: 15px;
+            padding: 20px;
             text-align: center;
         }
         
         .product-title {
-            font-size: 18px;
+            font-size: 1.2rem;
             margin-bottom: 10px;
             color: #122349;
+            font-weight: 600;
         }
         
         .product-price {
-            font-size: 20px;
+            font-size: 1.3rem;
             font-weight: bold;
-            color: #800000;
+            color: #b10e73;
             margin-bottom: 15px;
         }
         
+        /* Updated Add to Cart Button */
         .add-to-cart {
-            display: block;
+            display: inline-block;
             width: 100%;
-            padding: 10px;
-            background-color: #800000;
+            padding: 12px;
+            background: linear-gradient(135deg, #b10e73, #ff6b9e);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 16px;
-            transition: opacity 0.3s;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(177, 14, 115, 0.3);
         }
         
         .add-to-cart:hover {
-            opacity: 0.9;
+            background: linear-gradient(135deg, #850000, #b10e73);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(177, 14, 115, 0.4);
         }
         
-        .loading {
+        /* Loading States */
+        .loading, .no-products {
             text-align: center;
-            padding: 20px;
-            font-size: 18px;
-            color: #666;
-        }
-        
-        .no-products {
-            text-align: center;
-            padding: 20px;
-            font-size: 18px;
+            padding: 40px;
+            font-size: 1.1rem;
             color: #666;
             grid-column: 1 / -1;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .shop-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="breadcrumb">
-            <a href="#">Home</a> > <a href="#">All Products</a>
+            <a href="home.php">Home</a> > <span>All Products</span>
         </div>
         
-        <h1 class="page-title">All Products</h1>
+        <h1 class="page-title">Our Floral Collection</h1>
         
         <div class="shop-container">
             <!-- Sidebar Filters -->
@@ -222,15 +260,15 @@ include 'header.php';
                         <span class="filter-title">Price</span>
                         <div class="filter-option">
                             <input type="checkbox" id="price1" class="price-filter" data-min="0" data-max="50">
-                            <label for="price1">Under P50</label>
+                            <label for="price1">Under ₱50</label>
                         </div>
                         <div class="filter-option">
                             <input type="checkbox" id="price2" class="price-filter" data-min="50" data-max="100">
-                            <label for="price2">P50 - P100</label>
+                            <label for="price2">₱50 - ₱100</label>
                         </div>
                         <div class="filter-option">
                             <input type="checkbox" id="price3" class="price-filter" data-min="100" data-max="9999">
-                            <label for="price3">Over P100</label>
+                            <label for="price3">Over ₱100</label>
                         </div>
                     </div>
                     
@@ -253,22 +291,6 @@ include 'header.php';
                             <label for="color4">Mixed</label>
                         </div>
                     </div>
-                    
-                    <div class="filter-group">
-                        <span class="filter-title">Size</span>
-                        <div class="filter-option">
-                            <input type="checkbox" id="size1" class="size-filter" value="small">
-                            <label for="size1">Small</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="size2" class="size-filter" value="medium">
-                            <label for="size2">Medium</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="size3" class="size-filter" value="large">
-                            <label for="size3">Large</label>
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -279,6 +301,7 @@ include 'header.php';
         </div>
     </div>
 
+    <!-- Keep your existing JavaScript (no changes needed) -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const productsContainer = document.getElementById('products-container');

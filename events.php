@@ -274,7 +274,7 @@
         <img src="pictures/valen.jpg" alt="Valentine's Day" class="event-image">
         <div class="event-details">
           <h3 class="event-title">Valentine's Bouquet Special</h3>
-          <div class="event-date"><i class="far fa-calendar-alt"></i> February 14, 2024 | All Day</div>
+          <div class="event-date"><i class="far fa-calendar-alt"></i> February 14, 2025 | All Day</div>
           <p class="event-description">
             Pre-order romantic bouquets with 15% discount. Complimentary gift wrapping 
             and handwritten cards for all orders.
@@ -414,5 +414,6 @@
       console.log('Events page loaded');
     });
   </script>
+  
 </body>
 </html>
