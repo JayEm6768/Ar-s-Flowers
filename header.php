@@ -726,6 +726,7 @@ if (!window.headerScriptsLoaded) {
         }
 
         function renderCartItems() {
+          
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const cartItemsContainer = document.getElementById('cart-items');
     const cartTotal = document.getElementById('cart-total');
@@ -797,23 +798,45 @@ window.addEventListener('storage', function(event) {
 });
         
         function updateQuantity(index, change) {
-            cart[index].quantity += change;
-            
-            if (cart[index].quantity < 1) {
-                cart[index].quantity = 1;
-            }
-            
-            saveCart();
-            renderCartItems();
-            updateCartCount();
+    // Always get fresh cart data from localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Verify index is valid
+    if (index >= 0 && index < cart.length) {
+        cart[index].quantity += change;
+        
+        // Ensure quantity doesn't go below 1
+        if (cart[index].quantity < 1) {
+            cart[index].quantity = 1;
         }
         
+        // Save updated cart
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Update UI
+        renderCartItems();
+        updateCartCount();
+    } else {
+        console.error('Invalid index for quantity update');
+    }
+}
+        
         function removeItem(index) {
-            cart.splice(index, 1);
-            saveCart();
-            renderCartItems();
-            updateCartCount();
-        }
+    // Always get fresh cart data from localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Verify index is valid
+    if (index >= 0 && index < cart.length) {
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Update UI
+        renderCartItems();
+        updateCartCount();
+    } else {
+        console.error('Invalid index for cart item removal');
+    }
+}
         
         function saveCart() {
             localStorage.setItem('cart', JSON.stringify(cart));
