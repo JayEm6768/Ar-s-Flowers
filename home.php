@@ -1,25 +1,5 @@
 <?php include 'header.php'; ?>
-<script>
-// Debugging script - add this right after header include
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('Debugging home page:');
-  
-  // Check if elements exist
-  const loginButton = document.getElementById('login-button');
-  const loginModal = document.getElementById('login-modal');
-  
-  console.log('Login button exists:', !!loginButton);
-  console.log('Login modal exists:', !!loginModal);
-  
-  // Manually test click handler
-  if (loginButton) {
-    loginButton.addEventListener('click', function() {
-      console.log('Login button clicked - manual handler');
-      document.getElementById('login-modal').style.display = 'flex';
-    });
-  }
-});
-</script>
+
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -412,46 +392,57 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Fetch featured products from API
-      fetch('api/get_featured_products.php')
+    // Debugging script
+    console.log('Debugging home page:');
+    const loginButton = document.getElementById('login-button');
+    const loginModal = document.getElementById('login-modal');
+    console.log('Login button exists:', !!loginButton);
+    console.log('Login modal exists:', !!loginModal);
+
+    if (loginButton) {
+        loginButton.addEventListener('click', function() {
+            console.log('Login button clicked - manual handler');
+            document.getElementById('login-modal').style.display = 'flex';
+        });
+    }
+
+    // Fetch featured products from API
+    fetch('api/get_featured_products.php')
         .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
         })
         .then(products => {
-          const container = document.getElementById('featured-products-container');
-          
-          // Clear loading message
-          container.innerHTML = '';
-          
-          if (products.length === 0) {
-            container.innerHTML = '<div class="no-products">No featured products available at the moment.</div>';
-            return;
-          }
-          
-          // Create product cards for each featured product
-          products.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.className = 'product-card';
-            productCard.innerHTML = `
-              <img src="${product.image_url}" alt="${product.name}" class="product-image">
-              <div class="product-info">
-                <h3 class="product-title">${product.name}</h3>
-                <div class="product-price">₱${product.price.toFixed(2)}</div>
-                <a href="shop.php#product-${product.id}" class="view-product">View Product</a>
-              </div>
-            `;
-            container.appendChild(productCard);
-          });
+            const container = document.getElementById('featured-products-container');
+            container.innerHTML = '';
+            
+            if (!products || products.length === 0) {
+                container.innerHTML = '<div class="no-products">No featured products available at the moment.</div>';
+                return;
+            }
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="${product.image_url}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <div class="product-price">₱${product.price.toFixed(2)}</div>
+                        <a href="productPage.php#product-${product.id}" class="view-product">View Product</a>
+                    </div>
+                `;
+                container.appendChild(productCard);
+            });
         })
         .catch(error => {
-          console.error('Error fetching featured products:', error);
-          document.getElementById('featured-products-container').innerHTML = 
-            '<div class="no-products">Error loading featured products. Please try again later.</div>';
+            console.error('Error fetching featured products:', error);
+            document.getElementById('featured-products-container').innerHTML = 
+                '<div class="no-products">Error loading featured products. Please try again later.</div>';
         });
-    });
+});
   </script>
     <?php include 'aboutUs_content.php'; ?>
 
