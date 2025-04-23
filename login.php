@@ -1,55 +1,28 @@
 <?php
-include 'connect.php';
-    session_start();
+session_start();
+$host = "localhost";
+$db = "inventory";
+$user = "root";
+$pass = "";
 
-    if(isset($_POST['submit'])){
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+} catch (PDOException $e) {
+    die("DB error: " . $e->getMessage());
+}
 
-        $user = $_POST['username'];
-        $pass = $_POST['password'];
+$username = $_POST['username'];
+$password = $_POST['password'];
 
-        $select = mysqli_query($conn, "SELECT * FROM `users` WHERE username = '$user' AND pass = '$pass'");
-        if(mysqli_num_rows($select) > 0){
-            $row = mysqli_fetch_assoc($select);
-            $_SESSION['user'] = $row['user_id'];
+$stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->execute([$username]);
+$user = $stmt->fetch();
 
-            if($row['role_id'] == 1){
-                header('location:productPage.php');
-            }elseif($row['role_id'] == 2){
-
-                header('location:admin.php');
-            }
-            
-            mysqli_close($conn);
-        } elseif(empty($user) && empty($pass)){
-            $message = "Please input username or password.";
-        
-        } else{
-            $message = "Incorrect Username or Password";
-        }
-    }
-
+if ($user && $password === $user['pass']) {
+    $_SESSION['user'] = $user['username'];
+    $_SESSION['user_id'] = $user['user_id']; 
+    echo "Welcome, " . htmlspecialchars($user['username']) . "!";
+} else {
+    echo "Invalid username or password.";
+}
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>
-    <?php
-        if(isset($message)){
-            echo $message;
-        }
-                ?>
-    </p>
-    <form action="" method="post" class="flex flex-col gap-4">
-        <br>
-        <input name="username" type="username" placeholder="Username" class="p-2 rounded-lg border">
-        <input name="password" type="password" placeholder="Password" class="p-2 rounded-lg border">
-        <button name="submit" class="bg-[#CCC3E9] rounded-xl border text-[#502BD1]">Login</button>
-        <br>
-    </form>
-</body>
-</html>
