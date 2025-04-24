@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 22, 2025 at 12:11 PM
+-- Generation Time: Apr 24, 2025 at 12:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -125,8 +125,14 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`flower_id`, `name`, `description`, `price`, `quantity`, `size`, `color`, `available`, `image_url`) VALUES
-(1, 'Lily', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 150.00, 100, 'Small', 'White', 1, ''),
-(2, 'Rose', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 170.00, 100, 'Small', 'Red', 1, '');
+(1, 'Lily', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 150.00, 20, 'Small', 'White', 1, ''),
+(2, 'Rose', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 170.00, 13, 'Small', 'Red', 1, ''),
+(3, 'Rose', 'White roses', 150.00, 8, 'Small', 'White', 1, ''),
+(4, 'Sunflower', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 100.00, 5, 'Standard', 'Yellow', 1, ''),
+(5, 'Sampaguita', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 50.00, 0, 'Small', 'White', 1, ''),
+(6, 'Lavender', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 400.00, 0, 'Medium', 'Indigo', 1, ''),
+(7, 'Carnation', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 350.00, 5, 'Large', 'Pink', 1, ''),
+(8, 'Tulip', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 300.00, 15, 'Medium', 'Assorted', 1, '');
 
 -- --------------------------------------------------------
 
@@ -146,6 +152,39 @@ CREATE TABLE `role` (
 INSERT INTO `role` (`role_id`, `role`) VALUES
 (1, 'customer'),
 (2, 'admin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sales`
+--
+
+CREATE TABLE `sales` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `sale_date` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sales`
+--
+
+INSERT INTO `sales` (`id`, `product_id`, `quantity`, `sale_date`) VALUES
+(1, 3, 12, '2025-04-23'),
+(2, 1, 10, '2025-02-10'),
+(3, 2, 44, '2025-03-03'),
+(4, 2, 43, '2025-03-03'),
+(5, 4, 15, '2025-02-19'),
+(6, 5, 50, '2025-01-02'),
+(7, 5, 50, '2025-01-02'),
+(8, 6, 10, '2024-12-16'),
+(9, 6, 10, '2024-12-16'),
+(10, 6, 10, '2024-12-16'),
+(11, 7, 25, '2024-11-18'),
+(12, 1, 50, '2025-04-23'),
+(13, 1, 20, '2024-10-09'),
+(14, 8, 15, '2024-12-11');
 
 -- --------------------------------------------------------
 
@@ -247,6 +286,13 @@ ALTER TABLE `role`
   ADD PRIMARY KEY (`role_id`);
 
 --
+-- Indexes for table `sales`
+--
+ALTER TABLE `sales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sales_ibfk_1` (`product_id`);
+
+--
 -- Indexes for table `stock`
 --
 ALTER TABLE `stock`
@@ -305,13 +351,19 @@ ALTER TABLE `ordertable`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `flower_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `flower_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
   MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `sales`
+--
+ALTER TABLE `sales`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `stock`
@@ -367,6 +419,12 @@ ALTER TABLE `ordersummary`
 --
 ALTER TABLE `ordertable`
   ADD CONSTRAINT `ordertable_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `sales`
+--
+ALTER TABLE `sales`
+  ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`flower_id`);
 
 --
 -- Constraints for table `stock`
