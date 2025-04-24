@@ -182,6 +182,8 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
     <h2>🌼 Flower Inventory Dashboard</h2>
 
     <div class="actions">
+        <!-- Go Back Button -->
+        <a href="dashboard.php" class="btn-back-dashboard">🔙 Go Back to Dashboard</a>
         <a href="add_product.php">➕ Add New Flower</a>
     </div>
 
@@ -191,8 +193,7 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
         <p class="message error"><?= $error ?></p>
     <?php endif; ?>
 
-    <!-- Go Back Button -->
-    <a href="dashboard.php" class="btn-back-dashboard">🔙 Go Back to Dashboard</a>
+
 
     <table>
         <thead>
