@@ -786,17 +786,18 @@ if (!window.headerScriptsLoaded) {
       formData.append('username', username);
       formData.append('password', password);
 
-      const res = await fetch('login.php', {
+      const res = await fetch('/login.php', {
         method: 'POST',
         body: formData
       });
 
       const result = await res.text();
 
-      if (result.includes('Welcome')) {
-        toggleLoginModal();
-        location.reload();
-      } else {
+      if (result.includes('|')) {
+        const [message, redirectUrl] = result.split('|');
+        alert(message);
+        window.location.href = redirectUrl.trim();
+    } else {
         alert(result);
       }
     });
