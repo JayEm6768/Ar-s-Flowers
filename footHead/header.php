@@ -786,7 +786,7 @@ if (!window.headerScriptsLoaded) {
       formData.append('username', username);
       formData.append('password', password);
 
-      const res = await fetch('/login.php', {
+      const res = await fetch('\login.php', {
         method: 'POST',
         body: formData
       });
