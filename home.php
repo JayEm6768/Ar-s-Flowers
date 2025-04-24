@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include 'footHead/header.php'; ?>
 
 
   <meta charset="UTF-8">
@@ -444,11 +444,11 @@
         });
 });
   </script>
-    <?php include 'aboutUs_content.php'; ?>
+    <?php include 'homepageContents/aboutUs_content.php'; ?>
 
   <div class="whiteBackground">
-  <?php include 'events_content.php'; ?>
+  <?php include 'homepageContents/events_content.php'; ?>
   </div>
-  <?php include 'footer.php'; ?>
+  <?php include 'footHead/footer.php'; ?>
 </body>
 </html>

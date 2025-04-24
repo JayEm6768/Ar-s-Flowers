@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include 'footHead/header.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -414,6 +414,6 @@
       console.log('Events page loaded');
     });
   </script>
-  
+  <?php include 'footHead/footer.php'; ?>
 </body>
 </html>
