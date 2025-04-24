@@ -499,6 +499,193 @@
         gap: 12px;
       }
     }
+    /* User Greeting and Logout Styles */
+.user-greeting {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.greeting-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #122349;
+    white-space: nowrap;
+}
+
+/* Updated User Greeting and Logout Styles */
+.user-greeting {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    order: 2; /* This will position it after the cart */
+}
+
+/* Updated User Greeting Styles */
+.greeting-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #122349;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.greeting-text:hover {
+    color: #b10e73;
+    transform: translateY(-1px);
+}
+
+.greeting-text:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #b10e73, #ff6b9e);
+    transition: width 0.3s;
+}
+
+.greeting-text:hover:after {
+    width: 100%;
+}
+
+.logout-btn {
+    background: linear-gradient(135deg, #b10e73, #ff6b9e);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(177, 14, 115, 0.2);
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #850000, #b10e73);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(177, 14, 115, 0.3);
+}
+
+/* Updated icons container for logged in state */
+.logged-in-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Make cart appear first */
+.cart-icon {
+    order: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .greeting-text {
+        display: inline; /* Show even on mobile since it's now clickable */
+        font-size: 13px;
+        padding-right: 5px;
+    }
+}
+
+@media (max-width: 576px) {
+    .user-greeting {
+        gap: 8px;
+    }
+    
+    .greeting-text {
+        display: none;
+    }
+    
+    .logout-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+    
+    .logged-in-icons {
+        gap: 12px;
+    }
+}
+/* Confirmation Modal Styles */
+.confirm-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+}
+
+.confirm-modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: modalFadeIn 0.4s;
+}
+
+.confirm-modal h2 {
+    color: #b10e73;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.confirm-modal p {
+    color: #555;
+    margin-bottom: 25px;
+    font-size: 1rem;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.confirm-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    flex: 1;
+}
+
+.confirm-btn.logout {
+    background: linear-gradient(135deg, #b10e73, #ff6b9e);
+    color: white;
+}
+
+.confirm-btn.cancel {
+    background: #f0f0f0;
+    color: #555;
+}
+
+.confirm-btn.logout:hover {
+    background: linear-gradient(135deg, #850000, #b10e73);
+    transform: translateY(-2px);
+}
+
+.confirm-btn.cancel:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+}
+
   </style>
 </head>
 <body>
@@ -568,6 +755,19 @@
     </div>
   </div>
 
+      <!-- Confirmation Modal -->
+<div class="confirm-modal" id="confirm-modal">
+    <div class="confirm-modal-content">
+        <h2>Log Out</h2>
+        <p>Are you sure you want to log out?</p>
+        <div class="confirm-buttons">
+            <button class="confirm-btn cancel" id="cancel-logout">Cancel</button>
+            <button class="confirm-btn logout" id="confirm-logout">Log Out</button>
+        </div>
+    </div>
+</div>
+
+
   <!-- Keep your existing JavaScript -->
   <script>
  // Add initialization guard at the top
@@ -624,35 +824,140 @@ if (!window.headerScriptsLoaded) {
         };
 
         async function checkSessionStatus() {
-          try {
-            const res = await fetch('session_status.php');
-            const data = await res.json();
+    try {
+        const res = await fetch('session_status.php');
+        const data = await res.json();
 
-            if (data.loggedIn) {
-              // Replace login button with welcome/logout UI
-              const loginBtn = document.getElementById('login-button');
-              if (loginBtn) {
-                loginBtn.textContent = `Hi, ${data.username}`;
-                loginBtn.disabled = true; // or change to a user menu
-              }
-
-              // Optionally show a logout button
-              const logoutBtn = document.createElement('button');
-              logoutBtn.id = 'logout-button';
-              logoutBtn.textContent = 'Logout';
-              logoutBtn.className = 'logout-btn'; // style it
-
-              loginBtn.parentNode.appendChild(logoutBtn);
-
-              logoutBtn.addEventListener('click', async () => {
-                await fetch('logout.php'); // handles session_destroy()
-                location.reload();
-              });
+        if (data.loggedIn) {
+            // Get the icons container
+            const iconsContainer = document.querySelector('.icons');
+            
+            // Create new logged in UI
+            const userGreeting = document.createElement('div');
+            userGreeting.className = 'user-greeting';
+            
+            const greetingText = document.createElement('span');
+            greetingText.className = 'greeting-text';
+            greetingText.textContent = `Hi, ${data.username}`;
+            
+            // Add click handler for the username
+            greetingText.addEventListener('click', () => {
+                window.location.href = 'user-profile.php';
+            });
+            
+            const logoutBtn = document.createElement('button');
+            logoutBtn.className = 'logout-btn';
+            logoutBtn.textContent = 'Logout';
+            logoutBtn.id = 'logout-button';
+            
+            // Add elements to greeting container
+            userGreeting.appendChild(greetingText);
+            userGreeting.appendChild(logoutBtn);
+            
+            // Replace the login icon with the greeting
+            const loginIcon = document.querySelector('.fa-user');
+            if (loginIcon) {
+                loginIcon.replaceWith(userGreeting);
             }
-          } catch (err) {
-        console.error('Failed to check session status', err);
+            
+            // Update icons container
+            if (iconsContainer) {
+                iconsContainer.classList.add('logged-in-icons');
+                
+                // Move cart icon to be first element
+                const cartIcon = iconsContainer.querySelector('.cart-icon');
+                if (cartIcon) {
+                    iconsContainer.insertBefore(cartIcon, iconsContainer.firstChild);
+                }
             }
+
+            // Add logout event listener with confirmation
+            logoutBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                showLogoutConfirmation();
+            });
         }
+    } catch (err) {
+        console.error('Failed to check session status', err);
+    }
+}
+
+// Add these functions to handle the confirmation and logout flow
+function showLogoutConfirmation() {
+    const confirmModal = document.getElementById('confirm-modal');
+    const cancelBtn = document.getElementById('cancel-logout');
+    const confirmBtn = document.getElementById('confirm-logout');
+    const overlay = document.getElementById('overlay');
+    
+    confirmModal.style.display = 'flex';
+    overlay.classList.add('active');
+    
+    // Remove previous event listeners to avoid duplicates
+    cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+    confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+    
+    // Get fresh references after cloning
+    const newCancelBtn = document.getElementById('cancel-logout');
+    const newConfirmBtn = document.getElementById('confirm-logout');
+    
+    newCancelBtn.addEventListener('click', () => {
+        confirmModal.style.display = 'none';
+        overlay.classList.remove('active');
+    });
+    
+    newConfirmBtn.addEventListener('click', async () => {
+    try {
+        // Show loading state on logout button
+        newConfirmBtn.textContent = 'Logging out...';
+        newConfirmBtn.disabled = true;
+
+        // Perform logout
+        const logoutResponse = await fetch('logout.php');
+        if (logoutResponse.ok) {
+            // Close confirmation modal
+            confirmModal.style.display = 'none';
+            overlay.classList.remove('active');
+            
+            // Show login modal
+            const loginModal = document.getElementById('login-modal');
+            loginModal.style.display = 'flex';
+            overlay.classList.add('active');
+            
+            // Reset login form
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-pass').value = '';
+            
+            // Set up one-time event listeners for modal close
+            function handleModalClose() {
+                // Force full page reload, ignoring cache
+                window.location.reload(true);
+            }
+            
+            // Handle overlay click
+            overlay.addEventListener('click', handleModalClose, { once: true });
+            
+            // Handle close button click
+            const closeLogin = document.getElementById('close-login');
+            closeLogin.addEventListener('click', handleModalClose, { once: true });
+            
+            // Handle successful login (no refresh needed here)
+            document.getElementById('user-login').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Your existing login code
+                // On success, this will naturally reload the page
+            });
+        } else {
+            throw new Error('Logout failed');
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('An error occurred during logout. Please try again.');
+        // Reset logout button state
+        newConfirmBtn.textContent = 'Log Out';
+        newConfirmBtn.disabled = false;
+    }
+});
+}
 
 checkSessionStatus();
 
@@ -776,14 +1081,22 @@ checkSessionStatus();
         }
 
         function toggleLoginModal() {
-            elements.loginModal.style.display = elements.loginModal.style.display === 'flex' ? 'none' : 'flex';
-            elements.overlay.classList.toggle('active');
-            
-            if (elements.loginModal.style.display === 'flex') {
-                elements.signupForm.style.display = 'none';
-                elements.loginForm.style.display = 'block';
-            }
-        }
+    const loginModal = document.getElementById('login-modal');
+    const overlay = document.getElementById('overlay');
+    
+    // Only toggle if not already in the desired state
+    if (loginModal.style.display !== 'flex') {
+        loginModal.style.display = 'flex';
+        overlay.classList.add('active');
+        
+        // Ensure login form is shown (not signup)
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    } else {
+        loginModal.style.display = 'none';
+        overlay.classList.remove('active');
+    }
+}
 
         function renderCartItems() {
           

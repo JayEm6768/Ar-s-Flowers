@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include 'footHead/header.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -349,6 +349,6 @@
       </div>
     </div>
   </div>
-  
+  <?php include 'footHead/footer.php'; ?>
 </body>
 </html>
