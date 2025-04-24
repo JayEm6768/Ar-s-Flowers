@@ -154,6 +154,7 @@ if (isset($_SESSION['user'])) {
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         
         .product-card:hover {
@@ -166,6 +167,8 @@ if (isset($_SESSION['user'])) {
             height: 220px;
             object-fit: cover;
             border-bottom: 3px solid #ffb6c1;
+            background-size: cover;
+            background-position: center;
         }
         
         .product-info {
@@ -230,6 +233,114 @@ if (isset($_SESSION['user'])) {
             
             .page-title {
                 font-size: 2rem;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: #FFF9F9;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 900px;
+            position: relative;
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 35px;
+            color: #b10e73;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #850000;
+        }
+        
+        .modal-body {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .modal-body img {
+            width: 50%;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .modal-info {
+            width: 50%;
+        }
+        
+        .product-description {
+            margin: 20px 0;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .product-details {
+            margin: 25px 0;
+        }
+        
+        .detail-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            width: 80px;
+            color: #122349;
+        }
+        
+        .detail-value {
+            color: #b10e73;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+            
+            .modal-body {
+                flex-direction: column;
+            }
+            
+            .modal-body img,
+            .modal-info {
+                width: 100%;
             }
         }
     </style>
@@ -303,9 +414,94 @@ if (isset($_SESSION['user'])) {
         </div>
     </div>
 
-    <!-- Keep your existing JavaScript (no changes needed) -->
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Product Image">
+                <div class="modal-info">
+                    <h2 id="modalTitle"></h2>
+                    <div id="modalDescription" class="product-description"></div>
+                    <div class="product-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Price:</span>
+                            <span id="modalPrice" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Color:</span>
+                            <span id="modalColor" class="detail-value"></span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Size:</span>
+                            <span id="modalSize" class="detail-value"></span>
+                        </div>
+                    </div>
+                    <button id="modalAddToCart" class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const modal = document.getElementById('productModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalColor = document.getElementById('modalColor');
+            const modalSize = document.getElementById('modalSize');
+            const modalAddToCart = document.getElementById('modalAddToCart');
+            const closeModal = document.querySelector('.close-modal');
+
+            // Function to open modal with product details
+            function openProductModal(product) {
+                modalImage.src = product.image_url;
+                modalImage.alt = product.name;
+                modalTitle.textContent = product.name;
+                modalDescription.textContent = product.description || 'No description available';
+                modalPrice.textContent = `₱${Number(product.price).toFixed(2)}`;
+                modalColor.textContent = product.color;
+                modalSize.textContent = product.size;
+                
+                // Update add to cart button
+                modalAddToCart.setAttribute('data-product-id', product.flower_id);
+                
+                // Show modal
+                modal.style.display = 'block';
+                setTimeout(() => {
+                    modal.classList.add('show');
+                }, 10);
+            }
+
+            // Close modal when clicking X
+            closeModal.addEventListener('click', () => {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            });
+
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 300);
+                }
+            });
+
+            // Add to cart from modal
+            modalAddToCart.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                if (!isNaN(productId)) {
+                    addToCart(productId);
+                }
+            });
+
             const productsContainer = document.getElementById('products-container');
             let allProducts = [];
             let activeFilters = {
@@ -325,7 +521,7 @@ if (isset($_SESSION['user'])) {
                         return response.json();
                     })
                     .then(products => {
-                        console.log('Fetched products:', products); //for debugging
+                        console.log('Fetched products:', products);
                         allProducts = products;
                         renderProducts(products);
                     })
@@ -345,29 +541,31 @@ if (isset($_SESSION['user'])) {
                 productsContainer.innerHTML = '';
                 
                 products.forEach(product => {
-                    console.log(product); //for debugging
                     const productCard = document.createElement('div');
                     productCard.className = 'product-card';
                     productCard.innerHTML = `
-                        <div class="product-image" style="background-image: url('${product.image_url}')"></div>
+                        <div class="product-image" style="background-image: url('${product.image_url}')" data-product-id="${product.flower_id}"></div>
                         <div class="product-info">
                             <h3 class="product-title">${product.name}</h3>
-                            <div class="product-price">P${Number(product.price).toFixed(2)}</div>
-                            <button class="add-to-cart" data-product-id="${product.flower_id}" >Add to Cart</button>
+                            <div class="product-price">₱${Number(product.price).toFixed(2)}</div>
+                            <button class="add-to-cart" data-product-id="${product.flower_id}">Add to Cart</button>
                         </div>
-                    `; //changed
+                    `;
                     
                     productsContainer.appendChild(productCard);
-                });
-                
-                // Add event listeners to Add to Cart buttons
-                document.querySelectorAll('.add-to-cart').forEach(button => {
-                    button.addEventListener('click', function() {
+                    
+                    // Add click event to product image
+                    const productImage = productCard.querySelector('.product-image');
+                    productImage.addEventListener('click', () => {
+                        openProductModal(product);
+                    });
+                    
+                    // Add event listener to Add to Cart button
+                    productCard.querySelector('.add-to-cart').addEventListener('click', function(e) {
+                        e.stopPropagation(); // Prevent triggering the image click
                         const productId = this.getAttribute('data-product-id');
                         if (!isNaN(productId)) {
-                            addToCart(productId); //changed
-                        } else {
-                            console.error('Invalid product ID');
+                            addToCart(productId);
                         }
                     });
                 });
@@ -409,86 +607,86 @@ if (isset($_SESSION['user'])) {
                 
                 renderProducts(filteredProducts);
             }
-            function updateCartDisplay() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    
-    // Update cart count in navbar (example)
-    const cartCountElement = document.getElementById('cart-count');
-    if (cartCountElement) {
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCountElement.textContent = totalItems;
-    }
-    
-    // If you have a cart dropdown/sidebar, update it here
-    const cartItemsContainer = document.getElementById('cart-items-container');
-    if (cartItemsContainer) {
-        cartItemsContainer.innerHTML = '';
-        
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
-        } else {
-            cart.forEach(item => {
-                const cartItemElement = document.createElement('div');
-                cartItemElement.className = 'cart-item';
-                cartItemElement.innerHTML = `
-                    <img src="${item.image}" alt="${item.name}">
-                    <div>
-                        <h4>${item.name}</h4>
-                        <p>₱${item.price.toFixed(2)} × ${item.quantity}</p>
-                    </div>
-                `;
-                cartItemsContainer.appendChild(cartItemElement);
-            });
-        }
-    }
-}
-            // Add to cart function //changed func
-            // Modified addToCart function
-function addToCart(productId) {
-    console.log('Sending product ID:', productId);
-    fetch('addToCart.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-            product_id: productId,
-            quantity: 1 
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.product) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existingItem = cart.find(item => item.id === data.product.flower_id);
 
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({
-                    id: data.product.flower_id,
-                    name: data.product.name,
-                    price: data.product.price,
-                    image: data.product.image,
-                    quantity: 1
+            function updateCartDisplay() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                const cartCountElement = document.getElementById('cart-count');
+                if (cartCountElement) {
+                    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                    cartCountElement.textContent = totalItems;
+                }
+                
+                const cartItemsContainer = document.getElementById('cart-items-container');
+                if (cartItemsContainer) {
+                    cartItemsContainer.innerHTML = '';
+                    
+                    if (cart.length === 0) {
+                        cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
+                    } else {
+                        cart.forEach(item => {
+                            const cartItemElement = document.createElement('div');
+                            cartItemElement.className = 'cart-item';
+                            cartItemElement.innerHTML = `
+                                <img src="${item.image}" alt="${item.name}">
+                                <div>
+                                    <h4>${item.name}</h4>
+                                    <p>₱${item.price.toFixed(2)} × ${item.quantity}</p>
+                                </div>
+                            `;
+                            cartItemsContainer.appendChild(cartItemElement);
+                        });
+                    }
+                }
+            }
+
+            function addToCart(productId) {
+                console.log('Sending product ID:', productId);
+                fetch('addToCart.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        product_id: productId,
+                        quantity: 1 
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.product) {
+                        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                        const existingItem = cart.find(item => item.id === data.product.flower_id);
+
+                        if (existingItem) {
+                            existingItem.quantity += 1;
+                        } else {
+                            cart.push({
+                                id: data.product.flower_id,
+                                name: data.product.name,
+                                price: data.product.price,
+                                image: data.product.image_url,
+                                quantity: 1
+                            });
+                        }
+                        
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        updateCartDisplay();
+                        
+                        alert('Product added to cart!');
+                    } else {
+                        alert('Failed to add product to cart: ' + (data.message || ''));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while adding to cart');
                 });
             }
+
+            // Initialize cart display
+            updateCartDisplay();
             
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartDisplay(); // Call this to refresh UI
-            
-            alert('Product added to cart!');
-            console.log('Current cart:', cart);
-        } else {
-            alert('Failed to add product to cart: ' + (data.message || ''));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while adding to cart');
-    });
-}
-            document.addEventListener('DOMContentLoaded', updateCartDisplay);
             // Event listeners for filters
             document.querySelectorAll('.category-filter').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -524,19 +722,6 @@ function addToCart(productId) {
                         activeFilters.colors.push(color);
                     } else {
                         activeFilters.colors = activeFilters.colors.filter(c => c !== color);
-                    }
-                    filterProducts();
-                });
-            });
-            
-            document.querySelectorAll('.size-filter').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const size = this.value;
-                    
-                    if (this.checked) {
-                        activeFilters.sizes.push(size);
-                    } else {
-                        activeFilters.sizes = activeFilters.sizes.filter(s => s !== size);
                     }
                     filterProducts();
                 });

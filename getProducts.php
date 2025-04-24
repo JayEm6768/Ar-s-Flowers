@@ -1,9 +1,4 @@
-
 <?php
-
-//Backe End php code to fetch from the data base if there is one, still cannot use
-
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
@@ -25,8 +20,19 @@ try {
     $colors = isset($_GET['colors']) ? explode(',', $_GET['colors']) : [];
     $sizes = isset($_GET['sizes']) ? explode(',', $_GET['sizes']) : [];
     
-    // Base query
-    $query = "SELECT * FROM product WHERE available = 1";
+    // Base query - selecting all fields including description
+    $query = "SELECT 
+                flower_id, 
+                name, 
+                description, 
+                price, 
+                quantity, 
+                size, 
+                color, 
+                available, 
+                image_url 
+              FROM product 
+              WHERE available = 1";
     $params = [];
     
     // Add filters to query
@@ -60,6 +66,16 @@ try {
     // Fetch results
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
+    // Format price as string with 2 decimal places for consistent display
+    foreach ($products as &$product) {
+        $product['price'] = number_format((float)$product['price'], 2, '.', '');
+        
+        // Ensure description is not null
+        if ($product['description'] === null) {
+            $product['description'] = 'No description available';
+        }
+    }
+    
     // Return JSON response
     echo json_encode($products);
     
@@ -68,4 +84,3 @@ try {
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
 }
-?>
