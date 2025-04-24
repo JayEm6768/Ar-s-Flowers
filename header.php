@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -516,7 +517,7 @@
       <i class="fa-regular fa-user" id="login-button"></i>
       <div class="cart-icon">
         <i class="fa-solid fa-cart-shopping" id="cart-button"></i>
-        <span id="cart-count"></span>
+        <span id="cart-count"></span> 
       </div>
     </div>
   </div>
@@ -544,9 +545,9 @@
         <h2>Welcome Back! 🌸</h2>
         <p>Sign in to order your favorite flowers</p>
         <form id="user-login">
-          <input type="text" id="username" placeholder="Username" required>
-          <input type="password" id="pass" placeholder="Password" required>
-          <button type="submit">Log In</button>
+          <input type="text" id="login-username" placeholder="Username" required>
+          <input type="password" id="login-pass" placeholder="Password" required>
+          <button type="submit" id="logInBtn">Log In</button>
         </form>
         <p class="switch-form">Don't have an account? <a href="#" id="show-signup">Create one</a></p>
       </div>
@@ -556,10 +557,10 @@
         <p>Create an account to start shopping</p>
         <form id="user-signup">
           <input type="text" id="name" placeholder="Full Name" required>
-          <input type="text" id="username" placeholder="Username" required>
-          <input type="password" id="pass" placeholder="Password" required>
-          <input type="text" id="email" placeholder="Email Address" required>
-          <input type="text" id="phone" placeholder="Phone Number" required>
+          <input type="text" id="signup-username" placeholder="Username" required>
+          <input type="password" id="singup-pass" placeholder="Password" required>
+          <input type="text" id="signup-email" placeholder="Email Address" required>
+          <input type="text" id="signup-phone" placeholder="Phone Number" required>
           <button type="submit">Sign Up</button>
         </form>
         <p class="switch-form">Already have an account? <a href="#" id="show-login">Log In</a></p>
@@ -569,11 +570,37 @@
 
   <!-- Keep your existing JavaScript -->
   <script>
-// Add initialization guard at the top
+ // Add initialization guard at the top
 if (!window.headerScriptsLoaded) {
     window.headerScriptsLoaded = true;
     
     document.addEventListener('DOMContentLoaded', function() {
+
+      document.getElementById('user-login').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-pass').value;
+
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('password', password);
+
+      const res = await fetch('login.php', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await res.text();
+
+      if (result.includes('Welcome')) {
+        toggleLoginModal();
+        location.reload();
+      } else {
+        alert(result);
+      }
+    });
+
         // First, verify all elements exist
         const elements = {
             cartButton: document.getElementById('cart-button'),
@@ -595,6 +622,39 @@ if (!window.headerScriptsLoaded) {
             userSignupForm: document.getElementById('user-signup'),
             header: document.getElementById('main-header')
         };
+
+        async function checkSessionStatus() {
+          try {
+            const res = await fetch('session_status.php');
+            const data = await res.json();
+
+            if (data.loggedIn) {
+              // Replace login button with welcome/logout UI
+              const loginBtn = document.getElementById('login-button');
+              if (loginBtn) {
+                loginBtn.textContent = `Hi, ${data.username}`;
+                loginBtn.disabled = true; // or change to a user menu
+              }
+
+              // Optionally show a logout button
+              const logoutBtn = document.createElement('button');
+              logoutBtn.id = 'logout-button';
+              logoutBtn.textContent = 'Logout';
+              logoutBtn.className = 'logout-btn'; // style it
+
+              loginBtn.parentNode.appendChild(logoutBtn);
+
+              logoutBtn.addEventListener('click', async () => {
+                await fetch('logout.php'); // handles session_destroy()
+                location.reload();
+              });
+            }
+          } catch (err) {
+        console.error('Failed to check session status', err);
+            }
+        }
+
+checkSessionStatus();
 
         // Debugging - log which elements are missing
         Object.entries(elements).forEach(([name, element]) => {
