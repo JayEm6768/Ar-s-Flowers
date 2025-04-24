@@ -159,7 +159,7 @@ $sales_history = $conn->query("
             padding: 5px 10px;
             background-color: #007bff;
             color: white;
-            font-size: 10px;
+            font-size: 15px;
             text-decoration: none;
             border-radius: 3px;
             margin-top: 10px;
@@ -208,10 +208,11 @@ $sales_history = $conn->query("
             <input type="date" name="sale_date" id="sale_date" required>
 
             <input type="submit" value="Record Sale">
+            <a href="dashboard.php" class="btn-back-dashboard">🔙 Go Back to Dashboard</a>
         </form>
 
         <!-- Go Back Button -->
-        <a href="dashboard.php" class="btn-back-dashboard">🔙 Go Back to Dashboard</a>
+        
 
         <div class="section-title">📄 Recent Sales History</div>
         <table>
