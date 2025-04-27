@@ -1,15 +1,14 @@
 <?php
 include 'db.php';
 
-// Initialize variables to avoid undefined variable warnings
+// Initialize variables
 $success = '';
 $error = '';
 
 // Handle column sorting
-$sort_column = 'name'; // Default column to sort by
-$sort_order = 'ASC'; // Default sort order (ascending)
+$sort_column = 'name'; // Default sort by
+$sort_order = 'ASC';   // Default sort order
 
-// Handle sorting
 if (isset($_GET['sort_by']) && in_array($_GET['sort_by'], ['flower_id', 'name', 'price', 'quantity', 'size', 'color', 'available'])) {
     $sort_column = $_GET['sort_by'];
 }
@@ -18,10 +17,9 @@ if (isset($_GET['sort_order']) && in_array($_GET['sort_order'], ['ASC', 'DESC'])
     $sort_order = $_GET['sort_order'];
 }
 
-// Handle delete request
+// Handle delete
 if (isset($_GET['delete'])) {
     $flower_id = intval($_GET['delete']);
-    
     $check = $conn->query("SELECT * FROM product WHERE flower_id = $flower_id");
     if ($check->num_rows > 0) {
         $conn->query("DELETE FROM product WHERE flower_id = $flower_id");
@@ -31,11 +29,11 @@ if (isset($_GET['delete'])) {
     }
 }
 
-// Fetch sorted data
+// Fetch sorted products
 $query = "SELECT * FROM product ORDER BY $sort_column $sort_order";
 $result = $conn->query($query);
 
-// Toggle sort order for each column
+// Toggle sort order
 $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
 ?>
 
@@ -43,8 +41,12 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flower Inventory Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         :root {
             --primary: #4CAF50;
@@ -100,15 +102,6 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
             background-color: var(--primary-hover);
         }
 
-        .message {
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .success { color: var(--success-color); }
-        .error { color: var(--error-color); }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -141,6 +134,16 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
             font-weight: bold;
         }
 
+        .btn-edit {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-edit:hover {
+            text-decoration: underline;
+        }
+
         .delete-btn {
             color: var(--error-color);
             text-decoration: none;
@@ -158,21 +161,18 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
             margin-top: 30px;
         }
 
-        /* Add the button styling here */
         .btn-back-dashboard {
             display: inline-block;
             padding: 5px 10px;
-            background-color: #007bff;
+            background-color: var(--secondary);
             color: white;
-            font-size: 10px;
+            font-size: 12px;
             text-decoration: none;
-            border-radius: 3px;
-            margin-top: 10px;
-            text-align: center;
+            border-radius: 5px;
         }
 
         .btn-back-dashboard:hover {
-            background-color: #0056b3;
+            background-color: var(--secondary-hover);
         }
     </style>
 </head>
@@ -182,18 +182,29 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
     <h2>🌼 Flower Inventory Dashboard</h2>
 
     <div class="actions">
-        <!-- Go Back Button -->
-        <a href="dashboard.php" class="btn-back-dashboard">🔙 Go Back to Dashboard</a>
+        <a href="dashboard.php" class="btn-back-dashboard">🔙 Dashboard</a>
         <a href="add_product.php">➕ Add New Flower</a>
     </div>
 
     <?php if ($success): ?>
-        <p class="message success"><?= $success ?></p>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '<?= $success ?>',
+                confirmButtonColor: '#4CAF50'
+            });
+        </script>
     <?php elseif ($error): ?>
-        <p class="message error"><?= $error ?></p>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '<?= $error ?>',
+                confirmButtonColor: '#dc3545'
+            });
+        </script>
     <?php endif; ?>
-
-
 
     <table>
         <thead>
@@ -221,7 +232,8 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
                     <?= $row['available'] ? 'Yes' : 'No' ?>
                 </td>
                 <td>
-                    <a class="delete-btn" href="?delete=<?= $row['flower_id'] ?>" onclick="return confirm('Are you sure you want to delete this flower?')">Delete</a>
+                    <a class="btn-edit" href="edit_product.php?id=<?= $row['flower_id'] ?>">✏️ Edit</a> |
+                    <a class="delete-btn" href="?delete=<?= $row['flower_id'] ?>" onclick="return confirm('Are you sure you want to delete this flower?')">🗑️ Delete</a>
                 </td>
             </tr>
             <?php endwhile; ?>
