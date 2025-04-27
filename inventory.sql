@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 24, 2025 at 12:53 PM
+-- Generation Time: Apr 27, 2025 at 08:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -125,14 +125,14 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`flower_id`, `name`, `description`, `price`, `quantity`, `size`, `color`, `available`, `image_url`) VALUES
-(1, 'Lily', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 150.00, 20, 'Small', 'White', 1, ''),
-(2, 'Rose', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 170.00, 13, 'Small', 'Red', 1, ''),
+(1, 'Lily', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 150.00, 17, 'Small', 'White', 1, ''),
+(2, 'Rose', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 170.00, 8, 'Small', 'Red', 1, ''),
 (3, 'Rose', 'White roses', 150.00, 8, 'Small', 'White', 1, ''),
 (4, 'Sunflower', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 100.00, 5, 'Standard', 'Yellow', 1, ''),
 (5, 'Sampaguita', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 50.00, 0, 'Small', 'White', 1, ''),
 (6, 'Lavender', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 400.00, 0, 'Medium', 'Indigo', 1, ''),
-(7, 'Carnation', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 350.00, 5, 'Large', 'Pink', 1, ''),
-(8, 'Tulip', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 300.00, 15, 'Medium', 'Assorted', 1, '');
+(8, 'Tulip', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 300.00, 15, 'Medium', 'Assorted', 1, ''),
+(9, 'Rose boquet', 'roses are red violets are blue', 4000.00, 54, 'Standard', 'red', 1, '680e32e599c30.jpg');
 
 -- --------------------------------------------------------
 
@@ -161,7 +161,7 @@ INSERT INTO `role` (`role_id`, `role`) VALUES
 
 CREATE TABLE `sales` (
   `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
+  `product_id` int(11) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
   `sale_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -181,7 +181,7 @@ INSERT INTO `sales` (`id`, `product_id`, `quantity`, `sale_date`) VALUES
 (8, 6, 10, '2024-12-16'),
 (9, 6, 10, '2024-12-16'),
 (10, 6, 10, '2024-12-16'),
-(11, 7, 25, '2024-11-18'),
+(11, NULL, 25, '2024-11-18'),
 (12, 1, 50, '2025-04-23'),
 (13, 1, 20, '2024-10-09'),
 (14, 8, 15, '2024-12-11');
@@ -221,7 +221,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `name`, `email`, `phone`, `role_id`, `username`, `pass`, `created_at`) VALUES
-(2, 'Schann Jorson Alves', 's.alves.538181@umindanao.edu.ph', '09855029374', 1, 'Schann', '123', '2025-04-20 09:38:37'),
+(2, 'Schann Jorson Alves', 's.alves.538181@umindanao.edu.ph', '09855029374', 2, 'admin', '123', '2025-04-20 09:38:37'),
 (3, 'Jannel Jefferson Galo', 'kkyle008@yahoo.com', '09123456789', 1, 'galo', '123', '2025-04-22 06:03:10');
 
 --
@@ -351,7 +351,7 @@ ALTER TABLE `ordertable`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `flower_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `flower_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -424,7 +424,7 @@ ALTER TABLE `ordertable`
 -- Constraints for table `sales`
 --
 ALTER TABLE `sales`
-  ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`flower_id`);
+  ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`flower_id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `stock`
