@@ -459,11 +459,11 @@ if (isset($_SESSION['user'])) {
         function openProductModal(product) {
             // Ensure we're using the correct image path format
             let imagePath = product.image_url;
-            if (imagePath.includes('/dashboard/uploads/')) {
-                imagePath = imagePath.split('/dashboard/uploads/').pop();
+            if (imagePath.includes('dashboard/uploads/')) {
+                imagePath = imagePath.split('dashboard/uploads/').pop();
             }
             
-            modalImage.src = '/dashboard/uploads/' + imagePath;
+            modalImage.src = 'dashboard/uploads/' + imagePath;
             modalTitle.textContent = product.name;
             modalDescription.textContent = product.description || 'No description available';
             modalPrice.textContent = `₱${product.price}`;
@@ -568,14 +568,14 @@ if (isset($_SESSION['user'])) {
             products.forEach(product => {
                 // Handle image path correctly
                 let imagePath = product.image_url;
-                if (imagePath.includes('/dashboard/uploads/')) {
-                    imagePath = imagePath.split('/dashboard/uploads/').pop();
+                if (imagePath.includes('dashboard/uploads/')) {
+                    imagePath = imagePath.split('dashboard/uploads/').pop();
                 }
                 
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
                 productCard.innerHTML = `
-                    <div class="product-image" style="background-image: url('/dashboard/uploads/${imagePath}')" data-product-id="${product.flower_id}"></div>
+                    <div class="product-image" style="background-image: url('dashboard/uploads/${imagePath}')" data-product-id="${product.flower_id}"></div>
                     <div class="product-info">
                         <h3 class="product-title">${product.name}</h3>
                         <div class="product-price">₱${product.price}</div>
@@ -695,8 +695,8 @@ if (isset($_SESSION['user'])) {
                     } else {
                         // Handle image path correctly
                         let imagePath = product.image_url;
-                        if (imagePath.includes('/dashboard/uploads/')) {
-                            imagePath = imagePath.split('/dashboard/uploads/').pop();
+                        if (imagePath.includes('dashboard/uploads/')) {
+                            imagePath = imagePath.split('dashboard/uploads/').pop();
                         }
                         
                         cart.push({
