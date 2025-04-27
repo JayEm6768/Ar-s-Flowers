@@ -134,6 +134,46 @@
         a {
             text-decoration: none;
         }
+
+        /* Image upload styles */
+        .image-upload-container {
+            margin-bottom: 20px;
+        }
+
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            border: 2px dashed #ccc;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+
+        .upload-label {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .upload-label:hover {
+            background-color: #e0e0e0;
+        }
+
+        #image_url {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -149,7 +189,7 @@
     <?php endif; ?>
 
     <!-- Product Add Form -->
-    <form action="saveproduct.php" method="POST">
+    <form action="saveproduct.php" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Product Name:</label>
             <input type="text" id="name" name="name" required minlength="2" maxlength="100">
@@ -195,8 +235,16 @@
         </div>
 
         <div class="form-group">
-            <label for="image_url">Image URL:</label>
-            <input type="text" id="image_url" name="image_url" placeholder="e.g., rose.jpg">
+            <label>Product Image:</label>
+            <div class="image-upload-container">
+                <div class="image-preview">
+                    <img id="image-preview" src="#" alt="Image Preview">
+                    <span id="default-text">No image selected</span>
+                </div>
+                <label for="image_upload" class="upload-label">Choose Image</label>
+                <input type="file" id="image_upload" name="image_upload" accept="image/*" style="display: none;">
+                <input type="hidden" id="image_url" name="image_url">
+            </div>
         </div>
 
         <div class="form-group">
@@ -209,6 +257,33 @@
         <a href="dashboard.php" class="button">← Back to Dashboard</a>
     </div>
 </div>
+
+<script>
+    document.getElementById('image_upload').addEventListener('change', function(e) {
+        const preview = document.getElementById('image-preview');
+        const defaultText = document.getElementById('default-text');
+        const imageUrlInput = document.getElementById('image_url');
+        
+        if (e.target.files.length > 0) {
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                defaultText.style.display = 'none';
+                
+                // Set the filename as the image_url value
+                imageUrlInput.value = e.target.files[0].name;
+            };
+            
+            reader.readAsDataURL(e.target.files[0]);
+        } else {
+            preview.style.display = 'none';
+            defaultText.style.display = 'block';
+            imageUrlInput.value = '';
+        }
+    });
+</script>
 
 </body>
 </html>
