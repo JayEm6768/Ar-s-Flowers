@@ -1121,7 +1121,7 @@ checkSessionStatus();
         
         itemsHTML += `
             <div class="cart-item" data-id="${item.id}">
-                <img src="${item.image}" alt="${item.name}">
+                <img src="/dashboard/uploads/${item.image}" alt="${item.name}">
                 <div class="item-details">
                     <div class="item-name">${item.name}</div>
                     <div class="item-price">₱${Number(item.price).toFixed(2)}</div>
