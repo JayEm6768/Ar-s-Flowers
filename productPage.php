@@ -1,8 +1,5 @@
 <?php 
 include 'footHead/header.php'; 
-if (isset($_SESSION['user'])) {
-    echo "<p>Welcome, " . htmlspecialchars($_SESSION['user']) . "! Your ID is " . $_SESSION['user_id'] . ".</p>"; //temp, for debugging
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
