@@ -141,13 +141,14 @@ if (isset($_SESSION['user'])) {
         }
         
         /* Products Grid */
+        /* Products Grid */
         .products-grid {
             flex: 1;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
         }
-        
+
         .product-card {
             background-color: white;
             border-radius: 15px;
@@ -156,12 +157,12 @@ if (isset($_SESSION['user'])) {
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        
+
         .product-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 10px 25px rgba(177, 14, 115, 0.15);
         }
-        
+
         .product-image {
             width: 100%;
             height: 220px;
@@ -170,19 +171,19 @@ if (isset($_SESSION['user'])) {
             background-size: cover;
             background-position: center;
         }
-        
+
         .product-info {
             padding: 20px;
             text-align: center;
         }
-        
+
         .product-title {
             font-size: 1.2rem;
             margin-bottom: 10px;
             color: #122349;
             font-weight: 600;
         }
-        
+
         .product-price {
             font-size: 1.3rem;
             font-weight: bold;
