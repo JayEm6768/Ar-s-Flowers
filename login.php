@@ -27,7 +27,7 @@ if ($user && $password === $user['pass']) {
     if ($user['role_id'] == 2) {
         echo "Welcome, {$user['username']}!|dashboard\dashboard.php";
     } else {
-        echo "Welcome, {$user['username']}!|\productPage.php";
+        echo "Welcome, {$user['username']}!|productPage.php";
     }
 }  else {
     echo "Invalid username or password.";
