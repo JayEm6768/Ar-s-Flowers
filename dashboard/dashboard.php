@@ -185,6 +185,27 @@ while ($row = $result->fetch_assoc()) {
             border-radius: 50%;
             margin-right: 10px;
         }
+
+        /* New Products Button */
+        .products-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .products-btn:hover {
+            background-color: #7d3c98;
+            transform: translateY(-2px);
+        }
         
         /* Cards */
         .card-container {
@@ -378,9 +399,20 @@ while ($row = $result->fetch_assoc()) {
 <div class="main-content">
     <div class="header">
         <h1><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h1>
-        <div class="user-profile">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=8e44ad&color=fff" alt="User">
-            <span>Admin</span>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <!-- New Products Button -->
+            <a href="/Arsflower/productPage.php" class="products-btn" target="_blank">
+    <i class="fas fa-box-open"></i>
+    View Products
+</a>
+
+            </a>
+            
+            <!-- Existing User Profile -->
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=8e44ad&color=fff" alt="User">
+                <span>Admin</span>
+            </div>
         </div>
     </div>
     
