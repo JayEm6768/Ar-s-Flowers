@@ -401,7 +401,7 @@ while ($row = $result->fetch_assoc()) {
         <h1><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h1>
         <div style="display: flex; align-items: center; gap: 1rem;">
             <!-- New Products Button -->
-            <a href="/Arsflower/productPage.php" class="products-btn" target="_blank">
+            <a href="../productPage.php" class="products-btn" target="_blank">
     <i class="fas fa-box-open"></i>
     View Products
 </a>
