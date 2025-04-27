@@ -351,6 +351,116 @@
   top: 60px; /* Adjust as needed */
   left: 345px; /* Adjust as needed */
 }
+
+
+/* Featured Products Section */
+#featured-products-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.product-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.product-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #b10e73;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-title {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: #122349;
+}
+
+.product-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #b10e73;
+    margin-bottom: 8px;
+}
+
+.product-colors {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.view-product {
+    display: inline-block;
+    padding: 8px 15px;
+    background: #b10e73;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+.view-product:hover {
+    background: #850000;
+}
+
+.loading, .no-products {
+    text-align: center;
+    padding: 40px;
+    grid-column: 1 / -1;
+    color: #666;
+}
+
+.retry-button {
+    margin-top: 10px;
+    padding: 8px 20px;
+    background: #b10e73;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.retry-button:hover {
+    background: #850000;
+}
   </style>
 
 
@@ -391,59 +501,81 @@
   <div class="floral-divider"></div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    // Debugging script
-    console.log('Debugging home page:');
+document.addEventListener('DOMContentLoaded', function() {
+    
+    
+    // Login modal handling
     const loginButton = document.getElementById('login-button');
-    const loginModal = document.getElementById('login-modal');
-    console.log('Login button exists:', !!loginButton);
-    console.log('Login modal exists:', !!loginModal);
-
     if (loginButton) {
         loginButton.addEventListener('click', function() {
-            console.log('Login button clicked - manual handler');
             document.getElementById('login-modal').style.display = 'flex';
         });
     }
 
-    // Fetch featured products from API
-    fetch('api/get_featured_products.php')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(products => {
-            const container = document.getElementById('featured-products-container');
-            container.innerHTML = '';
-            
-            if (!products || products.length === 0) {
-                container.innerHTML = '<div class="no-products">No featured products available at the moment.</div>';
-                return;
-            }
-            
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                productCard.innerHTML = `
-                    <img src="${product.image_url}" alt="${product.name}" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-title">${product.name}</h3>
-                        <div class="product-price">₱${product.price.toFixed(2)}</div>
-                        <a href="productPage.php#product-${product.id}" class="view-product">View Product</a>
+    // Fetch and display featured products
+    fetchFeaturedProducts();
+    
+    function fetchFeaturedProducts() {
+        const container = document.getElementById('featured-products-container');
+        
+        // Show loading state
+        container.innerHTML = '<div class="loading">Loading featured products...</div>';
+        
+        fetch('api/getFeaturedProducts.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.data && data.data.length > 0) {
+                    renderFeaturedProducts(data.data);
+                } else {
+                    container.innerHTML = '<div class="no-products">No featured products available.</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                container.innerHTML = `
+                    <div class="no-products">
+                        Error loading featured products.<br>
+                        <button onclick="fetchFeaturedProducts()" class="retry-button">Try Again</button>
                     </div>
                 `;
-                container.appendChild(productCard);
             });
-        })
-        .catch(error => {
-            console.error('Error fetching featured products:', error);
-            document.getElementById('featured-products-container').innerHTML = 
-                '<div class="no-products">Error loading featured products. Please try again later.</div>';
+    }
+    
+    function renderFeaturedProducts(products) {
+        const container = document.getElementById('featured-products-container');
+        container.innerHTML = '';
+        
+        products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+                <div class="product-image-container">
+                    <img src="dashboard/uploads/${product.image_url}" alt="${product.name}" 
+                         class="product-image" loading="lazy">
+                    <div class="product-badge">Featured</div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <div class="product-price">₱${product.price}</div>
+                    <div class="product-colors">${product.color}</div>
+                    <a href="productPage.php?product_id=${product.id}" class="view-product">
+                        View Details
+                    </a>
+                </div>
+            `;
+            container.appendChild(productCard);
         });
+    }
+    
+    // Make function available for retry button
+    window.fetchFeaturedProducts = fetchFeaturedProducts;
 });
-  </script>
+</script>
     <?php include 'homepageContents/aboutUs_content.php'; ?>
 
   <div class="whiteBackground">
