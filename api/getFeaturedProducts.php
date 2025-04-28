@@ -41,9 +41,9 @@ try {
         
         // Handle image URL
         if (!empty($product['image_url'])) {
-            $product['image_url'] = $baseUrl . $uploadPath . $product['image_url'];
+            $product['image_url'] = $uploadPath . $product['image_url'];
         } else {
-            $product['image_url'] = $baseUrl . $uploadPath . 'default-product.jpg';
+            $product['image_url'] = $uploadPath . 'default-product.jpg';
         }
     }
     
