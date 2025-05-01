@@ -547,6 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function renderFeaturedProducts(products) {
+      console.log("Fetched Featured Products: ", products)
         const container = document.getElementById('featured-products-container');
         container.innerHTML = '';
         
@@ -555,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
             productCard.className = 'product-card';
             productCard.innerHTML = `
                 <div class="product-image-container">
-                    <img src="dashboard/uploads/${product.image_url}" alt="${product.name}" 
+                    <img src="${product.image_url}" alt="${product.name}" 
                          class="product-image" loading="lazy">
                     <div class="product-badge">Featured</div>
                 </div>
