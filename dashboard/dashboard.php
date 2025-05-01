@@ -412,6 +412,7 @@ while ($row = $result->fetch_assoc()) {
             <div class="user-profile">
                 <img src="https://ui-avatars.com/api/?name=Admin&background=8e44ad&color=fff" alt="User">
                 <span>Admin</span>
+                <button onclick="logoutUser()" class="logout-btn">Logout</button>
             </div>
         </div>
     </div>
@@ -498,6 +499,15 @@ while ($row = $result->fetch_assoc()) {
 </div>
 
 <script>
+    function logoutUser() {
+    localStorage.clear();
+
+    fetch('/logout.php', { method: 'POST' }).then(() => {
+        window.location.href = '/home.php';
+    }).catch(() => {
+        window.location.href = '/home.php';
+    });
+}
     // Register the ChartDataLabels plugin
     Chart.register(ChartDataLabels);
 
