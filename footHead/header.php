@@ -1004,22 +1004,17 @@
 
               // Perform logout
               const logoutResponse = await fetch('logout.php');
+              localStorage.clear(); //clears local storage for cart
               if (logoutResponse.ok) {
                 // Close confirmation modal
                 confirmModal.style.display = 'none';
                 overlay.classList.remove('active');
                 
-                // Show login modal
-                const loginModal = document.getElementById('login-modal');
-                loginModal.style.display = 'flex';
-                overlay.classList.add('active');
-                
                 // Reset login form
                 document.getElementById('login-username').value = '';
                 document.getElementById('login-pass').value = '';
                 
-                // Force full page reload, ignoring cache
-                window.location.reload(true);
+                window.location.href = '/home.php';
               } else {
                 throw new Error('Logout failed');
               }
