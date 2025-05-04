@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'db_connection.php';
+require_once 'connect.php';
 
 if (!isset($_GET['order_id']) || !isset($_SESSION['user_id'])) {
     header("Location: home.php");
@@ -172,7 +172,7 @@ $total = $subtotal + $tax + $deliveryFee;
   </style>
 </head>
 <body>
-  <?php include 'header.php'; ?>
+  <?php include 'footHead/header.php'; ?>
 
   <div class="confirmation-container">
     <h1 class="confirmation-title">Order Confirmation</h1>
