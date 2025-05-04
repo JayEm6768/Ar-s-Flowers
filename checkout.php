@@ -6,6 +6,10 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+$id = $_SESSION['user_id'];
+$query = "SELECT `address` FROM `users` WHERE `users`.`user_id` = $id;";
+$conn = mysqli_connect("localhost:3306","root", "", "inventory");
+$select = mysqli_query($conn, $query);
 
 // Get cart data from POST
 $cart = [];
@@ -35,7 +39,7 @@ $total = $subtotal + $tax + $deliveryFee;
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
-    require_once 'db_connection.php';
+    require_once 'connect.php';
     
     try {
         $pdo->beginTransaction();
@@ -80,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
         
         // Redirect to confirmation page
         header("Location: order_confirmation.php?order_id=$orderId");
+        
         exit();
     } catch (PDOException $e) {
         $pdo->rollBack();
@@ -330,7 +335,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             <h2 class="section-title">Delivery Information</h2>
             <div class="form-group">
               <label for="delivery-address">Full Address</label>
-              <textarea id="delivery-address" name="delivery_address" required></textarea>
+              <textarea id="delivery-address" name="delivery_address" required>
+                <?php 
+                if(mysqli_num_rows($select) > 0){
+                  $address = mysqli_fetch_assoc($select);
+                  echo $address['address'];
+                }
+                ?>
+                </textarea>
             </div>
             
             <div class="form-group">
@@ -407,6 +419,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
       
       const minDate = tomorrow.toISOString().split('T')[0];
       document.getElementById('delivery-date').min = minDate;
+
+      document.getElementById('delivery-form').addEventListener('submit', function () {
+      localStorage.clear();
+    });
     });
   </script>
 </body>
