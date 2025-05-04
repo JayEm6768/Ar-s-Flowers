@@ -45,6 +45,13 @@ try {
     error_log("User Profile Error: " . $e->getMessage());
 }
 
+$id = $_SESSION['user_id'];
+$query = "SELECT * FROM `ordertable` WHERE `ordertable`.`customer_id` = $id;";
+$conn = mysqli_connect("localhost:3306","root", "", "inventory");
+$orders = mysqli_query($conn, $query);
+
+
+
 // Rest of your existing code...
 ?>
 <!DOCTYPE html>
