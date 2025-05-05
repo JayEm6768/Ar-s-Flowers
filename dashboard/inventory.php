@@ -1,6 +1,7 @@
 <?php
 include 'db.php';
 
+
 // Initialize variables
 $success = '';
 $error = '';
@@ -23,9 +24,9 @@ if (isset($_GET['delete'])) {
     $check = $conn->query("SELECT * FROM product WHERE flower_id = $flower_id");
     if ($check->num_rows > 0) {
         $conn->query("DELETE FROM product WHERE flower_id = $flower_id");
-        $success = "✅ Flower deleted successfully.";
+        $success = "Flower deleted successfully.";
     } else {
-        $error = "❌ Flower not found.";
+        $error = "Flower not found.";
     }
 }
 
@@ -42,212 +43,296 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
 
 <head>
     <meta charset="UTF-8">
-    <title>Flower Inventory Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- SweetAlert2 -->
+    <title>Flower Inventory - Ar's Flowers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <style>
         :root {
-            --primary: #4CAF50;
-            --primary-hover: #45a049;
-            --secondary: #007bff;
-            --secondary-hover: #0056b3;
-            --error-color: #dc3545;
-            --success-color: #28a745;
-            --background: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-color: #333;
+            --primary: #8e44ad;
+            --secondary: #3498db;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --sidebar: #34495e;
+            --sidebar-hover: #2c3e50;
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--background);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .main-content {
+            margin-left: 100px;
+            padding: 2rem;
+            width: calc(100% - 250px);
+            transition: margin-left 0.3s;
         }
 
-        h2 {
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 30px;
-            font-size: 26px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: var(--dark);
+            font-size: 1.8rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
         }
 
         .actions {
-            text-align: right;
-            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
         }
 
-        .actions a {
-            background-color: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-size: 16px;
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
             border-radius: 6px;
-            transition: background-color 0.3s ease;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
 
-        .actions a:hover {
-            background-color: var(--primary-hover);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #b079c7);
+            color: white;
+            box-shadow: 0 3px 10px rgba(142, 68, 173, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7d3c98, var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(142, 68, 173, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2980b9;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
         th,
         td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: center;
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
 
         th {
             background-color: var(--primary);
             color: white;
+            font-weight: 600;
             cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
         }
 
-        td {
-            background-color: #fafafa;
+        th:hover {
+            background-color: #7d3c98;
+        }
+
+        th a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        tr:hover td {
+            background-color: #f8f9fa;
         }
 
         .status-yes {
-            color: var(--success-color);
+            color: var(--success);
             font-weight: bold;
         }
 
         .status-no {
-            color: var(--error-color);
+            color: var(--danger);
             font-weight: bold;
         }
 
-        .btn-edit {
+        .action-link {
             color: var(--secondary);
+            margin: 0 5px;
+            transition: color 0.3s;
             text-decoration: none;
-            font-weight: bold;
         }
 
-        .btn-edit:hover {
-            text-decoration: underline;
+        .action-link:hover {
+            color: #2980b9;
         }
 
-        .delete-btn {
-            color: var(--error-color);
-            text-decoration: none;
-            font-weight: bold;
+        .delete-link {
+            color: var(--danger);
         }
 
-        .delete-btn:hover {
-            text-decoration: underline;
+        .delete-link:hover {
+            color: #c0392b;
         }
 
-        .footer {
-            text-align: center;
-            font-size: 14px;
-            color: #777;
-            margin-top: 30px;
+        .sort-arrow {
+            margin-left: 5px;
         }
 
-        .btn-back-dashboard {
-            display: inline-block;
-            padding: 5px 10px;
-            background-color: var(--secondary);
-            color: white;
-            font-size: 12px;
-            text-decoration: none;
-            border-radius: 5px;
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
         }
 
-        .btn-back-dashboard:hover {
-            background-color: var(--secondary-hover);
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            th,
+            td {
+                padding: 12px 15px;
+            }
         }
     </style>
 </head>
 
 <body>
-
-    <div class="container">
-        <h2>🌼 Flower Inventory Dashboard</h2>
-
-        <div class="actions">
-            <a href="dashboard.php" class="btn-back-dashboard">🔙 Dashboard</a>
-            <a href="add_product.php">➕ Add New Flower</a>
+    <!-- Sidebar is included from sidebar.php -->
+    <?php //include 'sidebar.php'; 
+    ?>
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-boxes"></i> Flower Inventory</h1>
         </div>
 
-        <?php if ($success): ?>
-            <script>
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: '<?= $success ?>',
-                    confirmButtonColor: '#4CAF50'
-                });
-            </script>
-        <?php elseif ($error): ?>
-            <script>
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: '<?= $error ?>',
-                    confirmButtonColor: '#dc3545'
-                });
-            </script>
-        <?php endif; ?>
+        <div class="card">
+            <div class="actions">
+                <a href="dashboard.php" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <a href="add_product.php" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add New Flower
+                </a>
+            </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th><a href="?sort_by=flower_id&sort_order=<?= $toggle_order ?>">ID</a></th>
-                    <th><a href="?sort_by=name&sort_order=<?= $toggle_order ?>">Flower Name</a></th>
-                    <th><a href="?sort_by=price&sort_order=<?= $toggle_order ?>">Price (₱)</a></th>
-                    <th><a href="?sort_by=quantity&sort_order=<?= $toggle_order ?>">Stock</a></th>
-                    <th><a href="?sort_by=size&sort_order=<?= $toggle_order ?>">Size</a></th>
-                    <th><a href="?sort_by=color&sort_order=<?= $toggle_order ?>">Color</a></th>
-                    <th><a href="?sort_by=available&sort_order=<?= $toggle_order ?>">Available</a></th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $result->fetch_assoc()): ?>
+            <?php if ($success): ?>
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: '<?= $success ?>',
+                        confirmButtonColor: 'var(--primary)'
+                    });
+                </script>
+            <?php elseif ($error): ?>
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: '<?= $error ?>',
+                        confirmButtonColor: 'var(--danger)'
+                    });
+                </script>
+            <?php endif; ?>
+
+            <table>
+                <thead>
                     <tr>
-                        <td><?= $row['flower_id'] ?></td>
-                        <td><?= htmlspecialchars($row['name']) ?></td>
-                        <td><?= number_format($row['price'], 2) ?></td>
-                        <td><?= $row['quantity'] ?></td>
-                        <td><?= htmlspecialchars($row['size']) ?></td>
-                        <td><?= htmlspecialchars($row['color']) ?></td>
-                        <td class="<?= $row['available'] ? 'status-yes' : 'status-no' ?>">
-                            <?= $row['available'] ? 'Yes' : 'No' ?>
-                        </td>
-                        <td>
-                            <a class="btn-edit" href="edit_product.php?id=<?= $row['flower_id'] ?>">✏️ Edit</a> |
-                            <a class="delete-btn" href="?delete=<?= $row['flower_id'] ?>" onclick="return confirm('Are you sure you want to delete this flower?')">🗑️ Delete</a>
-                        </td>
+                        <th><a href="?sort_by=flower_id&sort_order=<?= $toggle_order ?>">ID <?= ($sort_column == 'flower_id') ? '<i class="fas fa-sort-' . strtolower($sort_order) . ' sort-arrow"></i>' : '' ?></a></th>
+                        <th><a href="?sort_by=name&sort_order=<?= $toggle_order ?>">Flower Name <?= ($sort_column == 'name') ? '<i class="fas fa-sort-' . strtolower($sort_order) . ' sort-arrow"></i>' : '' ?></a></th>
+                        <th><a href="?sort_by=price&sort_order=<?= $toggle_order ?>">Price (₱) <?= ($sort_column == 'price') ? '<i class="fas fa-sort-' . strtolower($sort_order) . ' sort-arrow"></i>' : '' ?></a></th>
+                        <th><a href="?sort_by=quantity&sort_order=<?= $toggle_order ?>">Stock <?= ($sort_column == 'quantity') ? '<i class="fas fa-sort-' . strtolower($sort_order) . ' sort-arrow"></i>' : '' ?></a></th>
+                        <th><a href="?sort_by=size&sort_order=<?= $toggle_order ?>">Size <?= ($sort_column == 'size') ? '<i class="fas fa-sort-' . strtolower($sort_order) . ' sort-arrow"></i>' : '' ?></a></th>
+                        <th><a href="?sort_by=color&sort_order=<?= $toggle_order ?>">Color <?= ($sort_column == 'color') ? '<i class="fas fa-sort-' . strtolower($sort_order) . ' sort-arrow"></i>' : '' ?></a></th>
+                        <th><a href="?sort_by=available&sort_order=<?= $toggle_order ?>">Available <?= ($sort_column == 'available') ? '<i class="fas fa-sort-' . strtolower($sort_order) . ' sort-arrow"></i>' : '' ?></a></th>
+                        <th>Actions</th>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-
-        <div class="footer">
-            © <?= date("Y") ?> Flower Shop Inventory System
+                </thead>
+                <tbody>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= $row['flower_id'] ?></td>
+                            <td><?= htmlspecialchars($row['name']) ?></td>
+                            <td>₱<?= number_format($row['price'], 2) ?></td>
+                            <td><?= $row['quantity'] ?></td>
+                            <td><?= htmlspecialchars($row['size']) ?></td>
+                            <td><?= htmlspecialchars($row['color']) ?></td>
+                            <td class="<?= $row['available'] ? 'status-yes' : 'status-no' ?>">
+                                <?= $row['available'] ? 'Yes' : 'No' ?>
+                            </td>
+                            <td>
+                                <a href="edit_product.php?id=<?= $row['flower_id'] ?>" class="action-link" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="?delete=<?= $row['flower_id'] ?>" class="action-link delete-link" title="Delete" onclick="return confirmDelete()">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 
+    <script>
+        function confirmDelete() {
+            return Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#8e44ad',
+                cancelButtonColor: '#e74c3c',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                return result.isConfirmed;
+            });
+        }
+
+        // Highlight current page in sidebar
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuItems = document.querySelectorAll('.sidebar-menu a');
+
+            menuItems.forEach(item => {
+                if (item.getAttribute('href') === currentPage) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
