@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -199,14 +199,16 @@
 
     /* Responsive Adjustments */
     @media (max-width: 768px) {
-      .history-item, .history-item.reverse {
+
+      .history-item,
+      .history-item.reverse {
         flex-direction: column;
       }
-      
+
       .history-image {
         width: 100%;
       }
-      
+
       .mission-vision {
         grid-template-columns: 1fr;
       }
@@ -217,19 +219,21 @@
       font-family: 'Fraunces_72pt-Light';
       src: url('fonts/Fraunces_72pt-Light.ttf') format('truetype');
     }
+
     @font-face {
       font-family: 'Fraunces_72pt-SemiBoldItalic';
       src: url('fonts/Fraunces_72pt-SemiBoldItalic.ttf') format('truetype');
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1 class="page-title">Our Blossoming Story</h1>
     <p class="page-subtitle">Three generations of floral passion in Davao City</p>
-    
+
     <div class="floral-divider"></div>
-    
+
     <!-- History Timeline -->
     <div class="history-container">
       <div class="history-item">
@@ -247,7 +251,7 @@
           </p>
         </div>
       </div>
-      
+
       <div class="history-item reverse">
         <div class="history-image">
           <img src="pictures/2020.jpg" alt="Ms. Armila Ladao Quiñones">
@@ -263,7 +267,7 @@
           </p>
         </div>
       </div>
-      
+
       <div class="history-item">
         <div class="history-image">
           <img src="pictures/newchap.jpg" alt="Buhangin Road Location">
@@ -280,9 +284,9 @@
         </div>
       </div>
     </div>
-    
+
     <div class="floral-divider"></div>
-    
+
     <!-- Mission & Vision -->
     <div class="mission-vision">
       <div class="mv-card">
@@ -291,7 +295,7 @@
           To be the leading flower shop in Davao City, known for creating meaningful connections through exceptional floral artistry, inspiring beauty, and uplifting celebrations across all occasions.
         </p>
       </div>
-      
+
       <div class="mv-card">
         <h3 class="mv-title">Our Mission</h3>
         <p class="mv-text">
@@ -299,9 +303,9 @@
         </p>
       </div>
     </div>
-    
+
     <div class="floral-divider"></div>
-    
+
     <!-- Today Section -->
     <div class="today-section">
       <h2 class="page-title">ARS Flower Shop Today</h2>
@@ -314,14 +318,14 @@
         </p>
       </div>
     </div>
-    
+
     <div class="floral-divider"></div>
-    
+
     <!-- Team Section -->
     <div class="team-section">
       <h2 class="page-title">Our Family</h2>
       <p class="page-subtitle">The passionate hearts behind our floral creations</p>
-      
+
       <div class="team-grid">
         <div class="team-card">
           <img src="pictures/lydia.jpg" alt="Mrs. Lydia Ladao Quiñones" class="team-image">
@@ -330,7 +334,7 @@
             <div class="team-role">Founder (1978)</div>
           </div>
         </div>
-        
+
         <div class="team-card">
           <img src="pictures/armila.jpg" alt="Ms. Armila Ladao Quiñones" class="team-image">
           <div class="team-info">
@@ -338,7 +342,7 @@
             <div class="team-role">Current Owner</div>
           </div>
         </div>
-        
+
         <div class="team-card">
           <img src="pictures/bianca.jpg" alt="Ms. Bianca Freya Facura" class="team-image">
           <div class="team-info">
@@ -349,6 +353,7 @@
       </div>
     </div>
   </div>
-  
+
 </body>
+
 </html>

@@ -57,6 +57,7 @@ while ($row = $result_monthly->fetch_assoc()) {
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Flower Shop Sales Report</title>
     <style>
@@ -65,44 +66,56 @@ while ($row = $result_monthly->fetch_assoc()) {
             background: #f9fafb;
             padding: 30px;
         }
-        h2, h3 {
+
+        h2,
+        h3 {
             color: #2c3e50;
         }
+
         form {
             margin-bottom: 30px;
         }
-        form input, form select {
+
+        form input,
+        form select {
             padding: 5px;
             margin: 5px;
             border-radius: 4px;
             border: 1px solid #ccc;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
-        th, td {
+
+        th,
+        td {
             padding: 12px;
             text-align: center;
             border-bottom: 1px solid #eee;
         }
+
         th {
             background: #3498db;
             color: white;
         }
+
         tr:hover {
             background: #f2f2f2;
         }
+
         canvas {
             margin-top: 30px;
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         button {
             padding: 8px 12px;
             border: none;
@@ -112,11 +125,13 @@ while ($row = $result_monthly->fetch_assoc()) {
             cursor: pointer;
             margin-right: 10px;
         }
+
         button:hover {
             background: #2ecc71;
         }
     </style>
 </head>
+
 <body>
 
     <h2>🌸 Flower Shop Sales Report</h2>
@@ -156,11 +171,11 @@ while ($row = $result_monthly->fetch_assoc()) {
             <th>Revenue (₱)</th>
         </tr>
         <?php foreach ($summary as $name => $data): ?>
-        <tr>
-            <td><?= htmlspecialchars($name) ?></td>
-            <td><?= $data['quantity'] ?></td>
-            <td><?= number_format($data['revenue'], 2) ?></td>
-        </tr>
+            <tr>
+                <td><?= htmlspecialchars($name) ?></td>
+                <td><?= $data['quantity'] ?></td>
+                <td><?= number_format($data['revenue'], 2) ?></td>
+            </tr>
         <?php endforeach; ?>
     </table>
 
@@ -177,78 +192,91 @@ while ($row = $result_monthly->fetch_assoc()) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
-    // Revenue Chart
-    const ctxRev = document.getElementById('revenueChart').getContext('2d');
-    new Chart(ctxRev, {
-        type: 'bar',
-        data: {
-            labels: <?= json_encode(array_keys($summary)) ?>,
-            datasets: [{
-                label: 'Revenue (₱)',
-                data: <?= json_encode(array_map(fn($s) => $s['revenue'], $summary)) ?>,
-                backgroundColor: 'rgba(255, 99, 132, 0.7)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: { y: { beginAtZero: true } }
+        // Revenue Chart
+        const ctxRev = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctxRev, {
+            type: 'bar',
+            data: {
+                labels: <?= json_encode(array_keys($summary)) ?>,
+                datasets: [{
+                    label: 'Revenue (₱)',
+                    data: <?= json_encode(array_map(fn($s) => $s['revenue'], $summary)) ?>,
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Monthly Sales Chart
+        const ctxMonth = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(ctxMonth, {
+            type: 'line',
+            data: {
+                labels: <?= json_encode($monthLabels) ?>,
+                datasets: [{
+                    label: 'Total Quantity Sold',
+                    data: <?= json_encode($monthData) ?>,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // CSV Export
+        function exportToCSV() {
+            const rows = [
+                ["Flower Name", "Quantity Sold", "Revenue (₱)"]
+            ];
+            <?php foreach ($summary as $name => $data): ?>
+                rows.push(["<?= $name ?>", "<?= $data['quantity'] ?>", "<?= number_format($data['revenue'], 2) ?>"]);
+            <?php endforeach; ?>
+            let csv = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csv));
+            link.setAttribute("download", "flower_sales_report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-    });
 
-    // Monthly Sales Chart
-    const ctxMonth = document.getElementById('monthlyChart').getContext('2d');
-    new Chart(ctxMonth, {
-        type: 'line',
-        data: {
-            labels: <?= json_encode($monthLabels) ?>,
-            datasets: [{
-                label: 'Total Quantity Sold',
-                data: <?= json_encode($monthData) ?>,
-                borderColor: 'rgba(54, 162, 235, 1)',
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                fill: false,
-                tension: 0.3
-            }]
-        },
-        options: {
-            scales: { y: { beginAtZero: true } }
+        // PDF Export
+        async function exportToPDF() {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(16);
+            doc.text("Flower Sales Report", 10, 10);
+            doc.setFontSize(12);
+            let y = 20;
+            doc.text("Overall Revenue: ₱<?= number_format($totalRevenue, 2) ?>", 10, y);
+            y += 10;
+            doc.text("Flower | Quantity | Revenue", 10, y);
+            <?php foreach ($summary as $name => $data): ?>
+                y += 10;
+                doc.text("<?= $name ?> | <?= $data['quantity'] ?> | ₱<?= number_format($data['revenue'], 2) ?>", 10, y);
+            <?php endforeach; ?>
+            doc.save("flower_sales_report.pdf");
         }
-    });
-
-    // CSV Export
-    function exportToCSV() {
-        const rows = [["Flower Name", "Quantity Sold", "Revenue (₱)"]];
-        <?php foreach ($summary as $name => $data): ?>
-        rows.push(["<?= $name ?>", "<?= $data['quantity'] ?>", "<?= number_format($data['revenue'], 2) ?>"]);
-        <?php endforeach; ?>
-        let csv = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
-        const link = document.createElement("a");
-        link.setAttribute("href", encodeURI(csv));
-        link.setAttribute("download", "flower_sales_report.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    // PDF Export
-    async function exportToPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFontSize(16);
-        doc.text("Flower Sales Report", 10, 10);
-        doc.setFontSize(12);
-        let y = 20;
-        doc.text("Overall Revenue: ₱<?= number_format($totalRevenue, 2) ?>", 10, y);
-        y += 10;
-        doc.text("Flower | Quantity | Revenue", 10, y);
-        <?php foreach ($summary as $name => $data): ?>
-        y += 10;
-        doc.text("<?= $name ?> | <?= $data['quantity'] ?> | ₱<?= number_format($data['revenue'], 2) ?>", 10, y);
-        <?php endforeach; ?>
-        doc.save("flower_sales_report.pdf");
-    }
     </script>
 
 </body>
+
 </html>

@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Edit Flower</title>
@@ -81,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background: var(--card-bg);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
@@ -148,65 +149,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>✏️ Edit Flower</h2>
+    <div class="container">
+        <h2>✏️ Edit Flower</h2>
 
-    <form method="POST">
-        <div>
-            <label>Flower Name:</label>
-            <input type="text" name="name" value="<?= htmlspecialchars($flower['name']) ?>" required>
-        </div>
-        <div>
-            <label>Price (₱):</label>
-            <input type="number" name="price" value="<?= $flower['price'] ?>" step="0.01" required>
-        </div>
-        <div>
-            <label>Quantity:</label>
-            <input type="number" name="quantity" value="<?= $flower['quantity'] ?>" required>
-        </div>
-        <div>
-            <label>Size:</label>
-            <input type="text" name="size" value="<?= htmlspecialchars($flower['size']) ?>" required>
-        </div>
-        <div>
-            <label>Color:</label>
-            <input type="text" name="color" value="<?= htmlspecialchars($flower['color']) ?>" required>
-        </div>
-        <div class="checkbox-group">
-            <input type="checkbox" name="available" <?= $flower['available'] ? 'checked' : '' ?>>
-            <label>Available</label>
-        </div>
-        <button type="submit">💾 Update Flower</button>
-    </form>
+        <form method="POST">
+            <div>
+                <label>Flower Name:</label>
+                <input type="text" name="name" value="<?= htmlspecialchars($flower['name']) ?>" required>
+            </div>
+            <div>
+                <label>Price (₱):</label>
+                <input type="number" name="price" value="<?= $flower['price'] ?>" step="0.01" required>
+            </div>
+            <div>
+                <label>Quantity:</label>
+                <input type="number" name="quantity" value="<?= $flower['quantity'] ?>" required>
+            </div>
+            <div>
+                <label>Size:</label>
+                <input type="text" name="size" value="<?= htmlspecialchars($flower['size']) ?>" required>
+            </div>
+            <div>
+                <label>Color:</label>
+                <input type="text" name="color" value="<?= htmlspecialchars($flower['color']) ?>" required>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" name="available" <?= $flower['available'] ? 'checked' : '' ?>>
+                <label>Available</label>
+            </div>
+            <button type="submit">💾 Update Flower</button>
+        </form>
 
-    <div class="btn-back">
-        <a href="inventory.php">🔙 Back to Inventory</a>
+        <div class="btn-back">
+            <a href="inventory.php">🔙 Back to Inventory</a>
+        </div>
     </div>
-</div>
 
-<?php if ($success): ?>
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: '<?= $success ?>',
-            confirmButtonColor: '#4CAF50'
-        }).then(function() {
-            window.location.href = 'inventory.php';
-        });
-    </script>
-<?php elseif ($error): ?>
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: '<?= $error ?>',
-            confirmButtonColor: '#dc3545'
-        });
-    </script>
-<?php endif; ?>
+    <?php if ($success): ?>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '<?= $success ?>',
+                confirmButtonColor: '#4CAF50'
+            }).then(function() {
+                window.location.href = 'inventory.php';
+            });
+        </script>
+    <?php elseif ($error): ?>
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '<?= $error ?>',
+                confirmButtonColor: '#dc3545'
+            });
+        </script>
+    <?php endif; ?>
 
 </body>
+
 </html>

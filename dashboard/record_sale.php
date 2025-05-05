@@ -54,6 +54,7 @@ $sales_history = $conn->query("
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,7 +106,9 @@ $sales_history = $conn->query("
             color: #333;
         }
 
-        select, input[type="number"], input[type="date"] {
+        select,
+        input[type="number"],
+        input[type="date"] {
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ddd;
@@ -134,7 +137,8 @@ $sales_history = $conn->query("
             margin-top: 40px;
         }
 
-        table th, table td {
+        table th,
+        table td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: center;
@@ -179,6 +183,7 @@ $sales_history = $conn->query("
         }
     </script>
 </head>
+
 <body>
 
     <div class="container">
@@ -194,7 +199,7 @@ $sales_history = $conn->query("
             <label for="product_id">Select Flower:</label>
             <select name="product_id" id="product_id" required>
                 <option disabled selected>-- Select a flower --</option>
-                <?php while($row = $products->fetch_assoc()): ?>
+                <?php while ($row = $products->fetch_assoc()): ?>
                     <option value="<?= $row['flower_id'] ?>">
                         <?= htmlspecialchars($row['name']) ?> (Stock: <?= $row['quantity'] ?>)
                     </option>
@@ -212,7 +217,7 @@ $sales_history = $conn->query("
         </form>
 
         <!-- Go Back Button -->
-        
+
 
         <div class="section-title">📄 Recent Sales History</div>
         <table>
@@ -225,7 +230,7 @@ $sales_history = $conn->query("
                 </tr>
             </thead>
             <tbody>
-                <?php while($sale = $sales_history->fetch_assoc()): ?>
+                <?php while ($sale = $sales_history->fetch_assoc()): ?>
                     <tr>
                         <td><?= $sale['id'] ?></td>
                         <td><?= htmlspecialchars($sale['product_name']) ?></td>
@@ -238,4 +243,5 @@ $sales_history = $conn->query("
     </div>
 
 </body>
+
 </html>

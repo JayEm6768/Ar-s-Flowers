@@ -39,6 +39,7 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Flower Inventory Dashboard</title>
@@ -73,7 +74,7 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
             background: var(--card-bg);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
@@ -108,7 +109,8 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
             margin-bottom: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             border: 1px solid #ddd;
             text-align: center;
@@ -176,74 +178,76 @@ $toggle_order = ($sort_order === 'ASC') ? 'DESC' : 'ASC';
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>🌼 Flower Inventory Dashboard</h2>
+    <div class="container">
+        <h2>🌼 Flower Inventory Dashboard</h2>
 
-    <div class="actions">
-        <a href="dashboard.php" class="btn-back-dashboard">🔙 Dashboard</a>
-        <a href="add_product.php">➕ Add New Flower</a>
+        <div class="actions">
+            <a href="dashboard.php" class="btn-back-dashboard">🔙 Dashboard</a>
+            <a href="add_product.php">➕ Add New Flower</a>
+        </div>
+
+        <?php if ($success): ?>
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '<?= $success ?>',
+                    confirmButtonColor: '#4CAF50'
+                });
+            </script>
+        <?php elseif ($error): ?>
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: '<?= $error ?>',
+                    confirmButtonColor: '#dc3545'
+                });
+            </script>
+        <?php endif; ?>
+
+        <table>
+            <thead>
+                <tr>
+                    <th><a href="?sort_by=flower_id&sort_order=<?= $toggle_order ?>">ID</a></th>
+                    <th><a href="?sort_by=name&sort_order=<?= $toggle_order ?>">Flower Name</a></th>
+                    <th><a href="?sort_by=price&sort_order=<?= $toggle_order ?>">Price (₱)</a></th>
+                    <th><a href="?sort_by=quantity&sort_order=<?= $toggle_order ?>">Stock</a></th>
+                    <th><a href="?sort_by=size&sort_order=<?= $toggle_order ?>">Size</a></th>
+                    <th><a href="?sort_by=color&sort_order=<?= $toggle_order ?>">Color</a></th>
+                    <th><a href="?sort_by=available&sort_order=<?= $toggle_order ?>">Available</a></th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= $row['flower_id'] ?></td>
+                        <td><?= htmlspecialchars($row['name']) ?></td>
+                        <td><?= number_format($row['price'], 2) ?></td>
+                        <td><?= $row['quantity'] ?></td>
+                        <td><?= htmlspecialchars($row['size']) ?></td>
+                        <td><?= htmlspecialchars($row['color']) ?></td>
+                        <td class="<?= $row['available'] ? 'status-yes' : 'status-no' ?>">
+                            <?= $row['available'] ? 'Yes' : 'No' ?>
+                        </td>
+                        <td>
+                            <a class="btn-edit" href="edit_product.php?id=<?= $row['flower_id'] ?>">✏️ Edit</a> |
+                            <a class="delete-btn" href="?delete=<?= $row['flower_id'] ?>" onclick="return confirm('Are you sure you want to delete this flower?')">🗑️ Delete</a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            © <?= date("Y") ?> Flower Shop Inventory System
+        </div>
     </div>
-
-    <?php if ($success): ?>
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '<?= $success ?>',
-                confirmButtonColor: '#4CAF50'
-            });
-        </script>
-    <?php elseif ($error): ?>
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: '<?= $error ?>',
-                confirmButtonColor: '#dc3545'
-            });
-        </script>
-    <?php endif; ?>
-
-    <table>
-        <thead>
-            <tr>
-                <th><a href="?sort_by=flower_id&sort_order=<?= $toggle_order ?>">ID</a></th>
-                <th><a href="?sort_by=name&sort_order=<?= $toggle_order ?>">Flower Name</a></th>
-                <th><a href="?sort_by=price&sort_order=<?= $toggle_order ?>">Price (₱)</a></th>
-                <th><a href="?sort_by=quantity&sort_order=<?= $toggle_order ?>">Stock</a></th>
-                <th><a href="?sort_by=size&sort_order=<?= $toggle_order ?>">Size</a></th>
-                <th><a href="?sort_by=color&sort_order=<?= $toggle_order ?>">Color</a></th>
-                <th><a href="?sort_by=available&sort_order=<?= $toggle_order ?>">Available</a></th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?= $row['flower_id'] ?></td>
-                <td><?= htmlspecialchars($row['name']) ?></td>
-                <td><?= number_format($row['price'], 2) ?></td>
-                <td><?= $row['quantity'] ?></td>
-                <td><?= htmlspecialchars($row['size']) ?></td>
-                <td><?= htmlspecialchars($row['color']) ?></td>
-                <td class="<?= $row['available'] ? 'status-yes' : 'status-no' ?>">
-                    <?= $row['available'] ? 'Yes' : 'No' ?>
-                </td>
-                <td>
-                    <a class="btn-edit" href="edit_product.php?id=<?= $row['flower_id'] ?>">✏️ Edit</a> |
-                    <a class="delete-btn" href="?delete=<?= $row['flower_id'] ?>" onclick="return confirm('Are you sure you want to delete this flower?')">🗑️ Delete</a>
-                </td>
-            </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
-
-    <div class="footer">
-        © <?= date("Y") ?> Flower Shop Inventory System
-    </div>
-</div>
 
 </body>
+
 </html>

@@ -3,8 +3,8 @@ session_start();
 require_once 'connect.php';
 
 if (!isset($_GET['order_id']) || !isset($_SESSION['user_id'])) {
-    header("Location: home.php");
-    exit();
+  header("Location: home.php");
+  exit();
 }
 
 $orderId = $_GET['order_id'];
@@ -18,8 +18,8 @@ $stmt->execute([$orderId, $_SESSION['user_id']]);
 $order = $stmt->fetch();
 
 if (!$order) {
-    header("Location: home.php");
-    exit();
+  header("Location: home.php");
+  exit();
 }
 
 // Get order items
@@ -33,7 +33,7 @@ $items = $stmt->fetchAll();
 // Calculate totals for display
 $subtotal = 0;
 foreach ($items as $item) {
-    $subtotal += $item['price'] * $item['quantity'];
+  $subtotal += $item['price'] * $item['quantity'];
 }
 $tax = $subtotal * 0.05;
 $deliveryFee = 30;
@@ -41,6 +41,7 @@ $total = $subtotal + $tax + $deliveryFee;
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Order Confirmation - ARS Flowershop Davao</title>
@@ -171,13 +172,14 @@ $total = $subtotal + $tax + $deliveryFee;
     }
   </style>
 </head>
+
 <body>
   <?php include 'footHead/header.php'; ?>
 
   <div class="confirmation-container">
     <h1 class="confirmation-title">Order Confirmation</h1>
     <p class="confirmation-message">Thank you for your order, <?= htmlspecialchars($order['customer_name']) ?>!</p>
-    
+
     <div class="order-details">
       <div class="detail-row">
         <span class="detail-label">Order Number:</span>
@@ -192,7 +194,7 @@ $total = $subtotal + $tax + $deliveryFee;
         <span><?= date('F j, Y', strtotime($order['shipping_date'])) ?></span>
       </div>
     </div>
-    
+
     <div class="order-items">
       <h3>Your Items</h3>
       <?php foreach ($items as $item): ?>
@@ -206,7 +208,7 @@ $total = $subtotal + $tax + $deliveryFee;
         </div>
       <?php endforeach; ?>
     </div>
-    
+
     <div class="order-summary">
       <div class="summary-row">
         <span>Subtotal:</span>
@@ -225,8 +227,9 @@ $total = $subtotal + $tax + $deliveryFee;
         <span>₱<?= number_format($total, 2) ?></span>
       </div>
     </div>
-    
+
     <a href="home.php" class="continue-btn">Continue Shopping</a>
   </div>
 </body>
+
 </html>

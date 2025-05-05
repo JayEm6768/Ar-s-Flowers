@@ -20,7 +20,7 @@ $user = $stmt->fetch();
 
 if ($user && $password === $user['pass']) {
     $_SESSION['user'] = $user['username'];
-    $_SESSION['user_id'] = $user['user_id']; 
+    $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['role_id'] = $user['role_id'];
 
     // decide destination based on role_id
@@ -29,7 +29,6 @@ if ($user && $password === $user['pass']) {
     } else {
         echo "Welcome, {$user['username']}!|productPage.php";
     }
-}  else {
+} else {
     echo "Invalid username or password.";
 }
-?>
