@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2025 at 08:58 PM
+-- Generation Time: May 05, 2025 at 05:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -88,6 +88,13 @@ CREATE TABLE `ordersummary` (
   `total_cost` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `ordersummary`
+--
+
+INSERT INTO `ordersummary` (`order_summary_id`, `order_id`, `total_items`, `total_cost`) VALUES
+(1, 1, 0, 30.00);
+
 -- --------------------------------------------------------
 
 --
@@ -99,8 +106,16 @@ CREATE TABLE `ordertable` (
   `customer_id` int(11) NOT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `total_amount` decimal(10,2) NOT NULL,
-  `shipping_date` date DEFAULT NULL
+  `shipping_date` date DEFAULT NULL,
+  `status` enum('Pending','Preparing','Out for Delivery','Delivered','Cancelled') NOT NULL DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ordertable`
+--
+
+INSERT INTO `ordertable` (`order_id`, `customer_id`, `order_date`, `total_amount`, `shipping_date`, `status`) VALUES
+(1, 3, '2025-04-30 17:45:42', 30.00, '2025-05-14', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -125,10 +140,10 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`flower_id`, `name`, `description`, `price`, `quantity`, `size`, `color`, `available`, `image_url`) VALUES
-(1, 'Lily', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 150.00, 17, 'Small', 'White', 1, ''),
-(2, 'Rose', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 170.00, 8, 'Small', 'Red', 1, ''),
-(3, 'Rose', 'White roses', 150.00, 8, 'Small', 'White', 1, ''),
-(4, 'Sunflower', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 100.00, 5, 'Standard', 'Yellow', 1, ''),
+(1, 'Lily', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 150.00, 14, 'Small', 'White', 1, ''),
+(2, 'Rose', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 170.00, 7, 'Small', 'Red', 1, ''),
+(3, 'Rose', 'White roses', 150.00, 7, 'Small', 'White', 1, ''),
+(4, 'Sunflower', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 100.00, 4, 'Standard', 'Yellow', 1, ''),
 (5, 'Sampaguita', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 50.00, 0, 'Small', 'White', 1, ''),
 (6, 'Lavender', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 400.00, 0, 'Medium', 'Indigo', 1, ''),
 (8, 'Tulip', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi pellentesque ex elit, vel sollicitudin sapien lobortis at. Integer sit amet dolor id diam molestie tempor sed at magna.', 300.00, 15, 'Medium', 'Assorted', 1, ''),
@@ -213,16 +228,17 @@ CREATE TABLE `users` (
   `role_id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `pass` varchar(100) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `profile_picture` varchar(255) DEFAULT 'uploads/profile_picture/default_profile.jpg'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `name`, `email`, `phone`, `role_id`, `username`, `pass`, `created_at`) VALUES
-(2, 'Schann Jorson Alves', 's.alves.538181@umindanao.edu.ph', '09855029374', 2, 'admin', '123', '2025-04-20 09:38:37'),
-(3, 'Jannel Jefferson Galo', 'kkyle008@yahoo.com', '09123456789', 1, 'galo', '123', '2025-04-22 06:03:10');
+INSERT INTO `users` (`user_id`, `name`, `email`, `phone`, `role_id`, `username`, `pass`, `created_at`, `profile_picture`) VALUES
+(2, 'Schann Jorson Alves', 's.alves.538181@umindanao.edu.ph', '09855029374', 2, 'admin', '123', '2025-04-20 09:38:37', 'uploads/profile_picture/default_profile.jpg'),
+(3, 'Jannel Jefferson Galo', 'kkyle008@yahoo.com', '09123456789', 1, 'galo', '123', '2025-04-22 06:03:10', 'uploads/profile_picture/default_profile.jpg');
 
 --
 -- Indexes for dumped tables
@@ -339,13 +355,13 @@ ALTER TABLE `orderitem`
 -- AUTO_INCREMENT for table `ordersummary`
 --
 ALTER TABLE `ordersummary`
-  MODIFY `order_summary_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_summary_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `ordertable`
 --
 ALTER TABLE `ordertable`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `product`

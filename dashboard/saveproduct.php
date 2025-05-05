@@ -23,9 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     // File upload handling
-    if(isset($_FILES['image_upload']) && $_FILES['image_upload']['error'] === UPLOAD_ERR_OK) {
+    if (isset($_FILES['image_upload']) && $_FILES['image_upload']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = 'uploads/';
-        
+
         // Create uploads directory if it doesn't exist
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0755, true);
@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $extension = pathinfo($_FILES['image_upload']['name'], PATHINFO_EXTENSION);
         $filename = uniqid() . '.' . $extension;
         $uploadFile = $uploadDir . $filename;
-        
+
         // Move the uploaded file
         if (move_uploaded_file($_FILES['image_upload']['tmp_name'], $uploadFile)) {
             $image_url = $filename; // Store only the filename in database
@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: add_product.php?status=error&message=$error_message");
             exit;
         }
-        
+
         // If no file was uploaded, check if there's a fallback URL
         $image_url = trim($_POST['image_url'] ?? '');
     }

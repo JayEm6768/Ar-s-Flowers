@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -90,7 +91,8 @@
             background-color: var(--primary-hover);
         }
 
-        .success, .error {
+        .success,
+        .error {
             text-align: center;
             font-size: 16px;
             padding: 12px;
@@ -176,114 +178,116 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1>🌸 Add New Product</h1>
+    <div class="container">
+        <h1>🌸 Add New Product</h1>
 
-    <!-- Status Message -->
-    <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
-        <div class="<?= $_GET['status'] === 'success' ? 'success' : 'error' ?>">
-            <?= htmlspecialchars($_GET['message']) ?>
-        </div>
-    <?php endif; ?>
-
-    <!-- Product Add Form -->
-    <form action="saveproduct.php" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="name">Product Name:</label>
-            <input type="text" id="name" name="name" required minlength="2" maxlength="100">
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <input type="text" id="description" name="description" maxlength="255">
-        </div>
-
-        <div class="form-group">
-            <label for="price">Price (₱):</label>
-            <input type="number" id="price" name="price" step="0.01" min="0" required>
-        </div>
-
-        <div class="form-group">
-            <label for="quantity">Stock Quantity:</label>
-            <input type="number" id="quantity" name="quantity" min="0" required>
-        </div>
-
-        <div class="form-group">
-            <label for="size">Size:</label>
-            <select id="size" name="size" required>
-                <option value="" disabled selected>Select size</option>
-                <option value="Small">Small</option>
-                <option value="Medium">Medium</option>
-                <option value="Large">Large</option>
-                <option value="Standard">Standard</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="color">Color:</label>
-            <input type="text" id="color" name="color" required>
-        </div>
-
-        <div class="form-group">
-            <label for="available">Available:</label>
-            <select id="available" name="available" required>
-                <option value="1">Yes</option>
-                <option value="0">No</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Product Image:</label>
-            <div class="image-upload-container">
-                <div class="image-preview">
-                    <img id="image-preview" src="#" alt="Image Preview">
-                    <span id="default-text">No image selected</span>
-                </div>
-                <label for="image_upload" class="upload-label">Choose Image</label>
-                <input type="file" id="image_upload" name="image_upload" accept="image/*" style="display: none;">
-                <input type="hidden" id="image_url" name="image_url">
+        <!-- Status Message -->
+        <?php if (isset($_GET['status']) && isset($_GET['message'])): ?>
+            <div class="<?= $_GET['status'] === 'success' ? 'success' : 'error' ?>">
+                <?= htmlspecialchars($_GET['message']) ?>
             </div>
-        </div>
+        <?php endif; ?>
 
-        <div class="form-group">
-            <input type="submit" value="Add Product">
-        </div>
-    </form>
+        <!-- Product Add Form -->
+        <form action="saveproduct.php" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Product Name:</label>
+                <input type="text" id="name" name="name" required minlength="2" maxlength="100">
+            </div>
 
-    <!-- Back to Dashboard Button -->
-    <div class="center">
-        <a href="dashboard.php" class="button">← Back to Dashboard</a>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" maxlength="255">
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price (₱):</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Stock Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="size">Size:</label>
+                <select id="size" name="size" required>
+                    <option value="" disabled selected>Select size</option>
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
+                    <option value="Standard">Standard</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="color">Color:</label>
+                <input type="text" id="color" name="color" required>
+            </div>
+
+            <div class="form-group">
+                <label for="available">Available:</label>
+                <select id="available" name="available" required>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Product Image:</label>
+                <div class="image-upload-container">
+                    <div class="image-preview">
+                        <img id="image-preview" src="#" alt="Image Preview">
+                        <span id="default-text">No image selected</span>
+                    </div>
+                    <label for="image_upload" class="upload-label">Choose Image</label>
+                    <input type="file" id="image_upload" name="image_upload" accept="image/*" style="display: none;">
+                    <input type="hidden" id="image_url" name="image_url">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Add Product">
+            </div>
+        </form>
+
+        <!-- Back to Dashboard Button -->
+        <div class="center">
+            <a href="dashboard.php" class="button">← Back to Dashboard</a>
+        </div>
     </div>
-</div>
 
-<script>
-    document.getElementById('image_upload').addEventListener('change', function(e) {
-        const preview = document.getElementById('image-preview');
-        const defaultText = document.getElementById('default-text');
-        const imageUrlInput = document.getElementById('image_url');
-        
-        if (e.target.files.length > 0) {
-            const reader = new FileReader();
-            
-            reader.onload = function(event) {
-                preview.src = event.target.result;
-                preview.style.display = 'block';
-                defaultText.style.display = 'none';
-                
-                // Set the filename as the image_url value
-                imageUrlInput.value = e.target.files[0].name;
-            };
-            
-            reader.readAsDataURL(e.target.files[0]);
-        } else {
-            preview.style.display = 'none';
-            defaultText.style.display = 'block';
-            imageUrlInput.value = '';
-        }
-    });
-</script>
+    <script>
+        document.getElementById('image_upload').addEventListener('change', function(e) {
+            const preview = document.getElementById('image-preview');
+            const defaultText = document.getElementById('default-text');
+            const imageUrlInput = document.getElementById('image_url');
+
+            if (e.target.files.length > 0) {
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                    defaultText.style.display = 'none';
+
+                    // Set the filename as the image_url value
+                    imageUrlInput.value = e.target.files[0].name;
+                };
+
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                preview.style.display = 'none';
+                defaultText.style.display = 'block';
+                imageUrlInput.value = '';
+            }
+        });
+    </script>
 
 </body>
+
 </html>

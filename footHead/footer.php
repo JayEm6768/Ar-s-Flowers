@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,7 +65,8 @@
             background: #ffffff;
         }
 
-        .footer-col p, .footer-col a {
+        .footer-col p,
+        .footer-col a {
             color: #b3b3b3;
             line-height: 1.6;
             margin-bottom: 10px;
@@ -101,14 +103,14 @@
             width: 180px;
             height: auto;
             margin-bottom: 20px;
-            -webkit-mask-image: linear-gradient(to bottom, 
-                rgba(0,0,0,1) 0%, 
-                rgba(0,0,0,1) 80%, 
-                rgba(0,0,0,0) 100%);
-            mask-image: linear-gradient(to bottom, 
-                rgba(0,0,0,1) 0%, 
-                rgba(0,0,0,1) 80%, 
-                rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to bottom,
+                    rgba(0, 0, 0, 1) 0%,
+                    rgba(0, 0, 0, 1) 80%,
+                    rgba(0, 0, 0, 0) 100%);
+            mask-image: linear-gradient(to bottom,
+                    rgba(0, 0, 0, 1) 0%,
+                    rgba(0, 0, 0, 1) 80%,
+                    rgba(0, 0, 0, 0) 100%);
         }
 
         /* Newsletter Form */
@@ -118,7 +120,7 @@
             margin-bottom: 10px;
             border: none;
             border-radius: 4px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
         }
 
@@ -170,20 +172,20 @@
                 flex: 100%;
                 text-align: center;
             }
-            
+
             .footer-col h3::after {
                 left: 50%;
                 transform: translateX(-50%);
             }
-            
+
             .footer-square {
                 display: none;
             }
-            
+
             .contact-info {
                 justify-content: center;
             }
-            
+
             .social-icons {
                 justify-content: center;
             }
@@ -191,6 +193,7 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Footer Section -->
     <footer>
@@ -206,7 +209,7 @@
                     <a href="#"><i class="fab fa-pinterest"></i></a>
                 </div>
             </div>
-            
+
             <!-- Column 2: Quick Links -->
             <div class="footer-col">
                 <h3>Quick Links</h3>
@@ -216,7 +219,7 @@
                 <a href="events.php">Events</a>
                 <a href="#">FAQs</a>
             </div>
-            
+
             <!-- Column 3: Contact Info -->
             <div class="footer-col">
                 <h3>Contact Us</h3>
@@ -224,8 +227,8 @@
                     <div class="contact-info">
                         <i class="fas fa-map-marker-alt"></i>
                         <p>Ground Floor, Masamura Building,<br>
-                        Km. 5 Buhangin-Cabantian-Indangan Rd.,<br>
-                        Brgy. Buhangin, Davao City 8000</p>
+                            Km. 5 Buhangin-Cabantian-Indangan Rd.,<br>
+                            Brgy. Buhangin, Davao City 8000</p>
                     </div>
                     <div class="contact-info">
                         <i class="fas fa-envelope"></i>
@@ -241,7 +244,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Column 4: Newsletter -->
             <div class="footer-col">
                 <h3>Newsletter</h3>
@@ -252,15 +255,16 @@
                 </form>
                 <p style="font-size: 12px; margin-top: 10px;">We'll never share your email with anyone else.</p>
             </div>
-            
+
             <!-- Transparent Square Decoration -->
             <div class="footer-square"></div>
         </div>
-        
+
         <!-- Copyright -->
         <div class="copyright">
             &copy; 2025 Ar's Flower Shop. All Rights Reserved. | Designed with <i class="fas fa-heart" style="color: #ff6b9e;"></i> by ARS Team
         </div>
     </footer>
 </body>
+
 </html>

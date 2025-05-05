@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,8 @@
   <style>
     /* Base Styles */
     body {
-      background-color: #FFF9F9; /* Soft pink background */
+      background-color: #FFF9F9;
+      /* Soft pink background */
       color: #122349;
       margin-top: 120px;
       font-family: 'Arial', sans-serif;
@@ -171,8 +172,15 @@
     }
 
     @keyframes modalFadeIn {
-      from { opacity: 0; transform: translateY(-50px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .close-modal {
@@ -202,8 +210,8 @@
       font-weight: 600;
     }
 
-    .form-group input, 
-    .form-group select, 
+    .form-group input,
+    .form-group select,
     .form-group textarea {
       width: 100%;
       padding: 12px;
@@ -239,20 +247,21 @@
       .events-grid {
         grid-template-columns: 1fr;
       }
-      
+
       .page-title {
         font-size: 2rem;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1 class="page-title">Floral Events & Workshops</h1>
     <p class="page-subtitle">Join us for unforgettable experiences with flowers</p>
-    
+
     <div class="floral-divider"></div>
-    
+
     <div class="events-grid">
       <!-- Workshop Event -->
       <div class="event-card">
@@ -261,7 +270,7 @@
           <h3 class="event-title">Spring Floral Workshop</h3>
           <div class="event-date"><i class="far fa-calendar-alt"></i> June 15, 2024 | 2:00 PM</div>
           <p class="event-description">
-            Learn to create stunning spring arrangements with our expert florists. 
+            Learn to create stunning spring arrangements with our expert florists.
             All materials provided, including seasonal blooms and a take-home vase.
           </p>
           <div class="event-price">Price: ₱1,200 per person</div>
@@ -276,7 +285,7 @@
           <h3 class="event-title">Valentine's Bouquet Special</h3>
           <div class="event-date"><i class="far fa-calendar-alt"></i> February 14, 2025 | All Day</div>
           <p class="event-description">
-            Pre-order romantic bouquets with 15% discount. Complimentary gift wrapping 
+            Pre-order romantic bouquets with 15% discount. Complimentary gift wrapping
             and handwritten cards for all orders.
           </p>
           <a href="productPage.php" class="register-btn">Shop Valentine's Collection</a>
@@ -290,7 +299,7 @@
           <h3 class="event-title">Bridal Floral Showcase</h3>
           <div class="event-date"><i class="far fa-calendar-alt"></i> March 5, 2025 | 10AM-6PM</div>
           <p class="event-description">
-            Explore wedding floral trends with live demonstrations. Exclusive 
+            Explore wedding floral trends with live demonstrations. Exclusive
             consultation discounts for attendees.
           </p>
           <div class="event-price">Free Admission</div>
@@ -309,22 +318,22 @@
       <h2 class="modal-title" id="modal-event-title">Register for Event</h2>
       <form id="registration-form">
         <input type="hidden" id="event-type">
-        
+
         <div class="form-group">
           <label for="name">Full Name</label>
           <input type="text" id="name" required>
         </div>
-        
+
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" required>
         </div>
-        
+
         <div class="form-group">
           <label for="phone">Phone Number</label>
           <input type="tel" id="phone" required>
         </div>
-        
+
         <div class="form-group" id="guest-field">
           <label for="guests">Number of Guests (including you)</label>
           <select id="guests">
@@ -334,12 +343,12 @@
             <option value="4">4</option>
           </select>
         </div>
-        
+
         <div class="form-group">
           <label for="notes">Special Requests</label>
           <textarea id="notes" placeholder="Allergies, accessibility needs, etc."></textarea>
         </div>
-        
+
         <button type="submit" class="submit-btn">Complete Registration</button>
       </form>
     </div>
@@ -361,9 +370,9 @@
         btn.addEventListener('click', function() {
           const event = this.getAttribute('data-event');
           eventType.value = event;
-          
+
           // Customize modal based on event
-          switch(event) {
+          switch (event) {
             case 'workshop':
               eventTitle.textContent = 'Register for Floral Workshop';
               guestField.style.display = 'block';
@@ -373,7 +382,7 @@
               guestField.style.display = 'none';
               break;
           }
-          
+
           modal.style.display = 'flex';
           document.body.style.overflow = 'hidden'; // Prevent scrolling
         });
@@ -396,14 +405,14 @@
       // Form submission
       form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Simulate form processing
         const eventName = eventType.value;
         const userName = document.getElementById('name').value;
-        
+
         // In a real app, you'd send this data to a server (e.g., via fetch)
         alert(`Thank you, ${userName}! Your registration for the ${eventName} has been received. We'll contact you shortly.`);
-        
+
         // Reset and close
         form.reset();
         modal.style.display = 'none';
@@ -414,6 +423,7 @@
       console.log('Events page loaded');
     });
   </script>
-  
+
 </body>
+
 </html>

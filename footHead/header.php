@@ -1,12 +1,15 @@
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>ARS Flowershop Davao</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -14,11 +17,13 @@
       -moz-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
     }
+
     html {
       scroll-behavior: smooth;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
+
     body {
       font-family: 'Arial', sans-serif;
       position: relative;
@@ -158,11 +163,11 @@
       padding: 25px;
       overflow-y: auto;
     }
-    
+
     .cart-sidebar.active {
       right: 0;
     }
-    
+
     .cart-header {
       display: flex;
       justify-content: space-between;
@@ -171,12 +176,12 @@
       border-bottom: 2px solid #ffb6c1;
       margin-bottom: 20px;
     }
-    
+
     .cart-header h2 {
       color: #122349;
       font-size: 1.5rem;
     }
-    
+
     .close-cart {
       background: none;
       border: none;
@@ -185,22 +190,22 @@
       color: #850000;
       transition: transform 0.3s;
     }
-    
+
     .close-cart:hover {
       transform: rotate(90deg);
     }
-    
+
     .cart-items {
       margin-bottom: 25px;
     }
-    
+
     .cart-item {
       display: flex;
       margin-bottom: 20px;
       padding-bottom: 20px;
       border-bottom: 1px solid #f0f0f0;
     }
-    
+
     .cart-item img {
       width: 80px;
       height: 80px;
@@ -208,29 +213,29 @@
       border-radius: 8px;
       margin-right: 15px;
     }
-    
+
     .item-details {
       flex: 1;
     }
-    
+
     .item-name {
       font-weight: bold;
       margin-bottom: 5px;
       color: #122349;
     }
-    
+
     .item-price {
       color: #b10e73;
       font-weight: 600;
       margin-bottom: 10px;
     }
-    
+
     .item-quantity {
       display: flex;
       align-items: center;
       margin-bottom: 5px;
     }
-    
+
     .quantity-btn {
       background: #f5f5f5;
       border: none;
@@ -241,11 +246,11 @@
       font-weight: bold;
       transition: all 0.2s;
     }
-    
+
     .quantity-btn:hover {
       background: #e0e0e0;
     }
-    
+
     .quantity-input {
       width: 40px;
       text-align: center;
@@ -254,7 +259,7 @@
       border-radius: 4px;
       padding: 5px;
     }
-    
+
     .remove-item {
       color: #850000;
       cursor: pointer;
@@ -263,12 +268,12 @@
       display: inline-block;
       transition: color 0.2s;
     }
-    
+
     .remove-item:hover {
       color: #b10e73;
       text-decoration: underline;
     }
-    
+
     .cart-total {
       font-weight: bold;
       font-size: 1.2rem;
@@ -276,7 +281,7 @@
       margin: 25px 0;
       color: #122349;
     }
-    
+
     .checkout-btn {
       width: 100%;
       padding: 14px;
@@ -290,13 +295,13 @@
       transition: all 0.3s;
       box-shadow: 0 3px 10px rgba(177, 14, 115, 0.3);
     }
-    
+
     .checkout-btn:hover {
       background: linear-gradient(135deg, #850000, #b10e73);
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(177, 14, 115, 0.4);
     }
-    
+
     .overlay {
       position: fixed;
       top: 0;
@@ -308,11 +313,11 @@
       display: none;
       backdrop-filter: blur(3px);
     }
-    
+
     .overlay.active {
       display: block;
     }
-    
+
     .empty-cart {
       text-align: center;
       padding: 40px 0;
@@ -348,8 +353,15 @@
     }
 
     @keyframes modalFadeIn {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .close-login {
@@ -579,11 +591,11 @@
       .header {
         padding: 15px 30px;
       }
-      
+
       .nav-links {
         gap: 25px;
       }
-      
+
       .nav-links a {
         font-size: 16px;
       }
@@ -594,19 +606,19 @@
         padding: 12px 20px;
         height: 90px;
       }
-      
+
       .logo img {
         height: 65px;
       }
-      
+
       .nav-links {
         gap: 15px;
       }
-      
+
       .nav-links a {
         font-size: 15px;
       }
-      
+
       .icons i {
         font-size: 20px;
         width: 20px;
@@ -624,20 +636,20 @@
         padding: 10px 15px;
         height: 80px;
       }
-      
+
       .logo img {
         height: 55px;
       }
-      
+
       .nav-links {
         gap: 10px;
         left: 55%;
       }
-      
+
       .nav-links a {
         font-size: 14px;
       }
-      
+
       .icons {
         gap: 12px;
       }
@@ -650,22 +662,23 @@
       .user-greeting {
         gap: 8px;
       }
-      
+
       .greeting-text {
         display: none;
       }
-      
+
       .logout-btn {
         padding: 6px 10px;
         font-size: 11px;
       }
-      
+
       .logged-in-icons {
         gap: 12px;
       }
     }
   </style>
 </head>
+
 <body>
 
   <div id="main-header" class="header">
@@ -682,7 +695,7 @@
       <i class="fa-regular fa-user" id="login-button"></i>
       <div class="cart-icon">
         <i class="fa-solid fa-cart-shopping" id="cart-button"></i>
-        <span id="cart-count"></span> 
+        <span id="cart-count"></span>
       </div>
     </div>
   </div>
@@ -705,7 +718,7 @@
   <div class="login-modal" id="login-modal">
     <div class="login-modal-content">
       <span class="close-login" id="close-login">&times;</span>
-      
+
       <div class="login-form-container" id="login-form">
         <h2>Welcome Back! 🌸</h2>
         <p>Sign in to order your favorite flowers</p>
@@ -716,7 +729,7 @@
         </form>
         <p class="switch-form">Don't have an account? <a href="#" id="show-signup">Create one</a></p>
       </div>
-      
+
       <div class="login-form-container" id="signup-form" style="display: none;">
         <h2>Join Us! 🌺</h2>
         <p>Create an account to start shopping</p>
@@ -749,7 +762,7 @@
     // Add initialization guard at the top
     if (!window.headerScriptsLoaded) {
       window.headerScriptsLoaded = true;
-      
+
       document.addEventListener('DOMContentLoaded', function() {
         // First, verify all elements exist
         const elements = {
@@ -793,7 +806,7 @@
             console.log('Login button clicked');
             toggleLoginModal();
           });
-          
+
           elements.closeLogin.addEventListener('click', toggleLoginModal);
         }
 
@@ -804,7 +817,7 @@
             elements.loginForm.style.display = 'none';
             elements.signupForm.style.display = 'block';
           });
-          
+
           elements.showLogin.addEventListener('click', function(e) {
             e.preventDefault();
             elements.signupForm.style.display = 'none';
@@ -820,7 +833,7 @@
             toggleLoginModal();
           });
         }
-        
+
         if (elements.userSignupForm) {
           elements.userSignupForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -834,25 +847,25 @@
         if (elements.checkoutBtn) {
           elements.checkoutBtn.addEventListener('click', function() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            
+
             // Check if cart is empty
             if (cart.length === 0) {
               alert('Your cart is empty. Please add items before checking out.');
               return;
             }
-            
+
             // Check if user is logged in
             checkSessionStatus().then(() => {
               const userGreeting = document.querySelector('.user-greeting');
-              
+
               if (!userGreeting) {
                 // User not logged in, show login modal
                 toggleLoginModal();
-                
+
                 // Add event listener to redirect to checkout after successful login
                 document.getElementById('user-login').addEventListener('submit', function(e) {
                   e.preventDefault();
-                  
+
                   // Simulate login success
                   setTimeout(() => {
                     toggleLoginModal();
@@ -870,19 +883,19 @@
         // Function to redirect to checkout page
         function redirectToCheckout() {
           const cart = JSON.parse(localStorage.getItem('cart')) || [];
-          
+
           // Create a form dynamically to submit the cart data
           const form = document.createElement('form');
           form.method = 'POST';
           form.action = 'checkout.php';
-          
+
           // Add cart data as hidden input
           const input = document.createElement('input');
           input.type = 'hidden';
           input.name = 'cart_data';
           input.value = JSON.stringify(cart);
           form.appendChild(input);
-          
+
           // Submit the form
           document.body.appendChild(form);
           form.submit();
@@ -923,39 +936,39 @@
             if (data.loggedIn) {
               // Get the icons container
               const iconsContainer = document.querySelector('.icons');
-              
+
               // Create new logged in UI
               const userGreeting = document.createElement('div');
               userGreeting.className = 'user-greeting';
-              
+
               const greetingText = document.createElement('span');
               greetingText.className = 'greeting-text';
               greetingText.textContent = `Hi, ${data.username}`;
-              
+
               // Add click handler for the username
               greetingText.addEventListener('click', () => {
                 window.location.href = 'user-profile.php';
               });
-              
+
               const logoutBtn = document.createElement('button');
               logoutBtn.className = 'logout-btn';
               logoutBtn.textContent = 'Logout';
               logoutBtn.id = 'logout-button';
-              
+
               // Add elements to greeting container
               userGreeting.appendChild(greetingText);
               userGreeting.appendChild(logoutBtn);
-              
+
               // Replace the login icon with the greeting
               const loginIcon = document.querySelector('.fa-user');
               if (loginIcon) {
                 loginIcon.replaceWith(userGreeting);
               }
-              
+
               // Update icons container
               if (iconsContainer) {
                 iconsContainer.classList.add('logged-in-icons');
-                
+
                 // Move cart icon to be first element
                 const cartIcon = iconsContainer.querySelector('.cart-icon');
                 if (cartIcon) {
@@ -979,23 +992,23 @@
           const cancelBtn = document.getElementById('cancel-logout');
           const confirmBtn = document.getElementById('confirm-logout');
           const overlay = document.getElementById('overlay');
-          
+
           confirmModal.style.display = 'flex';
           overlay.classList.add('active');
-          
+
           // Remove previous event listeners to avoid duplicates
           cancelBtn.replaceWith(cancelBtn.cloneNode(true));
           confirmBtn.replaceWith(confirmBtn.cloneNode(true));
-          
+
           // Get fresh references after cloning
           const newCancelBtn = document.getElementById('cancel-logout');
           const newConfirmBtn = document.getElementById('confirm-logout');
-          
+
           newCancelBtn.addEventListener('click', () => {
             confirmModal.style.display = 'none';
             overlay.classList.remove('active');
           });
-          
+
           newConfirmBtn.addEventListener('click', async () => {
             try {
               // Show loading state on logout button
@@ -1009,12 +1022,12 @@
                 // Close confirmation modal
                 confirmModal.style.display = 'none';
                 overlay.classList.remove('active');
-                
+
                 // Reset login form
                 document.getElementById('login-username').value = '';
                 document.getElementById('login-pass').value = '';
-                
-                window.location.href = '/home.php';
+
+                window.location.href = 'home.php';
               } else {
                 throw new Error('Logout failed');
               }
@@ -1034,7 +1047,7 @@
         function toggleCart() {
           elements.cartSidebar.classList.toggle('active');
           elements.overlay.classList.toggle('active');
-          
+
           if (elements.cartSidebar.classList.contains('active')) {
             renderCartItems();
           }
@@ -1043,12 +1056,12 @@
         function toggleLoginModal() {
           const loginModal = document.getElementById('login-modal');
           const overlay = document.getElementById('overlay');
-          
+
           // Only toggle if not already in the desired state
           if (loginModal.style.display !== 'flex') {
             loginModal.style.display = 'flex';
             overlay.classList.add('active');
-            
+
             // Ensure login form is shown (not signup)
             document.getElementById('signup-form').style.display = 'none';
             document.getElementById('login-form').style.display = 'block';
@@ -1062,21 +1075,21 @@
           const cart = JSON.parse(localStorage.getItem('cart')) || [];
           const cartItemsContainer = document.getElementById('cart-items');
           const cartTotal = document.getElementById('cart-total');
-          
+
           if (!cartItemsContainer) return;
-          
+
           if (cart.length === 0) {
             cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
             if (cartTotal) cartTotal.textContent = 'Total: ₱0.00';
             return;
           }
-          
+
           let itemsHTML = '';
           let total = 0;
-          
+
           cart.forEach((item, index) => {
             total += item.price * item.quantity;
-            
+
             itemsHTML += `
               <div class="cart-item" data-id="${item.id}">
                 <img src="dashboard/uploads/${item.image}" alt="${item.name}">
@@ -1093,10 +1106,10 @@
               </div>
             `;
           });
-          
+
           cartItemsContainer.innerHTML = itemsHTML;
           if (cartTotal) cartTotal.textContent = `Total: ₱${total.toFixed(2)}`;
-          
+
           // Reattach event listeners
           document.querySelectorAll('.minus').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -1104,14 +1117,14 @@
               updateQuantity(index, -1);
             });
           });
-          
+
           document.querySelectorAll('.plus').forEach(btn => {
             btn.addEventListener('click', function() {
               const index = parseInt(this.getAttribute('data-index'));
               updateQuantity(index, 1);
             });
           });
-          
+
           document.querySelectorAll('.remove-item').forEach(btn => {
             btn.addEventListener('click', function() {
               const index = parseInt(this.getAttribute('data-index'));
@@ -1119,23 +1132,23 @@
             });
           });
         }
-        
+
         function updateQuantity(index, change) {
           // Always get fresh cart data from localStorage
           let cart = JSON.parse(localStorage.getItem('cart')) || [];
-          
+
           // Verify index is valid
           if (index >= 0 && index < cart.length) {
             cart[index].quantity += change;
-            
+
             // Ensure quantity doesn't go below 1
             if (cart[index].quantity < 1) {
               cart[index].quantity = 1;
             }
-            
+
             // Save updated cart
             localStorage.setItem('cart', JSON.stringify(cart));
-            
+
             // Update UI
             renderCartItems();
             updateCartCount();
@@ -1143,16 +1156,16 @@
             console.error('Invalid index for quantity update');
           }
         }
-        
+
         function removeItem(index) {
           // Always get fresh cart data from localStorage
           let cart = JSON.parse(localStorage.getItem('cart')) || [];
-          
+
           // Verify index is valid
           if (index >= 0 && index < cart.length) {
             cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
-            
+
             // Update UI
             renderCartItems();
             updateCartCount();
@@ -1160,7 +1173,7 @@
             console.error('Invalid index for cart item removal');
           }
         }
-        
+
         function updateCartCount() {
           const cart = JSON.parse(localStorage.getItem('cart')) || [];
           const count = cart.reduce((total, item) => total + item.quantity, 0);
@@ -1170,13 +1183,13 @@
         // Global function to add items to cart
         window.addToCart = function(product) {
           console.log('Adding product to cart:', product);
-          
+
           // Get current cart or initialize empty array
           let cart = JSON.parse(localStorage.getItem('cart')) || [];
-          
+
           // Check if item exists in cart
           const existingItem = cart.find(item => item.id === product.id);
-          
+
           if (existingItem) {
             existingItem.quantity += 1;
           } else {
@@ -1188,25 +1201,25 @@
               quantity: 1
             });
           }
-          
+
           // Save updated cart
           localStorage.setItem('cart', JSON.stringify(cart));
-          
+
           // Update UI immediately
           updateCartCount();
-          
+
           // If cart sidebar is open, update its contents
           if (document.getElementById('cart-sidebar').classList.contains('active')) {
             renderCartItems();
           }
-          
+
           // Show visual feedback
           const cartIcon = document.getElementById('cart-button');
           if (cartIcon) {
             cartIcon.classList.add('pulse');
             setTimeout(() => cartIcon.classList.remove('pulse'), 500);
           }
-          
+
           console.log('Cart updated:', cart);
         };
 
@@ -1224,22 +1237,21 @@
         if (elements.header) {
           let lastScrollPosition = 0;
           const scrollThreshold = 100;
-          
+
           window.addEventListener('scroll', function() {
             const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-            
+
             if (currentScrollPosition <= 0) {
               elements.header.classList.remove('hidden');
               return;
             }
-            
+
             if (currentScrollPosition > lastScrollPosition && currentScrollPosition > scrollThreshold) {
               elements.header.classList.add('hidden');
-            } 
-            else if (currentScrollPosition < lastScrollPosition) {
+            } else if (currentScrollPosition < lastScrollPosition) {
               elements.header.classList.remove('hidden');
             }
-            
+
             lastScrollPosition = currentScrollPosition;
           });
         }
@@ -1249,4 +1261,5 @@
     }
   </script>
 </body>
+
 </html>

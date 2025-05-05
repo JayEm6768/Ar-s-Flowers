@@ -14,12 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // Update Cart - Add or Remove items
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $cartData = json_decode(file_get_contents('php://input'), true);  // Get JSON body
-    
+
     // Example to add/update item in cart
     if ($cartData && isset($cartData['id'])) {
         // Retrieve current cart
         $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
-        
+
         // Check if item exists
         $itemExists = false;
         foreach ($cart as &$item) {
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                 break;
             }
         }
-        
+
         // If item does not exist, add it to cart
         if (!$itemExists) {
             $cart[] = $cartData;
@@ -45,13 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 // Remove item from cart
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     $cartData = json_decode(file_get_contents('php://input'), true);  // Get JSON body
-    
+
     if (isset($cartData['id'])) {
         // Retrieve current cart
         $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 
         // Filter out item by id
-        $cart = array_filter($cart, function($item) use ($cartData) {
+        $cart = array_filter($cart, function ($item) use ($cartData) {
             return $item['id'] !== $cartData['id'];
         });
 
@@ -61,4 +61,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         echo json_encode(['error' => 'Invalid item ID']);
     }
 }
-?>

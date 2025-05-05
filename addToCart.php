@@ -101,8 +101,8 @@ try {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
     $baseUrl = $protocol . "://$_SERVER[HTTP_HOST]";
     $uploadPath = '/dashboard/uploads';
-    
-    $product['image_url'] = !empty($product['image_url']) 
+
+    $product['image_url'] = !empty($product['image_url'])
         ? $baseUrl . $uploadPath . $product['image_url']
         : $baseUrl . $uploadPath . 'default-product.jpg';
 
@@ -112,7 +112,7 @@ try {
     // Update stock quantity 
     $updateStmt = $pdo->prepare("UPDATE product SET quantity = quantity - ? WHERE flower_id = ?");
     $updateStmt->execute([$quantity, $productId]);
-    
+
 
     // Commit transaction
     $pdo->commit();
@@ -126,13 +126,12 @@ try {
         'message' => 'Product added to cart successfully',
         'cart_total_items' => $quantity // You might want to calculate actual cart total
     ]);
-
 } catch (PDOException $e) {
     // Roll back transaction if there was an error
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
-    
+
     http_response_code(500);
     echo json_encode([
         'success' => false,
@@ -148,4 +147,3 @@ try {
         'code' => $e->getCode()
     ]);
 }
-?>

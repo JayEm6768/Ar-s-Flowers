@@ -1,14 +1,18 @@
-  <?php include 'footHead/header.php'; ?>
-  <?php
+<?php include 'footHead/header.php'; ?>
+<?php
+// Enable error reporting for debugging (remove in production)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Start session only if not already active
 if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
+  session_start();
 }
 
 // Redirect if not authenticated
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+  header("Location: login.php");
+  exit();
 }
 
 // Database connection
@@ -16,46 +20,167 @@ require_once 'connect.php';
 
 // Initialize variables with default values
 $user = [
-    'user_id' => null,
-    'username' => 'Guest',
-    'email' => '',
-    'profile_picture' => '/images/default_profile.jpg',
-    'created_at' => date('Y-m-d H:i:s')
+  'user_id' => null,
+  'username' => 'Guest',
+  'email' => '',
+  'profile_picture' => '/images/default_profile.jpg',
+  'created_at' => date('Y-m-d H:i:s')
 ];
 $error = '';
 $success = '';
 
 try {
-    // Get current user data
-    $user_id = $_SESSION['user_id'];
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $user_data = $stmt->fetch();
+  // Get current user data
+  $user_id = $_SESSION['user_id'];
+  $stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
+  $stmt->execute([$user_id]);
+  $user_data = $stmt->fetch();
 
-    if ($user_data) {
-        // Merge default values with database values
-        $user = array_merge($user, $user_data);
-    } else {
-        session_destroy();
-        header("Location: login.php");
-        exit();
-    }
+  if ($user_data) {
+    // Merge default values with database values
+    $user = array_merge($user, $user_data);
+  } else {
+    session_destroy();
+    header("Location: login.php");
+    exit();
+  }
 } catch (PDOException $e) {
-    $error = "Database error: " . $e->getMessage();
-    error_log("User Profile Error: " . $e->getMessage());
+  $error = "Database error: " . $e->getMessage();
+  error_log("User Profile Error: " . $e->getMessage());
 }
 
-$id = $_SESSION['user_id'];
-$query = "SELECT * FROM `ordertable` WHERE `ordertable`.`customer_id` = $id;";
-$conn = mysqli_connect("localhost:3306","root", "", "inventory");
-$orders = mysqli_query($conn, $query);
+// Handle form submissions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Handle profile picture upload
+  if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+    try {
+      // Validate and process the uploaded file
+      $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+      $file_type = $_FILES['profile_picture']['type'];
 
+      if (!in_array($file_type, $allowed_types)) {
+        throw new Exception("Only JPG, PNG, and GIF files are allowed.");
+      }
 
+      // Check file size (max 2MB)
+      if ($_FILES['profile_picture']['size'] > 2097152) {
+        throw new Exception("File size must be less than 2MB.");
+      }
 
-// Rest of your existing code...
+      // Create uploads directory if it doesn't exist
+      $upload_dir = 'uploads/profile_pictures/';
+      if (!file_exists($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+      }
+
+      // Generate unique filename
+      $file_ext = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
+      $filename = 'user_' . $user_id . '_' . time() . '.' . $file_ext;
+      $destination = $upload_dir . $filename;
+
+      // Move the file
+      if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $destination)) {
+        // Delete old profile picture if it's not the default
+        if ($user['profile_picture'] && $user['profile_picture'] !== '/images/default_profile.jpg') {
+          @unlink($user['profile_picture']);
+        }
+
+        // Update database
+        $stmt = $pdo->prepare("UPDATE users SET profile_picture = ? WHERE user_id = ?");
+        $stmt->execute([$destination, $user_id]);
+
+        // Update the current user data
+        $user['profile_picture'] = $destination;
+        $success = "Profile picture updated successfully!";
+      } else {
+        throw new Exception("Failed to move uploaded file.");
+      }
+    } catch (Exception $e) {
+      $error = "Error uploading profile picture: " . $e->getMessage();
+    }
+  }
+
+  // Handle email change
+  if (isset($_POST['change_email'])) {
+    $new_email = filter_var($_POST['new_email'], FILTER_SANITIZE_EMAIL);
+
+    if (filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
+      try {
+        // Check if email already exists
+        $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ? AND user_id != ?");
+        $stmt->execute([$new_email, $user_id]);
+
+        if ($stmt->fetch()) {
+          $error = "This email is already registered to another account.";
+        } else {
+          // Update email
+          $stmt = $pdo->prepare("UPDATE users SET email = ? WHERE user_id = ?");
+          $stmt->execute([$new_email, $user_id]);
+
+          $user['email'] = $new_email;
+          $success = "Email updated successfully!";
+        }
+      } catch (PDOException $e) {
+        $error = "Database error: " . $e->getMessage();
+      }
+    } else {
+      $error = "Please enter a valid email address.";
+    }
+  }
+
+  // Handle password change
+  if (isset($_POST['change_password'])) {
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
+
+    // Validate password strength
+    if (strlen($new_password) < 8) {
+      $error = "Password must be at least 8 characters long.";
+    } else {
+      try {
+        // Verify current password
+        $stmt = $pdo->prepare("SELECT pass FROM users WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+        $db_password = $stmt->fetchColumn();
+
+        if (password_verify($current_password, $db_password)) {
+          // Hash new password
+          $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+
+          // Update password
+          $stmt = $pdo->prepare("UPDATE users SET pass = ? WHERE user_id = ?");
+          $stmt->execute([$hashed_password, $user_id]);
+
+          $success = "Password changed successfully!";
+        } else {
+          $error = "Current password is incorrect.";
+        }
+      } catch (PDOException $e) {
+        $error = "Database error: " . $e->getMessage();
+      }
+    }
+  }
+}
+
+// Get user orders using PDO
+try {
+  $id = $_SESSION['user_id'];
+  $stmt = $pdo->prepare("SELECT * FROM `ordertable` WHERE `customer_id` = ?");
+  $stmt->execute([$id]);
+  $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  $error = "Error fetching orders: " . $e->getMessage();
+  $orders = [];
+}
+
+// Initialize complaints array
+$complaints = [];
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>My Profile - ARS Flowershop</title>
@@ -73,46 +198,46 @@ $orders = mysqli_query($conn, $query);
       --warning: #ff9800;
       --danger: #f44336;
     }
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Arial', sans-serif;
     }
-    
+
     body {
       background-color: var(--light);
       color: var(--secondary);
       line-height: 1.6;
       margin-top: 120px;
     }
-    
+
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
     }
-    
+
     /* Profile Container */
     .profile-container {
       display: flex;
       gap: 30px;
       margin-bottom: 40px;
     }
-    
+
     /* Sidebar Styles */
     .profile-sidebar {
       width: 320px;
       padding: 30px;
       background: white;
       border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
       position: sticky;
       top: 140px;
       height: fit-content;
     }
-    
+
     /* Content Styles */
     .profile-content {
       flex: 1;
@@ -120,9 +245,9 @@ $orders = mysqli_query($conn, $query);
       padding: 30px;
       background: white;
       border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     }
-    
+
     /* Profile Picture */
     .profile-picture-container {
       position: relative;
@@ -130,7 +255,7 @@ $orders = mysqli_query($conn, $query);
       height: 150px;
       margin: 0 auto 20px;
     }
-    
+
     .profile-picture {
       width: 100%;
       height: 100%;
@@ -139,7 +264,7 @@ $orders = mysqli_query($conn, $query);
       border: 3px solid var(--primary);
       box-shadow: 0 3px 10px rgba(177, 14, 115, 0.2);
     }
-    
+
     .profile-picture-edit {
       position: absolute;
       bottom: 5px;
@@ -156,14 +281,15 @@ $orders = mysqli_query($conn, $query);
       border: 2px solid white;
       transition: all 0.3s;
     }
-    
+
     .profile-picture-edit:hover {
       background: var(--primary-dark);
       transform: scale(1.1);
     }
-    
+
     /* Order and Complaint Cards */
-    .order-card, .complaint-card {
+    .order-card,
+    .complaint-card {
       border: 1px solid #eee;
       padding: 20px;
       margin-bottom: 20px;
@@ -172,12 +298,13 @@ $orders = mysqli_query($conn, $query);
       transition: all 0.3s;
       background: white;
     }
-    
-    .order-card:hover, .complaint-card:hover {
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+    .order-card:hover,
+    .complaint-card:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       transform: translateY(-2px);
     }
-    
+
     /* Complaint Form */
     .complaint-form {
       display: none;
@@ -187,14 +314,14 @@ $orders = mysqli_query($conn, $query);
       border-radius: 8px;
       border-left: 4px solid var(--primary);
     }
-    
+
     /* Tab System */
     .tab-buttons {
       display: flex;
       margin-bottom: 25px;
       border-bottom: 1px solid #ddd;
     }
-    
+
     .tab-button {
       padding: 12px 25px;
       background: none;
@@ -205,20 +332,20 @@ $orders = mysqli_query($conn, $query);
       border-bottom: 3px solid transparent;
       transition: all 0.3s;
     }
-    
+
     .tab-button.active {
       color: var(--primary);
       border-bottom: 3px solid var(--primary);
     }
-    
+
     .tab-content {
       display: none;
     }
-    
+
     .tab-content.active {
       display: block;
     }
-    
+
     /* Buttons */
     .btn {
       padding: 10px 20px;
@@ -231,48 +358,48 @@ $orders = mysqli_query($conn, $query);
       align-items: center;
       gap: 8px;
     }
-    
+
     .btn i {
       font-size: 14px;
     }
-    
+
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
       color: white;
       box-shadow: 0 3px 10px rgba(177, 14, 115, 0.3);
     }
-    
+
     .btn-primary:hover {
       background: linear-gradient(135deg, var(--primary-dark), var(--primary));
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(177, 14, 115, 0.4);
     }
-    
+
     .btn-secondary {
       background: var(--gray);
       color: var(--dark-gray);
     }
-    
+
     .btn-secondary:hover {
       background: #e0e0e0;
     }
-    
+
     /* Status Indicators */
     .status-pending {
       color: var(--warning);
       font-weight: bold;
     }
-    
+
     .status-resolved {
       color: var(--success);
       font-weight: bold;
     }
-    
+
     .status-rejected {
       color: var(--danger);
       font-weight: bold;
     }
-    
+
     /* Alerts */
     .alert {
       padding: 15px;
@@ -283,35 +410,35 @@ $orders = mysqli_query($conn, $query);
       align-items: center;
       gap: 10px;
     }
-    
+
     .alert i {
       font-size: 20px;
     }
-    
+
     .alert-danger {
       background-color: #f8d7da;
       color: #721c24;
       border-left: 4px solid var(--danger);
     }
-    
+
     .alert-success {
       background-color: #d4edda;
       color: #155724;
       border-left: 4px solid var(--success);
     }
-    
+
     /* Form Styles */
     .form-group {
       margin-bottom: 20px;
     }
-    
+
     .form-group label {
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
       color: var(--secondary);
     }
-    
+
     .form-control {
       width: 100%;
       padding: 12px 15px;
@@ -319,13 +446,13 @@ $orders = mysqli_query($conn, $query);
       border-radius: 8px;
       transition: all 0.3s;
     }
-    
+
     .form-control:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(177, 14, 115, 0.1);
       outline: none;
     }
-    
+
     /* Profile Header */
     .profile-header {
       display: flex;
@@ -333,35 +460,35 @@ $orders = mysqli_query($conn, $query);
       align-items: center;
       margin-bottom: 25px;
     }
-    
+
     .profile-header h2 {
       color: var(--primary);
       font-size: 28px;
     }
-    
+
     /* Responsive Adjustments */
     @media (max-width: 992px) {
       .profile-container {
         flex-direction: column;
       }
-      
+
       .profile-sidebar {
         width: 100%;
         position: static;
       }
     }
-    
+
     @media (max-width: 576px) {
       .tab-buttons {
         flex-direction: column;
       }
-      
+
       .tab-button {
         text-align: left;
         border-bottom: none;
         border-left: 3px solid transparent;
       }
-      
+
       .tab-button.active {
         border-left: 3px solid var(--primary);
         border-bottom: none;
@@ -369,9 +496,9 @@ $orders = mysqli_query($conn, $query);
     }
   </style>
 </head>
+
 <body>
 
-  
   <div class="container">
     <!-- Display error/success messages -->
     <?php if (!empty($error)): ?>
@@ -392,15 +519,15 @@ $orders = mysqli_query($conn, $query);
         <!-- Profile Section -->
         <div class="text-center">
           <div class="profile-picture-container">
-            <img src="<?php echo htmlspecialchars($user['profile_picture'] ?? '/images/default_profile.jpg'); ?>" 
-                 class="profile-picture" id="profile-picture">
+            <img src="<?php echo htmlspecialchars($user['profile_picture'] ?? '/images/default_profile.jpg'); ?>"
+              class="profile-picture" id="profile-picture">
             <div class="profile-picture-edit" onclick="document.getElementById('profile-upload').click()">
               <i class="fas fa-camera"></i>
             </div>
           </div>
           <h2><?php echo htmlspecialchars($user['username']); ?></h2>
           <p><?php echo htmlspecialchars($user['email']); ?></p>
-          
+
           <!-- Profile Picture Form -->
           <form method="post" enctype="multipart/form-data" class="mt-4">
             <input type="file" name="profile_picture" id="profile-upload" accept="image/*" style="display:none;">
@@ -415,19 +542,19 @@ $orders = mysqli_query($conn, $query);
           <h4 class="mb-4" style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 8px;">
             <i class="fas fa-cog mr-2"></i>Account Settings
           </h4>
-          
+
           <!-- Email Update Form -->
           <form method="post">
             <div class="form-group">
               <label><i class="fas fa-envelope mr-2"></i>Email Address</label>
-              <input type="email" name="new_email" class="form-control" 
-                     value="<?php echo htmlspecialchars($user['email']); ?>" required>
+              <input type="email" name="new_email" class="form-control"
+                value="<?php echo htmlspecialchars($user['email']); ?>" required>
               <button type="submit" name="change_email" class="btn btn-primary mt-3 w-100">
                 <i class="fas fa-sync-alt"></i> Update Email
               </button>
             </div>
           </form>
-          
+
           <!-- Password Update Form -->
           <form method="post" class="mt-4">
             <div class="form-group">
@@ -447,7 +574,7 @@ $orders = mysqli_query($conn, $query);
           <h2><i class="fas fa-user-circle mr-2"></i>My Account</h2>
           <div class="text-muted">Member since <?php echo date('M Y', strtotime($user['created_at'])); ?></div>
         </div>
-        
+
         <div class="tab-buttons">
           <button class="tab-button active" onclick="openTab('orders')">
             <i class="fas fa-shopping-bag mr-2"></i>My Orders
@@ -456,7 +583,7 @@ $orders = mysqli_query($conn, $query);
             <i class="fas fa-exclamation-circle mr-2"></i>My Complaints
           </button>
         </div>
-        
+
         <div id="orders" class="tab-content active">
           <?php if (empty($orders)): ?>
             <div class="text-center py-5">
@@ -485,12 +612,12 @@ $orders = mysqli_query($conn, $query);
                     <strong>₱<?php echo number_format($order['total_amount'], 2); ?></strong>
                   </div>
                 </div>
-                
+
                 <?php if ($order['status'] == 'completed'): ?>
                   <button onclick="showComplaintForm(<?php echo $order['order_id']; ?>)" class="btn btn-primary mt-3">
                     <i class="fas fa-exclamation-circle mr-2"></i>File Complaint
                   </button>
-                  
+
                   <div id="complaint-form-<?php echo $order['order_id']; ?>" class="complaint-form">
                     <form method="post">
                       <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
@@ -508,7 +635,7 @@ $orders = mysqli_query($conn, $query);
             <?php endforeach; ?>
           <?php endif; ?>
         </div>
-        
+
         <div id="complaints" class="tab-content">
           <?php if (empty($complaints)): ?>
             <div class="text-center py-5">
@@ -526,7 +653,7 @@ $orders = mysqli_query($conn, $query);
                     <?php echo ucfirst(htmlspecialchars($complaint['status'])); ?>
                   </span>
                 </div>
-                
+
                 <div class="mb-3">
                   <div class="d-flex align-items-center mb-2">
                     <i class="fas fa-shopping-bag mr-2 text-muted"></i>
@@ -535,13 +662,13 @@ $orders = mysqli_query($conn, $query);
                     <i class="fas fa-calendar-day mr-2 text-muted"></i>
                     <?php echo date('M d, Y', strtotime($complaint['order_date'])); ?>
                   </div>
-                  
+
                   <div class="d-flex align-items-center mb-3">
                     <i class="fas fa-clock mr-2 text-muted"></i>
                     Filed on <?php echo date('M d, Y h:i A', strtotime($complaint['complaint_date'])); ?>
                   </div>
                 </div>
-                
+
                 <div class="complaint-details">
                   <h5 class="mb-2"><i class="fas fa-align-left mr-2 text-muted"></i>Description</h5>
                   <p><?php echo htmlspecialchars($complaint['description']); ?></p>
@@ -571,12 +698,12 @@ $orders = mysqli_query($conn, $query);
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
       });
-      
+
       // Deactivate all tab buttons
       document.querySelectorAll('.tab-button').forEach(btn => {
         btn.classList.remove('active');
       });
-      
+
       // Activate selected tab
       document.getElementById(tabName).classList.add('active');
       event.currentTarget.classList.add('active');
@@ -585,14 +712,18 @@ $orders = mysqli_query($conn, $query);
     function showComplaintForm(orderId) {
       const form = document.getElementById('complaint-form-' + orderId);
       form.style.display = form.style.display === 'block' ? 'none' : 'block';
-      
+
       // Smooth scroll to form
       if (form.style.display === 'block') {
-        form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        form.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        });
       }
     }
   </script>
-  
+
   <?php include 'footHead/footer.php'; ?>
 </body>
+
 </html>

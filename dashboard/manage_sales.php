@@ -60,6 +60,7 @@ $total_pages = ceil($total_sales / $rows_per_page);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -96,7 +97,8 @@ $total_pages = ceil($total_sales / $rows_per_page);
             margin-top: 20px;
         }
 
-        table th, table td {
+        table th,
+        table td {
             padding: 12px;
             text-align: center;
             border: 1px solid #ddd;
@@ -184,6 +186,7 @@ $total_pages = ceil($total_sales / $rows_per_page);
                 opacity: 0;
                 top: 0;
             }
+
             100% {
                 opacity: 1;
                 top: 20px;
@@ -199,6 +202,7 @@ $total_pages = ceil($total_sales / $rows_per_page);
             0% {
                 opacity: 1;
             }
+
             100% {
                 opacity: 0;
                 display: none;
@@ -221,9 +225,9 @@ $total_pages = ceil($total_sales / $rows_per_page);
         .btn-back-dashboard:hover {
             background-color: #0056b3;
         }
-
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -243,19 +247,19 @@ $total_pages = ceil($total_sales / $rows_per_page);
             </tr>
 
             <?php while ($row = $sales->fetch_assoc()): ?>
-            <tr>
-                <form method="post">
-                    <input type="hidden" name="sale_id" value="<?= $row['id'] ?>">
-                    <td><?= $row['id'] ?></td>
-                    <td><?= htmlspecialchars($row['name']) ?></td>
-                    <td><input type="number" name="quantity" value="<?= $row['quantity'] ?>" required></td>
-                    <td><input type="date" name="sale_date" value="<?= $row['sale_date'] ?>" required></td>
-                    <td>
-                        <input type="submit" name="update_sale" value="Update">
-                        <a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Delete this sale?')">Delete</a>
-                    </td>
-                </form>
-            </tr>
+                <tr>
+                    <form method="post">
+                        <input type="hidden" name="sale_id" value="<?= $row['id'] ?>">
+                        <td><?= $row['id'] ?></td>
+                        <td><?= htmlspecialchars($row['name']) ?></td>
+                        <td><input type="number" name="quantity" value="<?= $row['quantity'] ?>" required></td>
+                        <td><input type="date" name="sale_date" value="<?= $row['sale_date'] ?>" required></td>
+                        <td>
+                            <input type="submit" name="update_sale" value="Update">
+                            <a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Delete this sale?')">Delete</a>
+                        </td>
+                    </form>
+                </tr>
             <?php endwhile; ?>
         </table>
 
@@ -273,7 +277,7 @@ $total_pages = ceil($total_sales / $rows_per_page);
     <div id="popup" class="popup <?= $update_success ? '' : 'hide' ?>">
         ✅ Sale updated successfully!
     </div>
-    
+
 
     <script>
         // Automatically hide the success popup after 3 seconds
@@ -287,4 +291,5 @@ $total_pages = ceil($total_sales / $rows_per_page);
     </script>
 
 </body>
+
 </html>

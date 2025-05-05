@@ -3,26 +3,26 @@ session_start();
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+  header("Location: login.php");
+  exit();
 }
 $id = $_SESSION['user_id'];
 $query = "SELECT `address` FROM `users` WHERE `users`.`user_id` = $id;";
-$conn = mysqli_connect("localhost:3306","root", "", "inventory");
+$conn = mysqli_connect("localhost:3306", "root", "", "inventory");
 $select = mysqli_query($conn, $query);
 
 // Get cart data from POST
 $cart = [];
 if (isset($_POST['cart_data'])) {
-    $cart = json_decode($_POST['cart_data'], true);
+  $cart = json_decode($_POST['cart_data'], true);
 } elseif (isset($_SESSION['checkout_cart'])) {
-    $cart = $_SESSION['checkout_cart'];
+  $cart = $_SESSION['checkout_cart'];
 }
 
 // If cart is empty, redirect back
 if (empty($cart)) {
-    header("Location: cart.php");
-    exit();
+  header("Location: cart.php");
+  exit();
 }
 
 // Calculate totals
@@ -31,7 +31,7 @@ $taxRate = 0.05; // 5% tax
 $deliveryFee = 30;
 
 foreach ($cart as $item) {
-    $subtotal += $item['price'] * $item['quantity'];
+  $subtotal += $item['price'] * $item['quantity'];
 }
 
 $tax = $subtotal * $taxRate;
@@ -39,61 +39,62 @@ $total = $subtotal + $tax + $deliveryFee;
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
-    require_once 'connect.php';
-    
-    try {
-        $pdo->beginTransaction();
-        
-        // 1. Create order record
-        $stmt = $pdo->prepare("INSERT INTO ordertable (customer_id, order_date, total_amount, shipping_date) 
+  require_once 'connect.php';
+
+  try {
+    $pdo->beginTransaction();
+
+    // 1. Create order record
+    $stmt = $pdo->prepare("INSERT INTO ordertable (customer_id, order_date, total_amount, shipping_date) 
                               VALUES (?, NOW(), ?, ?)");
-        $shippingDate = date('Y-m-d', strtotime($_POST['delivery_date']));
-        $stmt->execute([
-            $_SESSION['user_id'],
-            $total,
-            $shippingDate
-        ]);
-        $orderId = $pdo->lastInsertId();
-        
-        // 2. Add order items
-        foreach ($cart as $item) {
-            $stmt = $pdo->prepare("INSERT INTO orderitem (order_id, product_id, quantity, price) 
+    $shippingDate = date('Y-m-d', strtotime($_POST['delivery_date']));
+    $stmt->execute([
+      $_SESSION['user_id'],
+      $total,
+      $shippingDate
+    ]);
+    $orderId = $pdo->lastInsertId();
+
+    // 2. Add order items
+    foreach ($cart as $item) {
+      $stmt = $pdo->prepare("INSERT INTO orderitem (order_id, product_id, quantity, price) 
                                   VALUES (?, ?, ?, ?)");
-            $stmt->execute([
-                $orderId,
-                $item['id'],
-                $item['quantity'],
-                $item['price']
-            ]);
-            
-            // Update product quantity
-            $stmt = $pdo->prepare("UPDATE product SET quantity = quantity - ? WHERE flower_id = ?");
-            $stmt->execute([$item['quantity'], $item['id']]);
-        }
-        
-        // 3. Create order summary
-        $stmt = $pdo->prepare("INSERT INTO ordersummary (order_id, total_items, total_cost) 
-                              VALUES (?, ?, ?)");
-        $totalItems = array_sum(array_column($cart, 'quantity'));
-        $stmt->execute([$orderId, $totalItems, $total]);
-        
-        $pdo->commit();
-        
-        // Clear the cart
-        unset($_SESSION['checkout_cart']);
-        
-        // Redirect to confirmation page
-        header("Location: order_confirmation.php?order_id=$orderId");
-        
-        exit();
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $error = "Error processing your order: " . $e->getMessage();
+      $stmt->execute([
+        $orderId,
+        $item['id'],
+        $item['quantity'],
+        $item['price']
+      ]);
+
+      // Update product quantity
+      $stmt = $pdo->prepare("UPDATE product SET quantity = quantity - ? WHERE flower_id = ?");
+      $stmt->execute([$item['quantity'], $item['id']]);
     }
+
+    // 3. Create order summary
+    $stmt = $pdo->prepare("INSERT INTO ordersummary (order_id, total_items, total_cost) 
+                              VALUES (?, ?, ?)");
+    $totalItems = array_sum(array_column($cart, 'quantity'));
+    $stmt->execute([$orderId, $totalItems, $total]);
+
+    $pdo->commit();
+
+    // Clear the cart
+    unset($_SESSION['checkout_cart']);
+
+    // Redirect to confirmation page
+    header("Location: order_confirmation.php?order_id=$orderId");
+
+    exit();
+  } catch (PDOException $e) {
+    $pdo->rollBack();
+    $error = "Error processing your order: " . $e->getMessage();
+  }
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Checkout - ARS Flowershop Davao</title>
@@ -289,7 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
       .checkout-columns {
         flex-direction: column;
       }
-      
+
       .checkout-container {
         margin: 100px 20px 30px;
         padding: 20px;
@@ -297,18 +298,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
     }
   </style>
 </head>
+
 <body>
   <?php include 'footHead/header.php'; ?>
 
   <div class="checkout-container">
     <h1 class="checkout-title">Checkout</h1>
-    
+
     <?php if (!empty($error)): ?>
       <div class="error-message" style="color: red; margin-bottom: 20px; padding: 10px; background: #ffeeee; border-radius: 5px;">
         <?= htmlspecialchars($error) ?>
       </div>
     <?php endif; ?>
-    
+
     <div class="checkout-columns">
       <div class="checkout-items">
         <div class="checkout-section">
@@ -328,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
           <?php endforeach; ?>
         </div>
       </div>
-      
+
       <div class="checkout-form">
         <form method="POST" id="delivery-form">
           <div class="checkout-section">
@@ -336,31 +338,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
             <div class="form-group">
               <label for="delivery-address">Full Address</label>
               <textarea id="delivery-address" name="delivery_address" required>
-                <?php 
-                if(mysqli_num_rows($select) > 0){
+                <?php
+                if (mysqli_num_rows($select) > 0) {
                   $address = mysqli_fetch_assoc($select);
                   echo $address['address'];
                 }
                 ?>
                 </textarea>
             </div>
-            
+
             <div class="form-group">
               <label for="delivery-date">Delivery Date</label>
               <input type="date" id="delivery-date" name="delivery_date" required min="<?= date('Y-m-d', strtotime('+1 day')) ?>">
             </div>
-            
+
             <div class="form-group">
               <label for="delivery-time">Delivery Time</label>
               <input type="time" id="delivery-time" name="delivery_time" required>
             </div>
-            
+
             <div class="form-group">
               <label for="delivery-notes">Special Instructions (Optional)</label>
               <textarea id="delivery-notes" name="delivery_notes"></textarea>
             </div>
           </div>
-          
+
           <div class="checkout-section">
             <h2 class="section-title">Payment Method</h2>
             <div class="radio-group">
@@ -378,7 +380,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
               </div>
             </div>
           </div>
-          
+
           <div class="checkout-section">
             <h2 class="section-title">Order Summary</h2>
             <div class="order-summary">
@@ -400,10 +402,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
               </div>
             </div>
           </div>
-          
+
           <!-- Hidden field to preserve cart data -->
           <input type="hidden" name="cart_data" value="<?= htmlspecialchars(json_encode($cart)) ?>">
-          
+
           <button type="submit" name="place_order" class="checkout-btn">Place Order</button>
         </form>
       </div>
@@ -416,14 +418,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
       const today = new Date();
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
-      
+
       const minDate = tomorrow.toISOString().split('T')[0];
       document.getElementById('delivery-date').min = minDate;
 
-      document.getElementById('delivery-form').addEventListener('submit', function () {
-      localStorage.clear();
-    });
+      document.getElementById('delivery-form').addEventListener('submit', function() {
+        localStorage.clear();
+      });
     });
   </script>
 </body>
+
 </html>

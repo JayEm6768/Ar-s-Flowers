@@ -1,8 +1,9 @@
-<?php 
+<?php
 include 'footHead/header.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,20 +15,21 @@ include 'footHead/header.php';
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
         }
-        
+
         body {
             background-color: #FFF9F9;
             color: #122349;
             line-height: 1.6;
-            margin-top: 120px; /* Offset for fixed header */
+            margin-top: 120px;
+            /* Offset for fixed header */
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
+
         /* Title Section */
         .page-title {
             font-size: 2.5rem;
@@ -37,7 +39,7 @@ include 'footHead/header.php';
             font-family: 'Fraunces_72pt-SemiBoldItalic';
             position: relative;
         }
-        
+
         .page-title:after {
             content: "";
             display: block;
@@ -46,30 +48,30 @@ include 'footHead/header.php';
             background: linear-gradient(90deg, #b10e73, #ffb6c1);
             margin: 10px auto;
         }
-        
+
         .breadcrumb {
             margin-bottom: 20px;
             font-size: 14px;
             color: #666;
         }
-        
+
         .breadcrumb a {
             color: #666;
             text-decoration: none;
             transition: color 0.3s;
         }
-        
+
         .breadcrumb a:hover {
             color: #b10e73;
             text-decoration: underline;
         }
-        
+
         /* Shop Layout */
         .shop-container {
             display: flex;
             gap: 30px;
         }
-        
+
         /* Sidebar Filters */
         .sidebar {
             width: 250px;
@@ -78,11 +80,11 @@ include 'footHead/header.php';
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
-        
+
         .sidebar-section {
             margin-bottom: 25px;
         }
-        
+
         .sidebar-title {
             font-size: 1.2rem;
             margin-bottom: 15px;
@@ -91,15 +93,15 @@ include 'footHead/header.php';
             border-bottom: 2px solid #ffb6c1;
             padding-bottom: 5px;
         }
-        
+
         .sidebar-links {
             list-style: none;
         }
-        
+
         .sidebar-links li {
             margin-bottom: 10px;
         }
-        
+
         .sidebar-links a {
             color: #666;
             text-decoration: none;
@@ -107,35 +109,35 @@ include 'footHead/header.php';
             display: block;
             padding: 5px 0;
         }
-        
+
         .sidebar-links a:hover {
             color: #b10e73;
             transform: translateX(5px);
         }
-        
+
         /* Filter Groups */
         .filter-group {
             margin-bottom: 20px;
         }
-        
+
         .filter-title {
             font-weight: bold;
             margin-bottom: 10px;
             display: block;
             color: #122349;
         }
-        
+
         .filter-option {
             margin-bottom: 8px;
             display: flex;
             align-items: center;
         }
-        
+
         .filter-option input[type="checkbox"] {
             margin-right: 10px;
             accent-color: #b10e73;
         }
-        
+
         /* Products Grid */
         .products-grid {
             flex: 1;
@@ -185,7 +187,7 @@ include 'footHead/header.php';
             color: #b10e73;
             margin-bottom: 15px;
         }
-        
+
         /* Add to Cart Button */
         .add-to-cart {
             display: inline-block;
@@ -201,32 +203,33 @@ include 'footHead/header.php';
             transition: all 0.3s;
             box-shadow: 0 3px 10px rgba(177, 14, 115, 0.3);
         }
-        
+
         .add-to-cart:hover {
             background: linear-gradient(135deg, #850000, #b10e73);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(177, 14, 115, 0.4);
         }
-        
+
         /* Loading States */
-        .loading, .no-products {
+        .loading,
+        .no-products {
             text-align: center;
             padding: 40px;
             font-size: 1.1rem;
             color: #666;
             grid-column: 1 / -1;
         }
-        
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .shop-container {
                 flex-direction: column;
             }
-            
+
             .sidebar {
                 width: 100%;
             }
-            
+
             .page-title {
                 font-size: 2rem;
             }
@@ -242,15 +245,15 @@ include 'footHead/header.php';
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.8);
+            background-color: rgba(0, 0, 0, 0.8);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .modal.show {
             opacity: 1;
         }
-        
+
         .modal-content {
             background-color: #FFF9F9;
             margin: 5% auto;
@@ -262,11 +265,11 @@ include 'footHead/header.php';
             transform: translateY(-50px);
             transition: transform 0.3s ease;
         }
-        
+
         .modal.show .modal-content {
             transform: translateY(0);
         }
-        
+
         .close-modal {
             position: absolute;
             top: 15px;
@@ -276,64 +279,64 @@ include 'footHead/header.php';
             cursor: pointer;
             transition: color 0.3s;
         }
-        
+
         .close-modal:hover {
             color: #850000;
         }
-        
+
         .modal-body {
             display: flex;
             gap: 30px;
         }
-        
+
         .modal-body img {
             width: 50%;
             max-height: 500px;
             object-fit: contain;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .modal-info {
             width: 50%;
         }
-        
+
         .product-description {
             margin: 20px 0;
             line-height: 1.6;
             color: #555;
         }
-        
+
         .product-details {
             margin: 25px 0;
         }
-        
+
         .detail-item {
             display: flex;
             margin-bottom: 10px;
         }
-        
+
         .detail-label {
             font-weight: bold;
             width: 80px;
             color: #122349;
         }
-        
+
         .detail-value {
             color: #b10e73;
         }
-        
+
         @media (max-width: 768px) {
             .modal-content {
                 width: 95%;
                 margin: 10% auto;
                 padding: 20px;
             }
-            
+
             .modal-body {
                 flex-direction: column;
             }
-            
+
             .modal-body img,
             .modal-info {
                 width: 100%;
@@ -341,14 +344,15 @@ include 'footHead/header.php';
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="breadcrumb">
             <a href="home.php">Home</a> > <span>All Products</span>
         </div>
-        
+
         <h1 class="page-title">Our Floral Collection</h1>
-        
+
         <div class="shop-container">
             <!-- Sidebar Filters -->
             <div class="sidebar">
@@ -361,10 +365,10 @@ include 'footHead/header.php';
                         <li><a href="#" class="category-filter" data-category="stems">Single Stems</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="sidebar-section">
                     <h3 class="sidebar-title">Filter by</h3>
-                    
+
                     <div class="filter-group">
                         <span class="filter-title">Price</span>
                         <div class="filter-option">
@@ -380,7 +384,7 @@ include 'footHead/header.php';
                             <label for="price3">Over ₱100</label>
                         </div>
                     </div>
-                    
+
                     <div class="filter-group">
                         <span class="filter-title">Color</span>
                         <div class="filter-option">
@@ -402,7 +406,7 @@ include 'footHead/header.php';
                     </div>
                 </div>
             </div>
-            
+
             <!-- Products Grid -->
             <div class="products-grid" id="products-container">
                 <div class="loading">Loading products...</div>
@@ -440,138 +444,138 @@ include 'footHead/header.php';
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Modal functionality
-        const modal = document.getElementById('productModal');
-        const modalImage = document.getElementById('modalImage');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDescription = document.getElementById('modalDescription');
-        const modalPrice = document.getElementById('modalPrice');
-        const modalColor = document.getElementById('modalColor');
-        const modalSize = document.getElementById('modalSize');
-        const modalAddToCart = document.getElementById('modalAddToCart');
-        const closeModal = document.querySelector('.close-modal');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const modal = document.getElementById('productModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalColor = document.getElementById('modalColor');
+            const modalSize = document.getElementById('modalSize');
+            const modalAddToCart = document.getElementById('modalAddToCart');
+            const closeModal = document.querySelector('.close-modal');
 
-        // Function to open modal with product details
-        function openProductModal(product) {
-            // Ensure we're using the correct image path format
-            let imagePath = product.image_url;
-            if (imagePath.includes('dashboard/uploads/')) {
-                imagePath = imagePath.split('dashboard/uploads/').pop();
-            }
-            
-            modalImage.src = 'dashboard/uploads/' + imagePath;
-            modalTitle.textContent = product.name;
-            modalDescription.textContent = product.description || 'No description available';
-            modalPrice.textContent = `₱${product.price}`;
-            modalColor.textContent = product.color;
-            modalSize.textContent = product.size;
-            
-            modalAddToCart.setAttribute('data-product-id', product.flower_id);
-            
-            modal.style.display = 'block';
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-        }
-
-        // Close modal
-        closeModal.addEventListener('click', () => {
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        });
-
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                }, 300);
-            }
-        });
-
-        // Add to cart from modal
-        modalAddToCart.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id');
-            if (!isNaN(productId)) {
-                addToCart(productId);
-            }
-        });
-
-        const productsContainer = document.getElementById('products-container');
-        let allProducts = [];
-        let activeFilters = {
-            category: 'all',
-            price: [],
-            colors: [],
-            sizes: []
-        };
-        
-        // Fetch products from database
-        function fetchProducts() {
-            // Build query parameters based on activeFilters
-            const params = new URLSearchParams();
-            
-            if (activeFilters.category !== 'all') {
-                params.append('category', activeFilters.category);
-            }
-            
-            // Handle price filters
-            if (activeFilters.price.length > 0) {
-                const minPrice = Math.min(...activeFilters.price.map(r => r.min));
-                const maxPrice = Math.max(...activeFilters.price.map(r => r.max));
-                params.append('min_price', minPrice);
-                params.append('max_price', maxPrice);
-            }
-            
-            // Handle color filters
-            if (activeFilters.colors.length > 0) {
-                params.append('colors', activeFilters.colors.join(','));
-            }
-            
-            fetch(`getProducts.php?${params.toString()}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        console.log('Fetched products:', data.data);
-                        allProducts = data.data;
-                        renderProducts(data.data);
-                    } else {
-                        throw new Error(data.error || 'Failed to fetch products');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching products:', error);
-                    productsContainer.innerHTML = '<div class="no-products">Error loading products. Please try again later.</div>';
-                });
-        }
-        
-        // Render products based on current filters
-        function renderProducts(products) {
-            if (products.length === 0) {
-                productsContainer.innerHTML = '<div class="no-products">No products found matching your criteria.</div>';
-                return;
-            }
-            
-            productsContainer.innerHTML = '';
-            
-            products.forEach(product => {
-                // Handle image path correctly
+            // Function to open modal with product details
+            function openProductModal(product) {
+                // Ensure we're using the correct image path format
                 let imagePath = product.image_url;
                 if (imagePath.includes('dashboard/uploads/')) {
                     imagePath = imagePath.split('dashboard/uploads/').pop();
                 }
-                
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-                productCard.innerHTML = `
+
+                modalImage.src = 'dashboard/uploads/' + imagePath;
+                modalTitle.textContent = product.name;
+                modalDescription.textContent = product.description || 'No description available';
+                modalPrice.textContent = `₱${product.price}`;
+                modalColor.textContent = product.color;
+                modalSize.textContent = product.size;
+
+                modalAddToCart.setAttribute('data-product-id', product.flower_id);
+
+                modal.style.display = 'block';
+                setTimeout(() => {
+                    modal.classList.add('show');
+                }, 10);
+            }
+
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                    }, 300);
+                }
+            });
+
+            // Add to cart from modal
+            modalAddToCart.addEventListener('click', function() {
+                const productId = this.getAttribute('data-product-id');
+                if (!isNaN(productId)) {
+                    addToCart(productId);
+                }
+            });
+
+            const productsContainer = document.getElementById('products-container');
+            let allProducts = [];
+            let activeFilters = {
+                category: 'all',
+                price: [],
+                colors: [],
+                sizes: []
+            };
+
+            // Fetch products from database
+            function fetchProducts() {
+                // Build query parameters based on activeFilters
+                const params = new URLSearchParams();
+
+                if (activeFilters.category !== 'all') {
+                    params.append('category', activeFilters.category);
+                }
+
+                // Handle price filters
+                if (activeFilters.price.length > 0) {
+                    const minPrice = Math.min(...activeFilters.price.map(r => r.min));
+                    const maxPrice = Math.max(...activeFilters.price.map(r => r.max));
+                    params.append('min_price', minPrice);
+                    params.append('max_price', maxPrice);
+                }
+
+                // Handle color filters
+                if (activeFilters.colors.length > 0) {
+                    params.append('colors', activeFilters.colors.join(','));
+                }
+
+                fetch(`getProducts.php?${params.toString()}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Fetched products:', data.data);
+                            allProducts = data.data;
+                            renderProducts(data.data);
+                        } else {
+                            throw new Error(data.error || 'Failed to fetch products');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching products:', error);
+                        productsContainer.innerHTML = '<div class="no-products">Error loading products. Please try again later.</div>';
+                    });
+            }
+
+            // Render products based on current filters
+            function renderProducts(products) {
+                if (products.length === 0) {
+                    productsContainer.innerHTML = '<div class="no-products">No products found matching your criteria.</div>';
+                    return;
+                }
+
+                productsContainer.innerHTML = '';
+
+                products.forEach(product => {
+                    // Handle image path correctly
+                    let imagePath = product.image_url;
+                    if (imagePath.includes('dashboard/uploads/')) {
+                        imagePath = imagePath.split('dashboard/uploads/').pop();
+                    }
+
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    productCard.innerHTML = `
                     <div class="product-image" style="background-image: url('dashboard/uploads/${imagePath}')" data-product-id="${product.flower_id}"></div>
                     <div class="product-info">
                         <h3 class="product-title">${product.name}</h3>
@@ -579,193 +583,194 @@ include 'footHead/header.php';
                         <button class="add-to-cart" data-product-id="${product.flower_id}">Add to Cart</button>
                     </div>
                 `;
-                
-                productsContainer.appendChild(productCard);
-                
-                // Add click event to product image
-                const productImage = productCard.querySelector('.product-image');
-                productImage.addEventListener('click', () => {
-                    openProductModal(product);
-                });
-                
-                // Add event listener to Add to Cart button
-                productCard.querySelector('.add-to-cart').addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const productId = this.getAttribute('data-product-id');
-                    if (!isNaN(productId)) {
-                        addToCart(productId);
-                    }
-                });
-            });
-        }
-        
-        // Filter products
-        function filterProducts() {
-            let filteredProducts = allProducts;
-            
-            if (activeFilters.category !== 'all') {
-                filteredProducts = filteredProducts.filter(
-                    product => product.category === activeFilters.category
-                );
-            }
-            
-            if (activeFilters.price.length > 0) {
-                filteredProducts = filteredProducts.filter(product => {
-                    return activeFilters.price.some(range => {
-                        return product.price >= range.min && product.price <= range.max;
+
+                    productsContainer.appendChild(productCard);
+
+                    // Add click event to product image
+                    const productImage = productCard.querySelector('.product-image');
+                    productImage.addEventListener('click', () => {
+                        openProductModal(product);
+                    });
+
+                    // Add event listener to Add to Cart button
+                    productCard.querySelector('.add-to-cart').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const productId = this.getAttribute('data-product-id');
+                        if (!isNaN(productId)) {
+                            addToCart(productId);
+                        }
                     });
                 });
             }
-            
-            if (activeFilters.colors.length > 0) {
-                filteredProducts = filteredProducts.filter(
-                    product => activeFilters.colors.includes(product.color)
-                );
-            }
-            
-            if (activeFilters.sizes.length > 0) {
-                filteredProducts = filteredProducts.filter(
-                    product => activeFilters.sizes.includes(product.size)
-                );
-            }
-            
-            renderProducts(filteredProducts);
-        }
 
-        function updateCartDisplay() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            
-            const cartCountElement = document.getElementById('cart-count');
-            if (cartCountElement) {
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-                cartCountElement.textContent = totalItems;
+            // Filter products
+            function filterProducts() {
+                let filteredProducts = allProducts;
+
+                if (activeFilters.category !== 'all') {
+                    filteredProducts = filteredProducts.filter(
+                        product => product.category === activeFilters.category
+                    );
+                }
+
+                if (activeFilters.price.length > 0) {
+                    filteredProducts = filteredProducts.filter(product => {
+                        return activeFilters.price.some(range => {
+                            return product.price >= range.min && product.price <= range.max;
+                        });
+                    });
+                }
+
+                if (activeFilters.colors.length > 0) {
+                    filteredProducts = filteredProducts.filter(
+                        product => activeFilters.colors.includes(product.color)
+                    );
+                }
+
+                if (activeFilters.sizes.length > 0) {
+                    filteredProducts = filteredProducts.filter(
+                        product => activeFilters.sizes.includes(product.size)
+                    );
+                }
+
+                renderProducts(filteredProducts);
             }
-            
-            const cartItemsContainer = document.getElementById('cart-items-container');
-            if (cartItemsContainer) {
-                cartItemsContainer.innerHTML = '';
-                
-                if (cart.length === 0) {
-                    cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
-                } else {
-                    cart.forEach(item => {
-                        const cartItemElement = document.createElement('div');
-                        cartItemElement.className = 'cart-item';
-                        cartItemElement.innerHTML = `
+
+            function updateCartDisplay() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                const cartCountElement = document.getElementById('cart-count');
+                if (cartCountElement) {
+                    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                    cartCountElement.textContent = totalItems;
+                }
+
+                const cartItemsContainer = document.getElementById('cart-items-container');
+                if (cartItemsContainer) {
+                    cartItemsContainer.innerHTML = '';
+
+                    if (cart.length === 0) {
+                        cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
+                    } else {
+                        cart.forEach(item => {
+                            const cartItemElement = document.createElement('div');
+                            cartItemElement.className = 'cart-item';
+                            cartItemElement.innerHTML = `
                             <img src="/dashboard/uploads${item.image}" alt="${item.name}">
                             <div>
                                 <h4>${item.name}</h4>
                                 <p>₱${item.price.toFixed(2)} × ${item.quantity}</p>
                             </div>
                         `;
-                        cartItemsContainer.appendChild(cartItemElement);
-                    });
-                }
-            }
-        }
-
-        function addToCart(productId) {
-            const product = allProducts.find(p => p.flower_id == productId);
-            if (!product) {
-                alert('Product not found');
-                return;
-            }
-
-            fetch('addToCart.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    product_id: productId,
-                    quantity: 1 
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    const existingItem = cart.find(item => item.id == productId);
-
-                    if (existingItem) {
-                        existingItem.quantity += 1;
-                    } else {
-                        // Handle image path correctly
-                        let imagePath = product.image_url;
-                        if (imagePath.includes('dashboard/uploads/')) {
-                            imagePath = imagePath.split('dashboard/uploads/').pop();
-                        }
-                        
-                        cart.push({
-                            id: product.flower_id,
-                            name: product.name,
-                            price: parseFloat(product.price),
-                            image: imagePath,
-                            quantity: 1
+                            cartItemsContainer.appendChild(cartItemElement);
                         });
                     }
-                    
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    updateCartDisplay();
-                    
-                    alert('Product added to cart!');
-                } else {
-                    alert('Failed to add product to cart: ' + (data.message || ''));
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while adding to cart');
-            });
-        }
+            }
 
-        // Initialize cart display
-        updateCartDisplay();
-        
-        // Event listeners for filters
-        document.querySelectorAll('.category-filter').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                activeFilters.category = this.getAttribute('data-category');
-                fetchProducts(); // Changed from filterProducts() to fetch fresh data
-            });
-        });
-        
-        document.querySelectorAll('.price-filter').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const range = {
-                    min: parseFloat(this.getAttribute('data-min')),
-                    max: parseFloat(this.getAttribute('data-max'))
-                };
-                
-                if (this.checked) {
-                    activeFilters.price.push(range);
-                } else {
-                    activeFilters.price = activeFilters.price.filter(
-                        r => r.min !== range.min || r.max !== range.max
-                    );
+            function addToCart(productId) {
+                const product = allProducts.find(p => p.flower_id == productId);
+                if (!product) {
+                    alert('Product not found');
+                    return;
                 }
-                fetchProducts(); // Changed from filterProducts() to fetch fresh data
+
+                fetch('addToCart.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            quantity: 1
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                            const existingItem = cart.find(item => item.id == productId);
+
+                            if (existingItem) {
+                                existingItem.quantity += 1;
+                            } else {
+                                // Handle image path correctly
+                                let imagePath = product.image_url;
+                                if (imagePath.includes('dashboard/uploads/')) {
+                                    imagePath = imagePath.split('dashboard/uploads/').pop();
+                                }
+
+                                cart.push({
+                                    id: product.flower_id,
+                                    name: product.name,
+                                    price: parseFloat(product.price),
+                                    image: imagePath,
+                                    quantity: 1
+                                });
+                            }
+
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            updateCartDisplay();
+
+                            alert('Product added to cart!');
+                        } else {
+                            alert('Failed to add product to cart: ' + (data.message || ''));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while adding to cart');
+                    });
+            }
+
+            // Initialize cart display
+            updateCartDisplay();
+
+            // Event listeners for filters
+            document.querySelectorAll('.category-filter').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    activeFilters.category = this.getAttribute('data-category');
+                    fetchProducts(); // Changed from filterProducts() to fetch fresh data
+                });
             });
-        });
-        
-        document.querySelectorAll('.color-filter').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const color = this.value;
-                
-                if (this.checked) {
-                    activeFilters.colors.push(color);
-                } else {
-                    activeFilters.colors = activeFilters.colors.filter(c => c !== color);
-                }
-                fetchProducts(); // Changed from filterProducts() to fetch fresh data
+
+            document.querySelectorAll('.price-filter').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const range = {
+                        min: parseFloat(this.getAttribute('data-min')),
+                        max: parseFloat(this.getAttribute('data-max'))
+                    };
+
+                    if (this.checked) {
+                        activeFilters.price.push(range);
+                    } else {
+                        activeFilters.price = activeFilters.price.filter(
+                            r => r.min !== range.min || r.max !== range.max
+                        );
+                    }
+                    fetchProducts(); // Changed from filterProducts() to fetch fresh data
+                });
             });
+
+            document.querySelectorAll('.color-filter').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const color = this.value;
+
+                    if (this.checked) {
+                        activeFilters.colors.push(color);
+                    } else {
+                        activeFilters.colors = activeFilters.colors.filter(c => c !== color);
+                    }
+                    fetchProducts(); // Changed from filterProducts() to fetch fresh data
+                });
+            });
+
+            // Initial fetch
+            fetchProducts();
         });
-        
-        // Initial fetch
-        fetchProducts();
-    });
-</script>
+    </script>
     <?php include 'footHead/footer.php'; ?>
 </body>
+
 </html>
