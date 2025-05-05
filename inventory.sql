@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2025 at 05:00 PM
+-- Generation Time: May 05, 2025 at 09:19 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -107,7 +107,7 @@ CREATE TABLE `ordertable` (
   `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `total_amount` decimal(10,2) NOT NULL,
   `shipping_date` date DEFAULT NULL,
-  `status` enum('Pending','Preparing','Out for Delivery','Delivered','Cancelled') NOT NULL DEFAULT 'Pending'
+  `status` enum('Pending','Preparing','Out for Delivery','Delivered','Cancelled') NOT NULL DEFAULT 'Delivered'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -238,7 +238,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `name`, `email`, `phone`, `role_id`, `username`, `pass`, `created_at`, `profile_picture`) VALUES
 (2, 'Schann Jorson Alves', 's.alves.538181@umindanao.edu.ph', '09855029374', 2, 'admin', '123', '2025-04-20 09:38:37', 'uploads/profile_picture/default_profile.jpg'),
-(3, 'Jannel Jefferson Galo', 'kkyle008@yahoo.com', '09123456789', 1, 'galo', '123', '2025-04-22 06:03:10', 'uploads/profile_picture/default_profile.jpg');
+(3, 'Jannel Jefferson Galo', 'kkyle008@yahoo.com', '09123456789', 1, 'galo', '123', '2025-04-22 06:03:10', 'uploads/profile_pictures/user_3_1746459158.jpg');
 
 --
 -- Indexes for dumped tables
