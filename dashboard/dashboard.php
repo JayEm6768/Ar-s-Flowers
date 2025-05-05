@@ -349,6 +349,36 @@ while ($row = $result->fetch_assoc()) {
             /* Increased height for better visibility */
         }
 
+        /* Logout Button Styles */
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            text-align: left;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .logout-btn:hover {
+            background-color: var(--sidebar-hover);
+            color: white;
+        }
+
+        .logout-btn i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .sidebar {
@@ -410,6 +440,14 @@ while ($row = $result->fetch_assoc()) {
             <li><a href="sales_report.php"><i class="fas fa-chart-line"></i> <span>Sales Report</span></a></li>
             <li><a href="sales_report.php"><i class="fas fa-reorder"></i> <span>Orders</span></a></li>
             <li><a href="sales_report.php"><i class="fas fa-complaint"></i> <span>Complaints</span></a></li>
+
+            <!-- Logout Button -->
+            <li style="margin-top: 2rem;">
+                <button class="logout-btn" onclick="logoutUser()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </li>
         </ul>
     </div>
 
@@ -430,7 +468,6 @@ while ($row = $result->fetch_assoc()) {
                 <div class="user-profile">
                     <img src="https://ui-avatars.com/api/?name=Admin&background=8e44ad&color=fff" alt="User">
                     <span>Admin</span>
-                    <button onclick="logoutUser()" class="logout-btn">Logout</button>
                 </div>
             </div>
         </div>
