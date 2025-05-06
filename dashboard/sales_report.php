@@ -17,7 +17,7 @@ class SalesReport
     private $monthLabels = [];
     private $monthData = [];
     private $topSelling = [];
-    private $whereClause = "1=1"; // Initialize whereClause as a class property
+    private $whereClause = "1=1";
 
     public function __construct($conn)
     {
@@ -127,7 +127,6 @@ class SalesReport
         $this->topSelling = array_slice($this->summary, 0, 1, true);
     }
 
-    // Getters for the view
     public function getFlowerOptions()
     {
         return $this->flowerOptions;
@@ -193,123 +192,278 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Report | Flower Shop Dashboard</title>
+    <title>Sales Report | Ar's Flowers</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #f8f9fa;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --border-radius: 0.375rem;
-            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            --primary: #2c3e50;
+            --primary-light: #3d566e;
+            --secondary: #3498db;
+            --secondary-light: #5faee3;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-color: #dee2e6;
+            --card-bg: #ffffff;
+            --background: #f5f7fa;
         }
 
         body {
-            background-color: #f4f6f8;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            color: #212529;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--dark);
+            padding: 2rem;
+            line-height: 1.6;
         }
 
         .dashboard-container {
-            padding: 2rem;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        .card {
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 1.5rem;
-            border: none;
-            transition: transform 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-        }
-
-        .card-header {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
-            padding: 1rem 1.25rem;
-        }
-
-        .card-body {
-            padding: 1.25rem;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 400px;
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
         }
 
-        .chart-container canvas {
-            width: 100% !important;
-            height: 100% !important;
-            transition: all 0.3s ease;
-        }
-
-        /* Hover effect for revenue chart bars */
-        #revenueChart:hover {
-            transform: scale(1.01);
-        }
-
-        .btn-export {
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
+        .page-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0;
         }
 
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background-color: var(--primary-color);
+            background-color: var(--primary);
             color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 6px;
             text-decoration: none;
-            border-radius: var(--border-radius);
-            margin-bottom: 1.5rem;
-            transition: background-color 0.2s ease;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid var(--primary);
         }
 
         .back-btn:hover {
-            background-color: #2980b9;
+            background-color: white;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: var(--primary);
             color: white;
+            font-weight: 500;
+            border-radius: 8px 8px 0 0 !important;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 1.5rem;
         }
 
         .chart-header {
+            font-size: 1.1rem;
+            font-weight: 500;
             margin-bottom: 1rem;
-            font-weight: 600;
-            color: #495057;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .table-responsive {
-            overflow-x: auto;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
         .table {
             margin-bottom: 0;
+            font-size: 0.95rem;
         }
 
-        .table th {
-            background-color: var(--secondary-color);
+        .table thead th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            border-bottom: none;
+        }
+
+        .table tbody td {
+            padding: 0.75rem 1rem;
+            vertical-align: middle;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: var(--light);
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .table tfoot th {
+            background-color: var(--light-gray);
+            font-weight: 500;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-export.btn-primary {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+        }
+
+        .btn-export.btn-primary:hover {
+            background-color: var(--secondary-light);
+            border-color: var(--secondary-light);
+        }
+
+        .btn-export.btn-danger {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .metric-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
             font-weight: 600;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .metric-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .top-product-name {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .top-product-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .top-product-label {
+            color: var(--gray);
+        }
+
+        .filter-form .form-label {
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .filter-form .form-control,
+        .filter-form .form-select {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        .filter-form .btn-apply {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem;
+            width: 100%;
+            border: none;
+        }
+
+        .filter-form .btn-apply:hover {
+            background-color: var(--primary-light);
+        }
+
+        @media (max-width: 992px) {
+            .chart-container {
+                height: 350px;
+            }
         }
 
         @media (max-width: 768px) {
-            .dashboard-container {
-                padding: 1rem;
+            body {
+                padding: 1.5rem 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding-bottom: 1rem;
             }
 
             .card-body {
-                padding: 1rem;
+                padding: 1.25rem;
             }
 
             .chart-container {
@@ -320,28 +474,26 @@ try {
 </head>
 
 <body>
-    <div class="container dashboard-container">
-        <!-- Header and Back Button -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">
-                <i class="bi bi-graph-up"></i> Sales Report
+    <div class="dashboard-container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="bi bi-graph-up"></i> Sales Analytics
             </h1>
             <a href="dashboard.php" class="back-btn">
                 <i class="bi bi-arrow-left"></i> Back to Dashboard
             </a>
         </div>
 
-        <!-- Filters -->
-        <div class="card mb-4">
+        <div class="card">
             <div class="card-header">
-                <i class="bi bi-funnel"></i> Filters
+                <i class="bi bi-funnel"></i> Report Filters
             </div>
             <div class="card-body">
-                <form method="get" class="row g-3">
+                <form method="get" class="row g-3 filter-form">
                     <div class="col-md-3">
-                        <label for="flower" class="form-label">Flower</label>
+                        <label for="flower" class="form-label">Product</label>
                         <select name="flower" id="flower" class="form-select">
-                            <option value="">All Flowers</option>
+                            <option value="">All Products</option>
                             <?php foreach ($flowerOptions as $id => $name): ?>
                                 <option value="<?= $id ?>" <?= ($flowerFilter == $id) ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($name) ?>
@@ -358,52 +510,51 @@ try {
                         <input type="date" name="to" id="to" value="<?= htmlspecialchars($toDate) ?>" class="form-control">
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-success w-100">
-                            <i class="bi bi-filter"></i> Apply Filters
+                        <button type="submit" class="btn btn-apply">
+                            <i class="bi bi-funnel-fill"></i> Apply Filters
                         </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- Key Metrics -->
         <div class="row mb-4">
             <div class="col-md-6">
-                <div class="card h-100">
+                <div class="card metric-card">
                     <div class="card-header">
-                        <i class="bi bi-cash-stack"></i> Total Revenue
+                        <i class="bi bi-currency-dollar"></i> Total Revenue
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">₱<?= number_format($totalRevenue, 2) ?></h3>
+                        <div class="metric-value">₱<?= number_format($totalRevenue, 2) ?></div>
+                        <div class="metric-label">Across all product sales</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card h-100">
+                <div class="card metric-card">
                     <div class="card-header">
-                        <i class="bi bi-trophy"></i> Top-Selling Product
+                        <i class="bi bi-award"></i> Top Performer
                     </div>
                     <div class="card-body">
                         <?php foreach ($topSelling as $name => $data): ?>
-                            <h5 class="card-title"><?= htmlspecialchars($name) ?></h5>
-                            <p class="card-text mb-1">
-                                <span class="text-muted">Quantity:</span>
-                                <strong><?= $data['quantity'] ?></strong>
-                            </p>
-                            <p class="card-text">
-                                <span class="text-muted">Revenue:</span>
-                                <strong>₱<?= number_format($data['revenue'], 2) ?></strong>
-                            </p>
+                            <div class="top-product-name"><?= htmlspecialchars($name) ?></div>
+                            <div class="top-product-detail">
+                                <span class="top-product-label">Units Sold:</span>
+                                <span><?= number_format($data['quantity']) ?></span>
+                            </div>
+                            <div class="top-product-detail">
+                                <span class="top-product-label">Revenue:</span>
+                                <span>₱<?= number_format($data['revenue'], 2) ?></span>
+                            </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Export Buttons -->
         <div class="card mb-4">
             <div class="card-header">
-                <i class="bi bi-download"></i> Export Report
+                <i class="bi bi-download"></i> Export Options
             </div>
             <div class="card-body">
                 <button onclick="exportToCSV()" class="btn btn-primary btn-export">
@@ -415,17 +566,16 @@ try {
             </div>
         </div>
 
-        <!-- Summary Table -->
         <div class="card mb-4">
             <div class="card-header">
-                <i class="bi bi-table"></i> Sales Summary by Flower
+                <i class="bi bi-table"></i> Sales Summary
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead class="table-light">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
-                                <th>Flower Name</th>
+                                <th>Product Name</th>
                                 <th class="text-end">Quantity Sold</th>
                                 <th class="text-end">Revenue (₱)</th>
                             </tr>
@@ -440,7 +590,7 @@ try {
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
-                            <tr class="table-active">
+                            <tr>
                                 <th>Total</th>
                                 <th class="text-end"><?= number_format(array_sum(array_column($summary, 'quantity'))) ?></th>
                                 <th class="text-end">₱<?= number_format($totalRevenue, 2) ?></th>
@@ -451,41 +601,47 @@ try {
             </div>
         </div>
 
-        <!-- Charts -->
         <div class="row">
             <div class="col-lg-6">
-                <div class="chart-container">
-                    <h5 class="chart-header">
-                        <i class="bi bi-bar-chart"></i> Revenue per Flower
-                    </h5>
-                    <canvas id="revenueChart" height="<?= max(300, count($summary) * 30) ?>"></canvas>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="chart-header">
+                            <i class="bi bi-bar-chart"></i> Revenue by Product
+                        </h5>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="chart-container">
-                    <h5 class="chart-header">
-                        <i class="bi bi-graph-up"></i> Monthly Sales Trend
-                    </h5>
-                    <canvas id="monthlyChart" height="300"></canvas>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="chart-header">
+                            <i class="bi bi-graph-up"></i> Sales Trend
+                        </h5>
+                        <div class="chart-container">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Store chart instances so we can resize them later
+        // Store chart instances
         const charts = {
             revenue: null,
             monthly: null
         };
 
-        // Function to initialize charts
+        // Initialize charts
         function initializeCharts() {
-            // Destroy existing charts if they exist
             if (charts.revenue) charts.revenue.destroy();
             if (charts.monthly) charts.monthly.destroy();
 
-            // Revenue Chart with enhanced hover effects
+            // Revenue Chart
             const revenueCtx = document.getElementById('revenueChart').getContext('2d');
             charts.revenue = new Chart(revenueCtx, {
                 type: 'bar',
@@ -494,16 +650,8 @@ try {
                     datasets: [{
                         label: 'Revenue (₱)',
                         data: <?= json_encode(array_map(fn($s) => $s['revenue'], $summary)) ?>,
-                        backgroundColor: function(context) {
-                            // Hover effect - change color when hovered
-                            return context.datasetIndex === 0 && context.dataIndex === context.active?.index ?
-                                'rgba(231, 76, 60, 0.7)' : 'rgba(52, 152, 219, 0.7)';
-                        },
-                        borderColor: function(context) {
-                            // Hover effect - change border when hovered
-                            return context.datasetIndex === 0 && context.dataIndex === context.active?.index ?
-                                'rgba(231, 76, 60, 1)' : 'rgba(52, 152, 219, 1)';
-                        },
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
                         borderWidth: 1,
                         hoverBackgroundColor: 'rgba(231, 76, 60, 0.7)',
                         hoverBorderColor: 'rgba(231, 76, 60, 1)',
@@ -526,21 +674,13 @@ try {
                                     });
                                 }
                             },
-                            displayColors: true,
-                            usePointStyle: true,
-                            padding: 10,
-                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            backgroundColor: 'rgba(44, 62, 80, 0.9)',
                             titleFont: {
-                                size: 14,
-                                weight: 'bold'
+                                weight: 'normal'
                             },
                             bodyFont: {
-                                size: 12
+                                weight: 'normal'
                             }
-                        },
-                        // Add animation on hover
-                        hover: {
-                            animationDuration: 200
                         }
                     },
                     scales: {
@@ -552,7 +692,7 @@ try {
                                 }
                             },
                             grid: {
-                                color: 'rgba(0,0,0,0.05)'
+                                color: 'rgba(0, 0, 0, 0.05)'
                             }
                         },
                         x: {
@@ -561,22 +701,13 @@ try {
                             }
                         }
                     },
-                    // Enhanced hover effects
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
                     animation: {
                         duration: 1000,
-                        easing: 'easeOutQuart',
-                        onComplete: function() {
-                            // Animation complete callback
-                        }
+                        easing: 'easeOutQuart'
                     },
                     elements: {
                         bar: {
-                            borderRadius: 4,
-                            borderSkipped: false
+                            borderRadius: 4
                         }
                     }
                 }
@@ -591,14 +722,12 @@ try {
                     datasets: [{
                         label: 'Total Quantity Sold',
                         data: <?= json_encode($monthData) ?>,
-                        borderColor: 'rgba(40, 167, 69, 1)',
-                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.3,
-                        pointBackgroundColor: 'rgba(40, 167, 69, 1)',
-                        pointHoverRadius: 6,
-                        pointHoverBorderWidth: 2
+                        pointBackgroundColor: 'rgba(231, 76, 60, 1)'
                     }]
                 },
                 options: {
@@ -610,7 +739,8 @@ try {
                                 label: function(context) {
                                     return context.raw.toLocaleString('en-PH') + ' units';
                                 }
-                            }
+                            },
+                            backgroundColor: 'rgba(44, 62, 80, 0.9)'
                         }
                     },
                     scales: {
@@ -620,6 +750,14 @@ try {
                                 callback: function(value) {
                                     return value.toLocaleString('en-PH');
                                 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
                             }
                         }
                     }
@@ -631,20 +769,24 @@ try {
         document.addEventListener('DOMContentLoaded', function() {
             initializeCharts();
 
+            // Set today's date as default for "to" field if empty
+            if (!document.getElementById('to').value) {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('to').value = today;
+            }
+
             // Handle window resize
             let resizeTimer;
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    initializeCharts();
-                }, 200);
+                resizeTimer = setTimeout(initializeCharts, 200);
             });
         });
 
         // Export to CSV
         function exportToCSV() {
             const rows = [
-                ["Flower Name", "Quantity Sold", "Revenue (₱)"],
+                ["Product Name", "Quantity Sold", "Revenue (₱)"],
                 <?php foreach ($summary as $name => $data): ?>["<?= addslashes($name) ?>", "<?= $data['quantity'] ?>", "<?= number_format($data['revenue'], 2) ?>"],
                 <?php endforeach; ?>["Total", "<?= array_sum(array_column($summary, 'quantity')) ?>", "<?= number_format($totalRevenue, 2) ?>"]
             ];
@@ -657,7 +799,7 @@ try {
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "flower_sales_report_<?= date('Ymd') ?>.csv");
+            link.setAttribute("download", "sales_report_<?= date('Ymd') ?>.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -674,16 +816,18 @@ try {
             });
 
             // Title
-            doc.setFontSize(18);
-            doc.setTextColor(40);
-            doc.text("Flower Shop Sales Report", 105, 15, {
+            doc.setFontSize(16);
+            doc.setTextColor(44, 62, 80);
+            doc.setFont(undefined, 'bold');
+            doc.text("Ar's Flowers - Sales Report", 105, 15, {
                 align: 'center'
             });
 
             // Date range if filtered
             <?php if (!empty($fromDate) || !empty($toDate)): ?>
-                doc.setFontSize(12);
-                let dateRange = "All Time";
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                let dateRange = "All Time Data";
                 if ("<?= $fromDate ?>" && "<?= $toDate ?>") {
                     dateRange = "From <?= date('M j, Y', strtotime($fromDate)) ?> to <?= date('M j, Y', strtotime($toDate)) ?>";
                 } else if ("<?= $fromDate ?>") {
@@ -697,36 +841,37 @@ try {
             <?php endif; ?>
 
             // Summary
-            doc.setFontSize(14);
-            doc.text("Summary", 15, 32);
-
             doc.setFontSize(12);
-            doc.text(`Total Revenue: ₱<?= number_format($totalRevenue, 2) ?>`, 15, 40);
+            doc.text("Key Metrics", 15, 32);
+            doc.setFontSize(10);
+            doc.text(`Total Revenue: ₱<?= number_format($totalRevenue, 2) ?>`, 15, 38);
 
             <?php foreach ($topSelling as $name => $data): ?>
-                doc.text(`Top-Selling Product: <?= addslashes($name) ?> (<?= $data['quantity'] ?> units, ₱<?= number_format($data['revenue'], 2) ?>)`, 15, 48);
+                doc.text(`Top Product: <?= addslashes($name) ?>`, 15, 44);
+                doc.text(`Units Sold: <?= number_format($data['quantity']) ?>`, 15, 48);
+                doc.text(`Revenue: ₱<?= number_format($data['revenue'], 2) ?>`, 15, 52);
             <?php endforeach; ?>
 
             // Table
-            doc.setFontSize(14);
-            doc.text("Sales by Flower", 15, 60);
+            doc.setFontSize(12);
+            doc.text("Sales Summary by Product", 15, 62);
 
             // Table headers
-            doc.setFontSize(12);
+            doc.setFontSize(10);
             doc.setTextColor(255);
-            doc.setFillColor(52, 152, 219);
-            doc.rect(15, 65, 180, 8, 'F');
-            doc.text("Flower Name", 20, 70);
-            doc.text("Quantity Sold", 100, 70, {
+            doc.setFillColor(44, 62, 80);
+            doc.rect(15, 67, 180, 8, 'F');
+            doc.text("Product Name", 20, 72);
+            doc.text("Qty Sold", 100, 72, {
                 align: 'right'
             });
-            doc.text("Revenue", 180, 70, {
+            doc.text("Revenue", 180, 72, {
                 align: 'right'
             });
 
             // Table rows
             doc.setTextColor(0);
-            let y = 75;
+            let y = 77;
             <?php foreach ($summary as $name => $data): ?>
                 doc.text("<?= addslashes($name) ?>", 20, y);
                 doc.text("<?= number_format($data['quantity']) ?>", 100, y, {
@@ -735,12 +880,12 @@ try {
                 doc.text("₱<?= number_format($data['revenue'], 2) ?>", 180, y, {
                     align: 'right'
                 });
-                y += 7;
+                y += 6;
             <?php endforeach; ?>
 
             // Table footer
-            doc.setFontSize(12);
-            doc.setDrawColor(52, 152, 219);
+            doc.setFontSize(10);
+            doc.setDrawColor(44, 62, 80);
             doc.line(15, y, 195, y);
             y += 5;
             doc.setFont(undefined, 'bold');
@@ -752,8 +897,15 @@ try {
                 align: 'right'
             });
 
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(100);
+            doc.text("Generated on <?= date('M j, Y \a\t g:i A') ?>", 105, 285, {
+                align: 'center'
+            });
+
             // Save the PDF
-            doc.save("flower_sales_report_<?= date('Ymd') ?>.pdf");
+            doc.save("sales_report_<?= date('Ymd_His') ?>.pdf");
         }
     </script>
 </body>
