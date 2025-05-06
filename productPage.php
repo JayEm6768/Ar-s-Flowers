@@ -70,15 +70,22 @@ include 'footHead/header.php';
         .shop-container {
             display: flex;
             gap: 30px;
+            align-items: flex-start;
+            /* Add this line */
         }
 
-        /* Sidebar Filters */
         .sidebar {
             width: 250px;
             background-color: white;
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            align-self: flex-start;
+            /* Add this line */
+            position: sticky;
+            /* Optional: makes sidebar stick when scrolling */
+            top: 140px;
+            /* Adjust this value based on your header height */
         }
 
         .sidebar-section {
