@@ -29,6 +29,16 @@ $user = [
 $error = '';
 $success = '';
 
+// Handle complaint success/error messages
+if (isset($_SESSION['success'])) {
+  $success = $_SESSION['success'];
+  unset($_SESSION['success']);
+}
+if (isset($_SESSION['error'])) {
+  $error = $_SESSION['error'];
+  unset($_SESSION['error']);
+}
+
 try {
   // Get current user data
   $user_id = $_SESSION['user_id'];
@@ -162,20 +172,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-// Get user orders using PDO
+// Get user orders and complaints using PDO
 try {
   $id = $_SESSION['user_id'];
-  $stmt = $pdo->prepare("SELECT * FROM `ordertable` WHERE `customer_id` = ?");
+  // Get orders
+  $stmt = $pdo->prepare("SELECT * FROM `ordertable` WHERE `customer_id` = ? ORDER BY `order_date` DESC");
   $stmt->execute([$id]);
   $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  // Get complaints and create a lookup array by order_id
+  $stmt = $pdo->prepare("SELECT c.*, o.order_date 
+                        FROM `complaint` c 
+                        JOIN `ordertable` o ON c.order_id = o.order_id 
+                        WHERE c.user_id = ? 
+                        ORDER BY c.complaint_date DESC");
+  $stmt->execute([$id]);
+  $complaints = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  // Create a complaint lookup array by order_id
+  $complaints_by_order = [];
+  foreach ($complaints as $complaint) {
+    $complaints_by_order[$complaint['order_id']] = $complaint;
+  }
 } catch (PDOException $e) {
-  $error = "Error fetching orders: " . $e->getMessage();
+  $error = "Error fetching data: " . $e->getMessage();
   $orders = [];
+  $complaints = [];
+  $complaints_by_order = [];
 }
 
-// Initialize complaints array
-$complaints = [];
-
+// Check if we're coming from a complaint redirect
+$highlight_complaint = isset($_GET['highlight_complaint']) ? (int)$_GET['highlight_complaint'] : null;
 ?>
 
 <!DOCTYPE html>
@@ -309,10 +336,21 @@ $complaints = [];
     .complaint-form {
       display: none;
       margin-top: 15px;
-      padding: 15px;
-      background: #f9f9f9;
+      padding: 20px;
+      background: #f8f9fa;
       border-radius: 8px;
       border-left: 4px solid var(--primary);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .complaint-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .complaint-form .btn {
+      margin-top: 10px;
     }
 
     /* Tab System */
@@ -466,6 +504,27 @@ $complaints = [];
       font-size: 28px;
     }
 
+    /* Highlighted complaint */
+    .highlighted-complaint {
+      border-left: 4px solid var(--primary);
+      background-color: rgba(177, 14, 115, 0.05);
+      animation: pulseHighlight 2s ease-in-out;
+    }
+
+    @keyframes pulseHighlight {
+      0% {
+        background-color: rgba(177, 14, 115, 0.05);
+      }
+
+      50% {
+        background-color: rgba(177, 14, 115, 0.15);
+      }
+
+      100% {
+        background-color: rgba(177, 14, 115, 0.05);
+      }
+    }
+
     /* Responsive Adjustments */
     @media (max-width: 992px) {
       .profile-container {
@@ -613,23 +672,32 @@ $complaints = [];
                   </div>
                 </div>
 
-                <?php if ($order['status'] == 'completed'): ?>
-                  <button onclick="showComplaintForm(<?php echo $order['order_id']; ?>)" class="btn btn-primary mt-3">
-                    <i class="fas fa-exclamation-circle mr-2"></i>File Complaint
-                  </button>
+                <?php if ($order['status'] == 'Delivered'): ?>
+                  <?php if (isset($complaints_by_order[$order['order_id']])): ?>
+                    <!-- If complaint exists, show View Complaint button -->
+                    <a href="?highlight_complaint=<?php echo $complaints_by_order[$order['order_id']]['complaint_id']; ?>#complaints"
+                      class="btn btn-primary mt-3">
+                      <i class="fas fa-eye mr-2"></i>View Complaint
+                    </a>
+                  <?php else: ?>
+                    <!-- If no complaint exists, show File Complaint button -->
+                    <button onclick="showComplaintForm(<?php echo $order['order_id']; ?>)" class="btn btn-primary mt-3">
+                      <i class="fas fa-exclamation-circle mr-2"></i>File Complaint
+                    </button>
 
-                  <div id="complaint-form-<?php echo $order['order_id']; ?>" class="complaint-form">
-                    <form method="post">
-                      <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
-                      <div class="form-group">
-                        <label>Describe your issue</label>
-                        <textarea name="description" class="form-control" rows="3" required></textarea>
-                      </div>
-                      <button type="submit" name="submit_complaint" class="btn btn-primary">
-                        <i class="fas fa-paper-plane mr-2"></i>Submit Complaint
-                      </button>
-                    </form>
-                  </div>
+                    <div id="complaint-form-<?php echo $order['order_id']; ?>" class="complaint-form">
+                      <form method="post" action="submit_complaint.php">
+                        <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+                        <div class="form-group">
+                          <label>Describe your issue</label>
+                          <textarea name="description" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" name="submit_complaint" class="btn btn-primary">
+                          <i class="fas fa-paper-plane mr-2"></i>Submit Complaint
+                        </button>
+                      </form>
+                    </div>
+                  <?php endif; ?>
                 <?php endif; ?>
               </div>
             <?php endforeach; ?>
@@ -645,7 +713,10 @@ $complaints = [];
             </div>
           <?php else: ?>
             <?php foreach ($complaints as $complaint): ?>
-              <div class="complaint-card">
+              <div class="complaint-card" id="complaint-<?php echo $complaint['complaint_id']; ?>"
+                <?php if ($highlight_complaint == $complaint['complaint_id']): ?>
+                class="highlighted-complaint"
+                <?php endif; ?>>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <h4>Complaint #<?php echo htmlspecialchars($complaint['complaint_id']); ?></h4>
                   <span class="status-<?php echo htmlspecialchars($complaint['status']); ?>">
@@ -710,6 +781,13 @@ $complaints = [];
     }
 
     function showComplaintForm(orderId) {
+      // Hide all other complaint forms first
+      document.querySelectorAll('.complaint-form').forEach(form => {
+        if (form.id !== 'complaint-form-' + orderId) {
+          form.style.display = 'none';
+        }
+      });
+
       const form = document.getElementById('complaint-form-' + orderId);
       form.style.display = form.style.display === 'block' ? 'none' : 'block';
 
@@ -721,6 +799,25 @@ $complaints = [];
         });
       }
     }
+
+    // Auto-open complaints tab and scroll to highlighted complaint if needed
+    document.addEventListener('DOMContentLoaded', function() {
+      <?php if ($highlight_complaint): ?>
+        // Open complaints tab
+        document.querySelector('.tab-button[onclick="openTab(\'complaints\')"]').click();
+
+        // Scroll to highlighted complaint
+        const highlightedComplaint = document.getElementById('complaint-<?php echo $highlight_complaint; ?>');
+        if (highlightedComplaint) {
+          setTimeout(() => {
+            highlightedComplaint.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }, 300);
+        }
+      <?php endif; ?>
+    });
   </script>
 
   <?php include 'footHead/footer.php'; ?>
