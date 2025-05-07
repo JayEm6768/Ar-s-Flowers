@@ -438,8 +438,8 @@ while ($row = $result->fetch_assoc()) {
             <li><a href="inventory.php"><i class="fas fa-boxes"></i> <span>Inventory</span></a></li>
             <li><a href="record_sale.php"><i class="fas fa-cash-register"></i> <span>Record Sale</span></a></li>
             <li><a href="sales_report.php"><i class="fas fa-chart-line"></i> <span>Sales Report</span></a></li>
-            <li><a href="sales_report.php"><i class="fas fa-reorder"></i> <span>Orders</span></a></li>
-            <li><a href="sales_report.php"><i class="fas fa-complaint"></i> <span>Complaints</span></a></li>
+            <li><a href="Orders.php"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a></li>
+            <li><a href="complaints.php"><i class="fas fa-comments"></i> <span>Complaints</span></a></li>
 
             <!-- Logout Button -->
             <li style="margin-top: 2rem;">
