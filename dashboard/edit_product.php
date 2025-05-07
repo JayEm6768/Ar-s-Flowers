@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $image_url = $flower['image_url']; // Keep existing image by default
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = 'dashboard/uploads/products/';
+        $upload_dir = 'uploads/products/';
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }
