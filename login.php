@@ -25,6 +25,10 @@ if ($user && $password === $user['pass']) {
 
     // decide destination based on role_id
     if ($user['role_id'] == 2) {
+        $_SESSION['admin'] = $_SESSION['user'];
+        unset($_SESSION['user']);
+        unset($_SESSION['user_id']);
+
         echo "Welcome, {$user['username']}!|dashboard\dashboard.php";
     } else {
         echo "Welcome, {$user['username']}!|productPage.php";

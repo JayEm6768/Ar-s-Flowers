@@ -192,439 +192,555 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Report | Ar's Flowers</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <title>Sales Report - Ar's Flowers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --primary: #2c3e50;
-            --primary-light: #3d566e;
+            --primary: #8e44ad;
+            --primary-light: #9b59b6;
+            --primary-dark: #7d3c98;
             --secondary: #3498db;
-            --secondary-light: #5faee3;
-            --accent: #e74c3c;
-            --success: #27ae60;
+            --secondary-light: #5dade2;
+            --error: #e74c3c;
+            --success: #2ecc71;
             --warning: #f39c12;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
-            --border-color: #dee2e6;
-            --card-bg: #ffffff;
-            --background: #f5f7fa;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --light-gray: #bdc3c7;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--background);
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
             color: var(--dark);
-            padding: 2rem;
             line-height: 1.6;
+            padding: 20px;
         }
 
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 0 auto;
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            padding: 0;
         }
 
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
         }
 
-        .page-title {
-            color: var(--primary);
-            font-size: 1.8rem;
+        .header h1 {
+            font-size: 24px;
             font-weight: 600;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin: 0;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .back-btn {
+        .header i {
+            font-size: 26px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-error {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--error);
+            border-left: 4px solid var(--error);
+        }
+
+        .alert i {
+            font-size: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        .form-group {
+            flex: 1;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+            background-color: var(--white);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.2);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+        }
+
+        .btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            background-color: var(--primary);
-            color: white;
-            padding: 0.75rem 1.25rem;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            border: 1px solid var(--primary);
-        }
-
-        .back-btn:hover {
-            background-color: white;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
+            justify-content: center;
+            padding: 12px 24px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2rem;
-            transition: box-shadow 0.2s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            background-color: var(--primary);
-            color: white;
             font-weight: 500;
-            border-radius: 8px 8px 0 0 !important;
-            padding: 1rem 1.5rem;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--error);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .section-title {
+            margin: 2.5rem 0 1rem;
+            font-size: 1.3rem;
+            color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
+            justify-content: center;
+            gap: 0.5rem;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--light-gray);
         }
 
-        .card-body {
-            padding: 1.5rem;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        table th,
+        table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        table tr:nth-child(even) {
+            background-color: rgba(142, 68, 173, 0.05);
+        }
+
+        table tr:hover {
+            background-color: rgba(142, 68, 173, 0.1);
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* Dashboard specific styles */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .metric-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-card .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .metric-card .header i {
+            font-size: 20px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: var(--gray);
+            font-size: 14px;
         }
 
         .chart-container {
             position: relative;
             height: 400px;
-            margin-bottom: 1.5rem;
+            margin: 20px 0;
         }
 
-        .chart-header {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .table-responsive {
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-        }
-
-        .table {
-            margin-bottom: 0;
-            font-size: 0.95rem;
-        }
-
-        .table thead th {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 500;
-            padding: 0.75rem 1rem;
-            border-bottom: none;
-        }
-
-        .table tbody td {
-            padding: 0.75rem 1rem;
-            vertical-align: middle;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .table tbody tr:nth-child(even) {
-            background-color: var(--light);
-        }
-
-        .table tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.05);
-        }
-
-        .table tfoot th {
-            background-color: var(--light-gray);
-            font-weight: 500;
-            border-top: 2px solid var(--border-color);
-        }
-
-        .btn-export {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            padding: 0.75rem 1.25rem;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .btn-export:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-export.btn-primary {
-            background-color: var(--secondary);
-            border-color: var(--secondary);
-        }
-
-        .btn-export.btn-primary:hover {
-            background-color: var(--secondary-light);
-            border-color: var(--secondary-light);
-        }
-
-        .btn-export.btn-danger {
-            background-color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .metric-card {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .metric-value {
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin: 0.5rem 0;
-        }
-
-        .metric-label {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .top-product-name {
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .top-product-detail {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.25rem;
-            font-size: 0.95rem;
-        }
-
-        .top-product-label {
-            color: var(--gray);
-        }
-
-        .filter-form .form-label {
-            font-weight: 500;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .filter-form .form-control,
-        .filter-form .form-select {
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            font-size: 0.95rem;
-        }
-
-        .filter-form .btn-apply {
-            background-color: var(--primary);
-            color: white;
-            font-weight: 500;
-            padding: 0.75rem;
-            width: 100%;
-            border: none;
-        }
-
-        .filter-form .btn-apply:hover {
-            background-color: var(--primary-light);
-        }
-
-        @media (max-width: 992px) {
-            .chart-container {
-                height: 350px;
-            }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 1.5rem 1rem;
+            .chart-grid {
+                grid-template-columns: 1fr;
             }
+        }
 
-            .page-header {
+        .chart-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .chart-title i {
+            font-size: 20px;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .export-options {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-                padding-bottom: 1rem;
+            }
+        }
+
+        /* Floating label animation */
+        .floating-label-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .floating-label {
+            position: absolute;
+            pointer-events: none;
+            left: 15px;
+            top: 12px;
+            transition: var(--transition);
+            background: var(--white);
+            padding: 0 5px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .floating-input:focus~.floating-label,
+        .floating-input:not(:placeholder-shown)~.floating-label {
+            top: -10px;
+            left: 10px;
+            font-size: 12px;
+            color: var(--primary);
+            background: var(--white);
+        }
+
+        .floating-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: var(--transition);
+            background-color: var(--white);
+        }
+
+        .floating-input:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 15px auto;
             }
 
-            .card-body {
-                padding: 1.25rem;
+            .content {
+                padding: 20px;
             }
 
-            .chart-container {
-                height: 300px;
+            .header h1 {
+                font-size: 20px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <div class="page-header">
-            <h1 class="page-title">
-                <i class="bi bi-graph-up"></i> Sales Analytics
-            </h1>
-            <a href="dashboard.php" class="back-btn">
-                <i class="bi bi-arrow-left"></i> Back to Dashboard
-            </a>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> Sales Analytics Report</h1>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                <i class="bi bi-funnel"></i> Report Filters
-            </div>
-            <div class="card-body">
-                <form method="get" class="row g-3 filter-form">
-                    <div class="col-md-3">
-                        <label for="flower" class="form-label">Product</label>
-                        <select name="flower" id="flower" class="form-select">
-                            <option value="">All Products</option>
+        <div class="content">
+            <form method="get" class="filter-form">
+                <div class="form-row">
+                    <div class="form-group floating-label-group">
+                        <select name="flower" id="flower" class="floating-input">
+                            <option value="" selected></option>
                             <?php foreach ($flowerOptions as $id => $name): ?>
                                 <option value="<?= $id ?>" <?= ($flowerFilter == $id) ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($name) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                        <label class="floating-label">Select Product</label>
                     </div>
-                    <div class="col-md-3">
-                        <label for="from" class="form-label">From Date</label>
-                        <input type="date" name="from" id="from" value="<?= htmlspecialchars($fromDate) ?>" class="form-control">
+
+                    <div class="form-group floating-label-group">
+                        <input type="date" name="from" id="from" value="<?= htmlspecialchars($fromDate) ?>" class="floating-input" placeholder=" ">
+                        <label class="floating-label">From Date</label>
                     </div>
-                    <div class="col-md-3">
-                        <label for="to" class="form-label">To Date</label>
-                        <input type="date" name="to" id="to" value="<?= htmlspecialchars($toDate) ?>" class="form-control">
+
+                    <div class="form-group floating-label-group">
+                        <input type="date" name="to" id="to" value="<?= htmlspecialchars($toDate) ?>" class="floating-input" placeholder=" ">
+                        <label class="floating-label">To Date</label>
                     </div>
-                    <div class="col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-apply">
-                            <i class="bi bi-funnel-fill"></i> Apply Filters
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-filter"></i> Apply Filters
                         </button>
                     </div>
-                </form>
-            </div>
-        </div>
+                </div>
+            </form>
 
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card metric-card">
-                    <div class="card-header">
-                        <i class="bi bi-currency-dollar"></i> Total Revenue
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="header">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Total Revenue</span>
                     </div>
-                    <div class="card-body">
-                        <div class="metric-value">₱<?= number_format($totalRevenue, 2) ?></div>
-                        <div class="metric-label">Across all product sales</div>
+                    <div class="metric-value">₱<?= number_format($totalRevenue, 2) ?></div>
+                    <div class="metric-label">Across all product sales</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="header">
+                        <i class="fas fa-trophy"></i>
+                        <span>Top Performer</span>
                     </div>
+                    <?php foreach ($topSelling as $name => $data): ?>
+                        <div class="metric-value"><?= htmlspecialchars($name) ?></div>
+                        <div class="metric-label">
+                            <?= number_format($data['quantity']) ?> units sold (₱<?= number_format($data['revenue'], 2) ?>)
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card metric-card">
-                    <div class="card-header">
-                        <i class="bi bi-award"></i> Top Performer
-                    </div>
-                    <div class="card-body">
-                        <?php foreach ($topSelling as $name => $data): ?>
-                            <div class="top-product-name"><?= htmlspecialchars($name) ?></div>
-                            <div class="top-product-detail">
-                                <span class="top-product-label">Units Sold:</span>
-                                <span><?= number_format($data['quantity']) ?></span>
-                            </div>
-                            <div class="top-product-detail">
-                                <span class="top-product-label">Revenue:</span>
-                                <span>₱<?= number_format($data['revenue'], 2) ?></span>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="bi bi-download"></i> Export Options
-            </div>
-            <div class="card-body">
-                <button onclick="exportToCSV()" class="btn btn-primary btn-export">
-                    <i class="bi bi-file-earmark-excel"></i> Export to CSV
+            <div class="export-options">
+                <button onclick="exportToCSV()" class="btn btn-secondary">
+                    <i class="fas fa-file-csv"></i> Export to CSV
                 </button>
-                <button onclick="exportToPDF()" class="btn btn-danger btn-export">
-                    <i class="bi bi-file-earmark-pdf"></i> Export to PDF
+                <button onclick="exportToPDF()" class="btn btn-danger">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
                 </button>
             </div>
-        </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="bi bi-table"></i> Sales Summary
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th class="text-end">Quantity Sold</th>
-                                <th class="text-end">Revenue (₱)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($summary as $name => $data): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($name) ?></td>
-                                    <td class="text-end"><?= number_format($data['quantity']) ?></td>
-                                    <td class="text-end"><?= number_format($data['revenue'], 2) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Total</th>
-                                <th class="text-end"><?= number_format(array_sum(array_column($summary, 'quantity'))) ?></th>
-                                <th class="text-end">₱<?= number_format($totalRevenue, 2) ?></th>
-                            </tr>
-                        </tfoot>
-                    </table>
+            <h3 class="section-title"><i class="fas fa-table"></i> Sales Summary</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th class="text-end">Quantity Sold</th>
+                        <th class="text-end">Revenue (₱)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($summary as $name => $data): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($name) ?></td>
+                            <td class="text-end"><?= number_format($data['quantity']) ?></td>
+                            <td class="text-end"><?= number_format($data['revenue'], 2) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <th class="text-end"><?= number_format(array_sum(array_column($summary, 'quantity'))) ?></th>
+                        <th class="text-end">₱<?= number_format($totalRevenue, 2) ?></th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Revenue by Product</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="chart-header">
-                            <i class="bi bi-bar-chart"></i> Revenue by Product
-                        </h5>
-                        <div class="chart-container">
-                            <canvas id="revenueChart"></canvas>
-                        </div>
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Sales Trend</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="monthlyChart"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="chart-header">
-                            <i class="bi bi-graph-up"></i> Sales Trend
-                        </h5>
-                        <div class="chart-container">
-                            <canvas id="monthlyChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="footer">
+                <a href="dashboard.php" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
             </div>
         </div>
     </div>

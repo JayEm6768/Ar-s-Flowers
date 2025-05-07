@@ -736,7 +736,7 @@
         <form id="user-signup">
           <input type="text" id="name" placeholder="Full Name" required>
           <input type="text" id="signup-username" placeholder="Username" required>
-          <input type="password" id="singup-pass" placeholder="Password" required>
+          <input type="password" id="signup-pass" placeholder="Password" required>
           <input type="text" id="signup-email" placeholder="Email Address" required>
           <input type="text" id="signup-phone" placeholder="Phone Number" required>
           <button type="submit">Sign Up</button>
@@ -932,8 +932,9 @@
           try {
             const res = await fetch('session_status.php');
             const data = await res.json();
-
-            if (data.loggedIn) {
+            if(data.loggedInAdmin){
+              
+            } else if (data.loggedIn) {
               // Get the icons container
               const iconsContainer = document.querySelector('.icons');
 
