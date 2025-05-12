@@ -833,13 +833,39 @@
             toggleLoginModal();
           });
         }
+        
 
         if (elements.userSignupForm) {
-          elements.userSignupForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Account created successfully!');
-            elements.signupForm.style.display = 'none';
-            elements.loginForm.style.display = 'block';
+          elements.userSignupForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const data = {
+            name: document.getElementById('name').value,
+            username: document.getElementById('signup-username').value,
+            password: document.getElementById('signup-pass').value,
+            email: document.getElementById('signup-email').value,
+            phone: document.getElementById('signup-phone').value
+          };
+
+          try {
+            const res = await fetch('/register.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+
+            if (result.success) {
+              alert('Account created successfully!');
+              document.getElementById('user-signup').reset();
+            } else {
+              alert(result.message || 'Registration failed.');
+            }
+            } catch (err) {
+              console.error('Registration error:', err);
+              alert('An error occurred. Please try again.');
+            }
           });
         }
 
