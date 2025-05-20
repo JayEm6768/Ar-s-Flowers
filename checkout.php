@@ -57,13 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
 
     // 2. Add order items
     foreach ($cart as $item) {
-      $stmt = $pdo->prepare("INSERT INTO orderitem (order_id, product_id, quantity, price) 
-                                  VALUES (?, ?, ?, ?)");
+      $stmt = $pdo->prepare("INSERT INTO orderitem (order_id, product_id, quantity, price, image_url) 
+                                  VALUES (?, ?, ?, ?, ?)");
       $stmt->execute([
         $orderId,
         $item['id'],
         $item['quantity'],
-        $item['price']
+        $item['price'],
+        $item['image']
       ]);
 
       // Update product quantity

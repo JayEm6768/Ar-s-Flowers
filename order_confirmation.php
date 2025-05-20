@@ -23,7 +23,7 @@ if (!$order) {
 }
 
 // Get order items
-$stmt = $pdo->prepare("SELECT oi.*, p.name, p.image_url 
+$stmt = $pdo->prepare("SELECT oi.*, p.name, oi.image_url 
                       FROM orderitem oi
                       JOIN product p ON oi.product_id = p.flower_id
                       WHERE oi.order_id = ?");
