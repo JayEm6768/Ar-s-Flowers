@@ -23,6 +23,10 @@ $query = "
     JOIN users u ON o.customer_id = u.user_id
 ";
 
+// $total_itms_query = "SELECT os.total_items FROM ordersummary os JOIN ordertable ot ON os.order_summary_id = ot.order_id";
+// $itms = $conn ->query($total_itms_query);
+// $total_itms = $itms->fetch_assoc();
+
 if ($status_filter && $status_filter !== 'All') {
     $query .= " WHERE o.status = '" . $conn->real_escape_string($status_filter) . "'";
 }
@@ -145,8 +149,8 @@ a>
                         <td>#<?= $row['order_id'] ?></td>
                         <td><?= htmlspecialchars($row['customer_name']) ?> (ID: <?= $row['customer_id'] ?>)</td>
                         <td><?= date("M d, Y", strtotime($row['order_date'])) ?></td>
-                        <td><?= $row['total_items'] ?></td>
-                        <td>$<?= number_format($row['total_cost'], 2) ?></td>
+                        <!-- <td><?= $total_itms['total_items'] ?></td> -->
+                        <td>$<?= number_format($row['total_amount'], 2) ?></td>
                         <td>
                             <span class="badge <?= $row['status'] == 'Delivered' ? 'bg-success' : ($row['status'] == 'Shipped' ? 'bg-info' : 'bg-warning') ?>">
                                 <?= $row['status'] ?>
