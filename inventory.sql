@@ -460,6 +460,8 @@ UPDATE `ordertable` SET `status` = 'Delivered' WHERE `ordertable`.`order_id` = 1
 ALTER TABLE `users` ADD `address` VARCHAR(255) NOT NULL AFTER `created_at`;
 
 ALTER TABLE `complaint` ADD `admin_note` VARCHAR(255) NOT NULL DEFAULT 'Waiting for Response!' AFTER `order_id`;
+
+ALTER TABLE `orderitem` ADD `image_url` VARCHAR(255) NOT NULL AFTER `quantity`;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
