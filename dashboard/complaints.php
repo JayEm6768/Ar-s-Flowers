@@ -29,6 +29,7 @@ $result = $conn->query("
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Complaints</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -45,7 +46,7 @@ $result = $conn->query("
             min-height: 100vh;
             padding: 20px;
             color: white;
-            box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+            box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar h4 {
@@ -149,80 +150,82 @@ $result = $conn->query("
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
+        .back-btn {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
+
 <body>
 
-<!--<div class="sidebar">
-    <h4>Admin Panel</h4>
-    <a href="dashboard.php">← Go Back to Dashboard</a>
-</div> -->
+    <div class="content">
+        <a href="dashboard.php" class="btn btn-secondary back-btn">← Back to Dashboard</a>
 
+        <div class="card p-4">
+            <h2 class="mb-4 text-center text-dark">Customer Complaints</h2>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User ID</th>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Admin Note</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= $row['complaint_id'] ?></td>
+                                <td><?= htmlspecialchars($row['customer_name']) ?> (ID: <?= $row['user_id'] ?>)</td>
+                                <td>#<?= $row['order_number'] ?></td>
+                                <td><?= date("M d, Y", strtotime($row['complaint_date'])) ?></td>
+                                <td><?= htmlspecialchars($row['description']) ?></td>
+                                <td>
+                                    <span class="badge <?= $row['status'] == 'Resolved' ? 'bg-success' : ($row['status'] == 'In Progress' ? 'bg-primary' : 'bg-warning') ?>">
+                                        <?= $row['status'] ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <!-- Display Admin Note -->
+                                    <div class="note-container">
+                                        <?= htmlspecialchars($row['admin_note']) ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <!-- Action Buttons: Resolve/Unresolve and Add Admin Notes -->
+                                    <form method="POST" class="d-flex flex-column">
+                                        <input type="hidden" name="complaint_id" value="<?= $row['complaint_id'] ?>">
 
-<div class="content">
-    <div class="card p-4">
-        <h2 class="mb-4 text-center text-dark">Customer Complaints</h2>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>User ID</th>
-                        <th>Order ID</th>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Admin Note</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?= $row['complaint_id'] ?></td>
-                        <td><?= htmlspecialchars($row['customer_name']) ?> (ID: <?= $row['user_id'] ?>)</td>
-                        <td>#<?= $row['order_number'] ?></td>
-                        <td><?= date("M d, Y", strtotime($row['complaint_date'])) ?></td>
-                        <td><?= htmlspecialchars($row['description']) ?></td>
-                        <td>
-                            <span class="badge <?= $row['status'] == 'Resolved' ? 'bg-success' : ($row['status'] == 'In Progress' ? 'bg-primary' : 'bg-warning') ?>">
-                                <?= $row['status'] ?>
-                            </span>
-                        </td>
-                        <td>
-                            <!-- Display Admin Note -->
-                            <div class="note-container">
-                                <?= htmlspecialchars($row['admin_note']) ?>
-                            </div>
-                        </td>
-                        <td>
-                            <!-- Action Buttons: Resolve/Unresolve and Add Admin Notes -->
-                            <form method="POST" class="d-flex flex-column">
-                                <input type="hidden" name="complaint_id" value="<?= $row['complaint_id'] ?>">
+                                        <!-- Dropdown for status -->
+                                        <select name="status" class="form-select mb-2">
+                                            <option value="Pending" <?= $row['status'] == 'Pending' ? 'selected' : '' ?>>Pending</option>
+                                            <option value="In Progress" <?= $row['status'] == 'In Progress' ? 'selected' : '' ?>>In Progress</option>
+                                            <option value="Resolved" <?= $row['status'] == 'Resolved' ? 'selected' : '' ?>>Resolved</option>
+                                        </select>
 
-                                <!-- Dropdown for status -->
-                                <select name="status" class="form-select mb-2">
-                                    <option value="Pending" <?= $row['status'] == 'Pending' ? 'selected' : '' ?>>Pending</option>
-                                    <option value="In Progress" <?= $row['status'] == 'In Progress' ? 'selected' : '' ?>>In Progress</option>
-                                    <option value="Resolved" <?= $row['status'] == 'Resolved' ? 'selected' : '' ?>>Resolved</option>
-                                </select>
+                                        <!-- Textarea for Admin Note -->
+                                        <textarea name="admin_note" class="admin-note-input" placeholder="Enter your admin note here..."><?= htmlspecialchars($row['admin_note']) ?></textarea>
 
-                                <!-- Textarea for Admin Note -->
-                                <textarea name="admin_note" class="admin-note-input" placeholder="Enter your admin note here..."><?= htmlspecialchars($row['admin_note']) ?></textarea>
-
-                                <!-- Action Buttons: Update Status and Admin Note -->
-                                <button type="submit" name="update_complaint" class="btn btn-info btn-sm btn-resolve mt-2">
-                                    Update Complaint
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-                </tbody>
-            </table>
+                                        <!-- Action Buttons: Update Status and Admin Note -->
+                                        <button type="submit" name="update_complaint" class="btn btn-info btn-sm btn-resolve mt-2">
+                                            Update Complaint
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
 </body>
+
 </html>
