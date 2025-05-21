@@ -153,10 +153,11 @@ $result = $conn->query("
 </head>
 <body>
 
-<div class="sidebar">
+<!--<div class="sidebar">
     <h4>Admin Panel</h4>
     <a href="dashboard.php">← Go Back to Dashboard</a>
-</div>
+</div> -->
+
 
 <div class="content">
     <div class="card p-4">
