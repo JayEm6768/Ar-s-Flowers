@@ -18,14 +18,15 @@ $status_filter = isset($_GET['status']) ? $_GET['status'] : '';
 $sort_order = isset($_GET['sort']) && $_GET['sort'] == 'asc' ? 'ASC' : 'DESC';
 
 $query = "
-    SELECT o.*, u.name AS customer_name
+    SELECT o.*, u.name AS customer_name, os.total_items AS total_items
     FROM ordertable o
     JOIN users u ON o.customer_id = u.user_id
+	JOIN ordersummary os ON o.order_id = os.order_summary_id
 ";
 
-// $total_itms_query = "SELECT os.total_items FROM ordersummary os JOIN ordertable ot ON os.order_summary_id = ot.order_id";
-// $itms = $conn ->query($total_itms_query);
-// $total_itms = $itms->fetch_assoc();
+$total_itms_query = "SELECT os.total_items FROM ordersummary os JOIN ordertable ot ON os.order_summary_id = ot.order_id";
+$itms = $conn ->query($total_itms_query);
+
 
 if ($status_filter && $status_filter !== 'All') {
     $query .= " WHERE o.status = '" . $conn->real_escape_string($status_filter) . "'";
@@ -149,7 +150,7 @@ a>
                         <td>#<?= $row['order_id'] ?></td>
                         <td><?= htmlspecialchars($row['customer_name']) ?> (ID: <?= $row['customer_id'] ?>)</td>
                         <td><?= date("M d, Y", strtotime($row['order_date'])) ?></td>
-                        <!-- <td><?= $total_itms['total_items'] ?></td> -->
+                        <td><?= $row['total_items'] ?></td>
                         <td>$<?= number_format($row['total_amount'], 2) ?></td>
                         <td>
                             <span class="badge <?= $row['status'] == 'Delivered' ? 'bg-success' : ($row['status'] == 'Shipped' ? 'bg-info' : 'bg-warning') ?>">
