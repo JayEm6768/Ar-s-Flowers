@@ -24,10 +24,6 @@ $query = "
 	JOIN ordersummary os ON o.order_id = os.order_summary_id
 ";
 
-$total_itms_query = "SELECT os.total_items FROM ordersummary os JOIN ordertable ot ON os.order_summary_id = ot.order_id";
-$itms = $conn ->query($total_itms_query);
-
-
 if ($status_filter && $status_filter !== 'All') {
     $query .= " WHERE o.status = '" . $conn->real_escape_string($status_filter) . "'";
 }
@@ -46,6 +42,33 @@ $result = $conn->query($query);
             display: flex;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #ecf0f3;
+        }
+        .sidebar {
+            width: 240px;
+            background-color: #1a2532;
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h4 {
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #ecf0f3;
+            margin-bottom: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #00b894;
+            transform: translateX(5px);
         }
 
 
@@ -118,7 +141,7 @@ a>
                 <select name="status" class="form-select form-select-sm">
                     <option <?= $status_filter === 'All' ? 'selected' : '' ?>>All</option>
                     <option <?= $status_filter === 'Pending' ? 'selected' : '' ?>>Pending</option>
-                    <option <?= $status_filter === 'Shipped' ? 'selected' : '' ?>>Shipped</option>
+                    <!-- <option <?= $status_filter === 'Shipped' ? 'selected' : '' ?>>Shipped</option> -->
                     <option <?= $status_filter === 'Delivered' ? 'selected' : '' ?>>Delivered</option>
                 </select>
 
@@ -162,7 +185,7 @@ a>
                                 <input type="hidden" name="order_id" value="<?= $row['order_id'] ?>">
                                 <select name="order_status" class="form-select form-select-sm">
                                     <option <?= $row['status'] === 'Pending' ? 'selected' : '' ?>>Pending</option>
-                                    <option <?= $row['status'] === 'Shipped' ? 'selected' : '' ?>>Shipped</option>
+                                  <!--  <option <?= $row['status'] === 'Shipped' ? 'selected' : '' ?>>Shipped</option> -->
                                     <option <?= $row['status'] === 'Delivered' ? 'selected' : '' ?>>Delivered</option>
                                 </select>
                                 <button type="submit" name="update_order_status" class="btn btn-sm btn-update btn-primary mt-2">
