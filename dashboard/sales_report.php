@@ -668,7 +668,7 @@ try {
                 <div class="metric-card">
                     <div class="header">
                         <i class="fas fa-trophy"></i>
-                        <span>Top Performer</span>
+                        <span>Best Seller</span>
                     </div>
                     <?php foreach ($topSelling as $name => $data): ?>
                         <div class="metric-value"><?= htmlspecialchars($name) ?></div>
